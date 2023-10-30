@@ -23,7 +23,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 # Opt out of the .NET SDK telemetry feature
   APP_VERSION: "v1.0.0"
   DOCKER_REGISTRY: docker.io
-  ARTIFACT_NAME: properties-api
+  ARTIFACT_NAME: querystring-composer-api
 
 jobs:
   build-and-test:
@@ -150,7 +150,7 @@ jobs:
           RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
         run: |
           echo "Updating Production Environment to ${{ env.RELEASE_VERSION }}"
-          sed -i 's/<!-- ppt-prd-start -->.*<!-- ppt-prd-end -->/<!-- ppt-prd-start -->${{ env.RELEASE_VERSION }}<!-- ppt-prd-end -->/g' README.md
+          sed -i 's/<!-- qsc-prd-start -->.*<!-- qsc-prd-end -->/<!-- qsc-prd-start -->${{ env.RELEASE_VERSION }}<!-- qsc-prd-end -->/g' README.md
 
       - name: Check for changes
         run: |
@@ -169,7 +169,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Continuous Deployment"
           git add --all
-          git commit -m "ci(properties-api): update to ${{ env.RELEASE_VERSION }} version."
+          git commit -m "ci(querystring-composer-api): update to ${{ env.RELEASE_VERSION }} version."
           git pull origin main
 
       - name: Push the changes
@@ -177,5 +177,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          repository: jtsato/properties-api-terraform
+          repository: jtsato/querystring-composer-api-terraform
           branch: main
