@@ -1,0 +1,7 @@
+{
+  "DOCKER_COMPOSE_FILE": "docker-compose.yml",
+  "MONGODB_URL": "mongodb://xunit:xunit@localhost:27018/querystring-mongodb",
+  "MONGODB_DATABASE": "querystring-mongodb",
+  "QUERY_STRUCTURE_COLLECTION_NAME": "query_structures",
+  "QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME": "query_structures_sequences"
+}

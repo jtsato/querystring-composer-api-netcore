@@ -1,0 +1,16 @@
+{
+  "stryker-config": {
+    "reporters": [
+      "progress",
+      "html"
+    ],
+    "ignore-methods": [
+      "*Log*",
+      "ToString",
+      "*HashCode*",
+      "*First*",
+      "CheckNull*"
+    ],
+    "coverage-analysis": "off"
+  }
+}

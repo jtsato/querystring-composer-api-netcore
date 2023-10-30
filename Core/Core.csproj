@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <PackageId>Core</PackageId>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>**/*Command.cs</Value>
+            <Value>**/*Query.cs</Value>
+        </SonarQubeSetting>
+        <SonarQubeSetting Include="sonar.cpd.exclusions">
+            <Value>**/*CommandValidator.cs</Value>
+            <Value>**/*QueryValidator.cs</Value>
+        </SonarQubeSetting>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="F23.StringSimilarity" Version="5.1.0" />
+        <PackageReference Include="FluentValidation" Version="11.7.1" />
+        <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15"/>
+    </ItemGroup>
+
+
+
+</Project>

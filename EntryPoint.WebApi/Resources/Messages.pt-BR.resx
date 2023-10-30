@@ -1,0 +1,90 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="CommonUnexpectedException" xml:space="preserve">
+        <value>Ocorreu um erro inesperado, por favor tente novamente mais tarde!</value>
+    </data>
+    <data name="CommonValidationAlert" xml:space="preserve">
+        <value>Favor corrigir os erros e enviar os dados novamente!</value>
+    </data>
+    <data name="CommonUnexpectedExceptionWithParams" xml:space="preserve">
+        <value>Ocorreu um erro inesperado, por favor tente novamente mais tarde! Detalhes: {0}.</value>
+    </data>
+    <data name="CommonInvalidRequest" xml:space="preserve">
+        <value>A solicitação recebida é inválida. Verifique o formato e os parâmetros na documentação, corrija-os e tente novamente.</value>
+    </data>
+    <data name="CommonJsonPropertyMissing" xml:space="preserve">
+        <value>A propriedade '{0}' é obrigatória.</value>
+    </data>
+    <data name="CommonJsonPropertyInvalid" xml:space="preserve">
+        <value>A propriedade '{0}' é inválida.</value>
+    </data>
+    <data name="CommonJsonPropertyWrongType" xml:space="preserve">
+        <value>A propriedade '{0}' possui um valor incompatível com o seu tipo esperado.</value>
+    </data>
+    <data name="ValidationSearchTermsIsNullOrEmpty" xml:space="preserve">
+        <value>O campo 'termo de busca' é obrigatório.</value>
+    </data>
+    <data name="ValidationQueryStructureNotFound" xml:space="preserve">
+        <value>Nenhuma estrutura de consulta foi encontrada para o cliente {0} e nome de consulta {1}.</value>
+    </data>
+    <data name="ValidationClientUidIsNullOrEmpty" xml:space="preserve">
+        <value>O Identificador do cliente é obrigatório.</value>
+    </data>
+    <data name="ValidationQueryNameIsNullOrEmpty" xml:space="preserve">
+        <value>O nome da query é obrigatório.</value>
+    </data>
+    <data name="ValidationDescriptionIsNullOrEmpty" xml:space="preserve">
+        <value>A descrição do cliente é obrigatório.</value>
+    </data>
+    <data name="ValidationNameIsNullOrEmpty" xml:space="preserve">
+        <value>O nome do cliente é obrigatório.</value>
+    </data>
+    <data name="ValidationAiSettingsIsNull" xml:space="preserve">
+        <value>As configurações da IA são obrigatórias.</value>
+    </data>
+    <data name="ValidationApiKeyIsNullOrEmpty" xml:space="preserve">
+        <value>A API Key é obrigatória quando a IA está habilitada.</value>
+    </data>
+    <data name="ValidationMaxTokensExceedsLimit" xml:space="preserve">
+        <value>O número máximo de tokens excede o limite.</value>
+    </data>
+    <data name="ValidationMaxTokensIsNotInteger" xml:space="preserve">
+        <value>O valor máximo de tokens não é um número inteiro.</value>
+    </data>
+    <data name="ValidationMaxTokensIsNullOrEmpty" xml:space="preserve">
+        <value>O valor máximo de tokens é obrigatório quando a IA está habilitada.</value>
+    </data>
+    <data name="ValidationModelIsNullOrEmpty" xml:space="preserve">
+        <value>O modelo é obrigatóriao quando a IA está habilitada.</value>
+    </data>
+    <data name="ValidationPromptTemplateIsNullOrEmpty" xml:space="preserve">
+        <value>O 'modelo de prompt' é obrigatória quando a IA está habilitada.</value>
+    </data>
+    <data name="ValidationTemperatureIsNullOrEmpty" xml:space="preserve">
+        <value>O campo de temperatura é obrigatório quando a IA está habilitada.</value>
+    </data>
+    <data name="ValidationTemperatureIsNotFloat" xml:space="preserve">
+        <value>O campo de temperatura não é um valor decimal válido.</value>
+    </data>
+    <data name="ValidationUsagePercentageIsNotPercentage" xml:space="preserve">
+        <value>O campo percentual não é um valor válido.</value>
+    </data>
+    <data name="ValidationUsagePercentageIsNullOrEmpty" xml:space="preserve">
+        <value>O campo percentual é obrigatório quando a IA está habilitada.</value>
+    </data>
+</root>

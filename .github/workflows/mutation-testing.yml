@@ -1,0 +1,133 @@
+name: Mutation Tests
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "stryker.conf.json"
+      - ".github/workflows/mutation-testing.yml"
+  schedule:
+    - cron: "30 3 * * 1-5"
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: 1 # Disable the .NET welcome message
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 # Opt out of the .NET SDK telemetry feature
+
+jobs:
+  run-stryker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup .NET [v7.0.x]
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            7.0.x
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Show docker-compose version
+        run: |
+          docker-compose version
+
+      - name: Start MongoDB Container
+        working-directory: ./IntegrationTest.Infra.MongoDB
+        run: docker-compose up -d
+
+      - name: Resolve dependencies
+        run: dotnet restore --force --no-cache
+
+      - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
+        run: |
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+
+      - name: Build in Debug Mode
+        run: dotnet build --configuration Debug --no-restore
+
+      - name: Mutation [Core]
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet stryker
+        working-directory: ./UnitTest.Core
+
+      - name: Copy report to right place [Core]
+        run: |
+          mkdir -p ./docs/mutation-reports/Core
+          find ./UnitTest.Core/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Core' ';'
+
+      - name: Mutation [EntryPoint WebApi]
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet stryker -p "EntryPoint.WebApi.csproj"
+        working-directory: ./IntegrationTest.EntryPoint.WebApi
+
+      - name: Copy report to right place [WebApi]
+        run: |
+          mkdir -p ./docs/mutation-reports/EntryPoint.WebApi
+          find ./IntegrationTest.EntryPoint.WebApi/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/EntryPoint.WebApi' ';'
+
+      - name: Mutation [Infra MongoDB]
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet stryker -p "Infra.MongoDB.csproj"
+        working-directory: ./IntegrationTest.Infra.MongoDB
+
+      - name: Copy report to right place [Infra MongoDB]
+        run: |
+          mkdir -p ./docs/mutation-reports/Infra.MongoDB
+          find ./IntegrationTest.Infra.MongoDB/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.MongoDB' ';'
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "SHOULD_I_COMMIT=Yes" >> $GITHUB_ENV
+          else
+            echo "SHOULD_I_COMMIT=No" >> $GITHUB_ENV
+          fi
+
+      - name: Commit the changes
+        if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
+        run: |
+          git config pull.rebase false        
+          git config --local user.email "action@github.com"
+          git config --local user.name "Stryker.NET"
+          git add --all
+          git commit -m "doc(testing): update mutation reports"
+          git pull origin ${GITHUB_REF##*/}
+
+      # In the /settings/actions section set Read and write permissions for the GITHUB_TOKEN
+      - name: Push the changes
+        if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      - name: Environment Teardown
+        if: always()
+        run: |
+          docker-compose -f IntegrationTest.Infra.MongoDB/docker-compose.yml down
+          echo "Environment Teardown"

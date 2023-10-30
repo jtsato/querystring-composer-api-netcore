@@ -1,0 +1,29 @@
+﻿version: "3.7"
+services:
+  local.webapi.mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  local.webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8088:80"
+    environment:
+      # Copy .env variables through to container
+      TZ: America/Sao_Paulo
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:80"
+      MONGODB_URL: "mongodb://container:container@local.webapi.mongodb:27017/querystring-mongodb"
+      MONGODB_DATABASE_NAME: "querystring-mongodb"
+      QUERY_COLLECTION_NAME: "query_structures"
+      QUERY_SEQUENCE_COLLECTION_NAME: "query_structures_sequences"
+    depends_on:
+      - local.webapi.mongodb

@@ -1,0 +1,179 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/workflows/mutation-testing.yml"
+      - "stryker.conf.json"
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/workflows/mutation-testing.yml"
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: 1 # Disable the .NET welcome message
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 # Opt out of the .NET SDK telemetry feature
+  APP_VERSION: "v1.0.0"
+  DOCKER_REGISTRY: docker.io
+  ARTIFACT_NAME: properties-api
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup .NET [v7.0.x]
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            7.0.x
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Show docker-compose version
+        run: |
+          docker-compose version
+
+      - name: Start MongoDB Container
+        working-directory: ./IntegrationTest.Infra.MongoDB
+        run: docker-compose up -d
+
+      - name: Resolve dependencies
+        run: dotnet restore --force --no-cache
+
+      - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
+        run: |
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
+          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+
+      - name: Build in Debug Mode
+        run: dotnet build --configuration Debug --no-restore
+
+      - name: Test [Core]
+        run: dotnet test ./UnitTest.Core/UnitTest.Core.csproj --configuration Debug --no-build --nologo -v n
+
+      - name: Test [EntryPoint.WebApi]
+        run: dotnet test ./IntegrationTest.EntryPoint.WebApi/IntegrationTest.EntryPoint.WebApi.csproj --configuration Debug --no-build --nologo -v n
+
+      - name: Test [Infra.MongoDB]
+        run: dotnet test ./IntegrationTest.Infra.MongoDB/IntegrationTest.Infra.MongoDB.csproj --configuration Debug --no-build --nologo -v n
+
+      - name: Environment Teardown
+        if: always()
+        run: |
+          docker-compose down -v --remove-orphans
+          echo "Environment Teardown"
+
+  run-sonar:
+    needs: build-and-test
+    uses: ./.github/workflows/sonar-analysis.yml
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
+      sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+  generate-artifact:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: run-sonar
+    runs-on: ubuntu-latest
+    outputs:
+      RELEASE_VERSION: ${{ steps.create_release.outputs.RELEASE_VERSION }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Tag from Date and Run Number
+        id: tag
+        run: |
+          echo "TAG=$(TZ='America/Sao_Paulo' date +'%y%m%d')${{ github.run_number }}" >> $GITHUB_ENV
+          echo "TAG=${{ env.TAG }}"
+
+      - name: Create Release Version from App Version and Tag
+        id: create_release
+        env:
+          APP_VERSION: ${{ env.APP_VERSION }}
+          TAG: ${{ env.TAG }}
+        run: |
+          echo "RELEASE_VERSION=${{ env.APP_VERSION }}-${{ env.TAG }}" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${{ env.APP_VERSION }}-${{ env.TAG }}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and Push to Docker Hub
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.ARTIFACT_NAME }}:${{ env.RELEASE_VERSION }}
+
+      - name: Environment Teardown
+        if: always()
+        run: |
+          docker logout ${{ env.DOCKER_REGISTRY }}
+          echo "Environment Teardown"
+
+  request-infrastructure-update:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: generate-artifact
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ needs.generate-artifact.outputs.RELEASE_VERSION }}
+
+    steps:
+      # In the /settings/actions section set Read and write permissions for the GITHUB_TOKEN
+      - name: Checkout QueryString API IaC project
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: jtsato/querystring-composer-api-terraform
+          ref: main
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Update Image Tag
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+        run: |
+          echo "Updating Production Environment to ${{ env.RELEASE_VERSION }}"
+          sed -i 's/<!-- ppt-prd-start -->.*<!-- ppt-prd-end -->/<!-- ppt-prd-start -->${{ env.RELEASE_VERSION }}<!-- ppt-prd-end -->/g' README.md
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "SHOULD_I_COMMIT=Yes" >> $GITHUB_ENV
+          else
+            echo "SHOULD_I_COMMIT=No" >> $GITHUB_ENV
+          fi
+
+      - name: Commit the changes
+        if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+        run: |
+          git config pull.rebase false
+          git config --local user.email "action@github.com"
+          git config --local user.name "Continuous Deployment"
+          git add --all
+          git commit -m "ci(properties-api): update to ${{ env.RELEASE_VERSION }} version."
+          git pull origin main
+
+      - name: Push the changes
+        if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: jtsato/properties-api-terraform
+          branch: main

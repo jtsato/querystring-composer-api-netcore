@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <RootNamespace>IntegrationTest.Infra.MongoDB</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SonarQubeSetting Include="sonar.coverage.exclusions">
+            <Value>mongo-init.js</Value>
+        </SonarQubeSetting>
+    </ItemGroup>    
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.msbuild" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Ductus.FluentDocker" Version="2.10.59"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3"/>
+        <PackageReference Include="xunit" Version="2.5.0"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Infra.MongoDB\Infra.MongoDB.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="local.settings.json"/>
+        <Content Include="test.settings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+        </Content>
+        <None Remove="StrykerOutput\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="StrykerOutput\**"/>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="StrykerOutput\**"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="StrykerOutput\**"/>
+    </ItemGroup>
+
+</Project>
