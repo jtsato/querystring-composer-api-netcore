@@ -1,0 +1,54 @@
+@startuml 02-ContainerDiagram
+!include <C4/C4_Container>
+
+/' Level 2: Container diagram
+   A container is something like a server-side web application, single-page application, desktop application, 
+   mobile app, database schema, file system, etc. 
+   Essentially, a container is a separately runnable/deployable unit (e.g. a separate process space) 
+   that executes code or stores data.
+'/
+
+title "Container Diagram for Real State Marketplace System"
+
+AddElementTag("microService", $shape=EightSidedShape(), $legendText="micro service\'")
+AddElementTag("storage", $shape=RoundedBoxShape())
+
+LAYOUT_LEFT_RIGHT()
+
+Person(seeker, "Property Seeker", "A person who is looking for a property")
+Person(agent, "Real State Agent", "A person who would like to promote properties")
+
+System_Boundary(realState, "Real State Marketplace System", "A system that allows property seekers to find properties for sale or rent") {
+    Container(showcase, "Showcase", "Flutterflow", "A Showcase of properties for sale or for rent")
+    Container(cabinet, "Cabinet", "Flutterflow", "Advertisement Manager")
+    Container(showcaseBff, "Property API Service", ".NET Core C#", "A Web API Service to get properties", $tags = "microService")
+    ContainerDb(propertiesDB, "PropertiesDB", "MongoDB", "Properties Database", $tags = "storage")
+    Container(composer, "QueryString Composer", ".NET Core C#", "A Web API Service to compose query strings", $tags = "microService")
+    Container(cabinetBff, "Cabinet BFF Service", ".NET Core C#", "A Web API Service to manage advertisements", $tags = "microService")
+    ContainerDb(cabinetDB, "CabinetDB", "Supabase", "Cabinet Database", $tags = "storage")
+    Container(etl, "ETL", "NodeJS, Github Actions", "Extract, transform and load")
+}
+
+System_Ext(chatGpt, "ChatGPT API", "An external API that supports diverse artificial intelligence functionalities")
+System_Ext(websites, "Real State Companies Websites", "An external websites that provides information about properties")
+System_Ext(stripe, "Stripe", "An external payment gateway")
+
+Rel(seeker, showcase, "Uses")
+Rel(showcase, showcaseBff, "Consumes the")
+Rel(showcase, composer, "Consumes the")
+Rel(composer, chatGpt, "Request improvements from")
+Rel(showcaseBff, propertiesDB, "Reads from and writes to")
+
+Rel(agent, cabinet, "Uses")
+Rel(cabinet, stripe, "Requests payment")
+Rel(stripe, cabinetBff, "Notifies about payment")
+Rel(cabinet, cabinetBff, "Consumes the")
+Rel(cabinetBff, cabinetDB, "Reads from and writes to")
+
+Rel(etl, websites, "Extracts data from")
+Rel(etl, chatGpt, "Request improvements from")
+Rel_R(etl, propertiesDB, "Reads from and writes to")
+
+LAYOUT_WITH_LEGEND()
+
+@enduml

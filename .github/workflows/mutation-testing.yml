@@ -100,6 +100,18 @@ jobs:
           mkdir -p ./docs/mutation-reports/Infra.MongoDB
           find ./IntegrationTest.Infra.MongoDB/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.MongoDB' ';'
 
+      - name: Mutation [Infra HttpClient]
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet stryker -p "Infra.HttpClient.csproj"
+        working-directory: ./IntegrationTest.Infra.HttpClient
+
+      - name: Copy report to right place [Infra HttpClient]
+        run: |
+          mkdir -p ./docs/mutation-reports/Infra.HttpClient
+          find ./IntegrationTest.Infra.HttpClient/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.HttpClient' ';'
+
       - name: Check for changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
