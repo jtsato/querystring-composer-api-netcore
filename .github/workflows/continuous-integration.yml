@@ -133,11 +133,10 @@ jobs:
       RELEASE_VERSION: ${{ needs.generate-artifact.outputs.RELEASE_VERSION }}
 
     steps:
-      # In the /settings/actions section set Read and write permissions for the GITHUB_TOKEN
-      - name: Checkout QueryString API IaC project
+      - name: Checkout Properties API IaC project
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: jtsato/querystring-composer-api-terraform
           ref: main
           persist-credentials: true
