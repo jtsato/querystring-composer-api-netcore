@@ -121,3 +121,5 @@ dotnet EntryPoint.WebApi.dll
 ##### Videos & Presentations
 * Clean Architecture https://www.youtube.com/results?search_query=clean+architecture
 * Screaming Architecture http://www.infoq.com/presentations/Screaming-Architecture
+
+***
