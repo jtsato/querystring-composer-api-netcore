@@ -37,11 +37,13 @@ public static class Program
 
         builder.Services.AddHttpLogging(GetHttpLoggingOptions);
 
-        builder.Services.AddControllers(options =>
+        builder.Services
+            .AddControllers(options =>
         {
             options.Filters.Add<GetLanguageActionFilterAttribute>();
             options.Filters.Add<HandleInvalidModelStateActionFilterAttribute>();
             options.Filters.Add<ExceptionHandlerFilterAttribute>();
+                options.Filters.Add<GetUserActionFilter>();
             })
             .AddJsonOptions(options =>
             {
@@ -60,8 +62,7 @@ public static class Program
         builder.Services.AddHealthChecks()
             .AddCheck("Health check", () => HealthCheckResult.Healthy(), tags: new[] {"live", "ready"});
 
-        Dictionary<Type, ServiceLifetime> lifetimeByType
-            = DependencyInjector.ConfigureServices(builder.Services);
+        Dictionary<Type, ServiceLifetime> lifetimeByType = DependencyInjector.ConfigureServices(builder.Services);
 
         WebApplication app = builder.Build();
 
@@ -75,8 +76,8 @@ public static class Program
             app.UseSwagger(ConfigureSwagger);
             app.UseSwaggerUI(options =>
             {
-                options.RoutePrefix = "api/properties-search/v1/swagger";
-                options.SwaggerEndpoint("/api/properties-search/v1/api-docs/v1/swagger.yaml", "Properties Search API");
+                options.RoutePrefix = "api/querystring-composer/v1/swagger";
+                options.SwaggerEndpoint("/api/querystring-composer/v1/api-docs/v1/swagger.yaml", "Properties Search API");
             });
             RewriteOptions rewriteOptions = new RewriteOptions();
             rewriteOptions.AddRedirect("^$", "swagger");
@@ -84,7 +85,7 @@ public static class Program
         }
 
         app.MapControllers();
-        app.UsePathBase(new PathString("/api/properties-search"));
+        app.UsePathBase(new PathString("/api/querystring-composer"));
         app.UseRouting();
 
         app.UseWhen(
@@ -118,11 +119,14 @@ public static class Program
             Description = "Properties Search API",
         });
 
-        options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
+            Name = "Authorization",
             In = ParameterLocation.Header,
-            Name = "X-Api-Key",
-            Type = SecuritySchemeType.ApiKey
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            Description = "JWT Authorization header using the Bearer scheme."
         });
 
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -130,10 +134,11 @@ public static class Program
             {
                 new OpenApiSecurityScheme
                 {
-                    Name = "X-Api-Key",
-                    Type = SecuritySchemeType.ApiKey,
-                    In = ParameterLocation.Header,
-                    Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "ApiKey"}
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
                 },
                 Array.Empty<string>()
             }
@@ -150,13 +155,13 @@ public static class Program
 
     private static void ConfigureSwagger(SwaggerOptions options)
     {
-        options.RouteTemplate = "api/properties-search/v1/api-docs/{documentName}/swagger.yaml";
+        options.RouteTemplate = "api/querystring-composer/v1/api-docs/{documentName}/swagger.yaml";
 
         options.PreSerializeFilters.Add((swagger, httpReq) =>
         {
             swagger.Servers = new List<OpenApiServer>
             {
-                new OpenApiServer {Url = $"{httpReq.Scheme}://{httpReq.Host.Value}/api/properties-search"}
+                new OpenApiServer {Url = $"{httpReq.Scheme}://{httpReq.Host.Value}/api/querystring-composer"}
             };
         });
     }

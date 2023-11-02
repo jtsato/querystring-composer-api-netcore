@@ -9,6 +9,7 @@ using Core.Domains.QueryStructures.Gateways;
 using EntryPoint.WebApi.Commons;
 using EntryPoint.WebApi.Commons.Exceptions;
 using EntryPoint.WebApi.Commons.Filters;
+using EntryPoint.WebApi.Commons.Models;
 using Infra.MongoDB.Commons.Connection;
 using Infra.MongoDB.Commons.Repository;
 using Infra.MongoDB.Domains.QueryStructures.Models;
@@ -44,7 +45,7 @@ public static class DependencyInjector
         AddSharedServices(services);
         AddEntryPointServices(services);
         AddCoreServices(services);
-        AddInfraQueryStructureServices(services, new ConnectionFactory(ConnectionString));
+        AddInfraStructureServices(services, new ConnectionFactory(ConnectionString));
 
         return BuildLifetimeByType(services);
     }
@@ -54,6 +55,7 @@ public static class DependencyInjector
         services.AddSingleton<IServiceResolver, ServiceResolver>();
         services.AddSingleton<IGetDateTime, GetDateTime>();
         services.AddTransient<ILoggerAdapter, LoggerAdapter<ExceptionHandlerFilterAttribute>>();
+        services.AddScoped<IWebRequest, WebRequest>();      
     }
 
     private static void AddEntryPointServices(IServiceCollection services)
@@ -68,12 +70,11 @@ public static class DependencyInjector
         services.AddSingleton<IBuildQueryStringUseCase, BuildQueryStringUseCase>();
     }
 
-    private static void AddInfraQueryStructureServices(IServiceCollection services, IConnectionFactory connectionFactory)
+    private static void AddInfraStructureServices(IServiceCollection services, IConnectionFactory connectionFactory)
     {
         services.AddSingleton<IRegisterClientGateway, RegisterClientProvider>();
         services.AddSingleton<IGetQueryStructureByNameGateway, GetQueryStructureByNameProvider>();
         services.AddSingleton<IRegisterQueryStructureGateway, RegisterQueryStructureProvider>();
-
 
         services.AddSingleton<IRepository<ClientEntity>>
         (
