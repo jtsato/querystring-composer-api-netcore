@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infra.MongoDB.Commons.Extensions;
 using Infra.MongoDB.Commons.Repository;
@@ -29,35 +28,20 @@ public sealed class QueryByPageExtensionsTest : IClassFixture<QueryByPageExtensi
         // Arrange
         IMongoCollection<DummyEntity> collection = _dummyRepository.GetCollection();
 
-        FilterDefinition<DummyEntity> filter = Builders<DummyEntity>.Filter.Empty;
-        SortDefinition<DummyEntity> sort = Builders<DummyEntity>.Sort.Ascending("Name");
-
         // Act
-        (int totalPages, long totalOfElements, IReadOnlyList<DummyEntity> content) result = await collection.AggregateByPage(filter, sort, 1, 10);
-        
+        (int totalPages, long totalOfElements, IReadOnlyList<DummyEntity> content) result = await collection.AggregateByPage
+        (
+            filterDefinition: Builders<DummyEntity>.Filter.Empty,
+            sortDefinition: Builders<DummyEntity>.Sort.Ascending("Name"),
+            pageNumber: 1,
+            pageSize: 10
+        );
+
         _outputHelper.WriteLine(result.ToString());
 
         // Assert
         Assert.True(result.totalPages >= 0);
         Assert.True(result.totalOfElements >= 0);
         Assert.NotNull(result.content);
-    }
-
-    [Trait("Category", "Infrastructure (DB) Integration tests")]
-    [Fact(DisplayName = "Fail to query by page when page is less than 1")]
-    public async Task FailToQueryByPageWhenPageIsLessThan1()
-    {
-        // Arrange
-        IMongoCollection<DummyEntity> collection = _dummyRepository.GetCollection();
-
-        FilterDefinition<DummyEntity> filter = Builders<DummyEntity>.Filter.Empty;
-        SortDefinition<DummyEntity> sort = Builders<DummyEntity>.Sort.Ascending("Name");
-
-        // Act
-        Task<(int totalPages, long totalOfElements, IReadOnlyList<DummyEntity> content)> task = collection.AggregateByPage(filter, sort, 0, 10);
-        _outputHelper.WriteLine(task.ToString());
-        
-        // Assert
-        // await Assert.ThrowsAsync<Exception>(async () => await task);
     }
 }
