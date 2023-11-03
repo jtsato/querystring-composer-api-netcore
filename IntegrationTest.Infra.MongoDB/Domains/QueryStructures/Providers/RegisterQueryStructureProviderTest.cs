@@ -55,8 +55,10 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
         _outputHelper.WriteLine(exception.ToString());
 
         Assert.IsType<MongoWriteException>(exception);
-        Assert.Contains("""Category : "DuplicateKey""", exception.Message);
-        Assert.Contains("""E11000 duplicate key error collection: querystring-mongodb.query_structures index: name_1 dup key: { name: "already-exists-query-structure" }""", exception.Message);
+        Assert.Equal(11000, ((MongoWriteException) exception).WriteError.Code);
+        Assert.Contains("E11000 duplicate key error collection", exception.Message);
+        Assert.Contains("querystring-mongodb.query_structures index: clientUid_1_name_1 ", exception.Message);
+        Assert.Contains("""dup key: { clientUid: "490f1db4-ed14-4cdc-a09f-401048951b17", name: "already-exists-query-structure" }""", exception.Message);
     }
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]

@@ -2,6 +2,10 @@
   "DOCKER_COMPOSE_FILE": "docker-compose.yml",
   "MONGODB_URL": "mongodb://xunit:xunit@localhost:27018/querystring-mongodb",
   "MONGODB_DATABASE": "querystring-mongodb",
+  "DUMMY_COLLECTION_NAME": "dummies",
+  "DUMMY_SEQUENCE_COLLECTION_NAME": "dummies_sequences",
   "QUERY_STRUCTURE_COLLECTION_NAME": "query_structures",
-  "QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME": "query_structures_sequences"
+  "QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME": "query_structures_sequences",
+  "CLIENT_COLLECTION_NAME": "clients",
+  "CLIENT_SEQUENCE_COLLECTION_NAME": "clients_sequences"
 }

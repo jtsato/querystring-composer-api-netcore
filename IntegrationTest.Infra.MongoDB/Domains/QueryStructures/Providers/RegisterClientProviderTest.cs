@@ -32,7 +32,7 @@ public sealed class RegisterClientProviderTest : IClassFixture<RegisterClientPro
                 new Client
                 {
                     Uid = "490f1db4-ed14-4cdc-a09f-401048951b17",
-                    Name = "already-exists-client-structure",
+                    Name = "already-exists-client",
                     Description = "Already exists client",
                     CreatedAt = new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local),
                     UpdatedAt = new DateTime(2023, 08, 04, 18, 21, 30, DateTimeKind.Local)
@@ -46,7 +46,10 @@ public sealed class RegisterClientProviderTest : IClassFixture<RegisterClientPro
         _outputHelper.WriteLine(exception.ToString());
 
         Assert.IsType<MongoWriteException>(exception);
-        Assert.Contains("""E11000 duplicate key error collection: querystring-mongodb.query_structures index: uid_1 dup key: { uid: "490f1db4-ed14-4cdc-a09f-401048951b17" }""", exception.Message);
+        Assert.Equal(11000, ((MongoWriteException) exception).WriteError.Code);
+        Assert.Contains("E11000 duplicate key error collection", exception.Message);
+        Assert.Contains("querystring-mongodb.clients index: uid_1", exception.Message);
+        Assert.Contains("""dup key: { uid: "490f1db4-ed14-4cdc-a09f-401048951b17" }""", exception.Message);
     }
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]

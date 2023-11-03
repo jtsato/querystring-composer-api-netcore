@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Infra.MongoDB.Commons.Repository;
 
-namespace IntegrationTest.Infra.MongoDB.Commons;
+namespace IntegrationTest.Infra.MongoDB.Commons.Dummies;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class DummyEntity : Entity

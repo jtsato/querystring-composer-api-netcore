@@ -15,7 +15,7 @@ public sealed class RegisterQueryStructureProvider : IRegisterQueryStructureGate
 
     private readonly IRepository<QueryStructureEntity> _entityRepository;
     private readonly ISequenceRepository<QueryStructureSequence> _sequenceRepository;
-    
+
     public RegisterQueryStructureProvider(IRepository<QueryStructureEntity> entityRepository, ISequenceRepository<QueryStructureSequence> sequenceRepository)
     {
         _entityRepository = ArgumentValidator.CheckNull(entityRepository, nameof(entityRepository));
@@ -25,6 +25,7 @@ public sealed class RegisterQueryStructureProvider : IRegisterQueryStructureGate
     public async Task<QueryStructure> ExecuteAsync(QueryStructure queryStructure)
     {
         QueryStructureEntity entity = queryStructure.ToEntity();
+
         await IncrementId(entity);
 
         return (await _entityRepository.SaveAsync(entity)).ToModel();

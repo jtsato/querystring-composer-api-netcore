@@ -12,15 +12,23 @@ public sealed class DatabaseKeeper
     private readonly IConnectionFactory _connectionFactory;
 
     private readonly string _databaseName;
-    private readonly string _propertyCollectionName;
-    private readonly string _propertySequenceCollectionName;
+    private readonly string _dummyCollectionName;
+    private readonly string _dummySequenceCollectionName;
+    private readonly string _clientCollectionName;
+    private readonly string _clientSequenceCollectionName;
+    private readonly string _queryStructureCollectionName;
+    private readonly string _queryStructureSequenceCollectionName;
 
     public DatabaseKeeper(IConfiguration configuration)
     {
         _connectionFactory = new ConnectionFactory(configuration["MONGODB_URL"]);
         _databaseName = configuration["MONGODB_DATABASE"];
-        _propertyCollectionName = configuration["QUERY_STRUCTURE_COLLECTION_NAME"];
-        _propertySequenceCollectionName = configuration["QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME"];
+        _dummyCollectionName = configuration["DUMMY_COLLECTION_NAME"];
+        _dummySequenceCollectionName = configuration["DUMMY_SEQUENCE_COLLECTION_NAME"];
+        _clientCollectionName = configuration["CLIENT_COLLECTION_NAME"];
+        _clientSequenceCollectionName = configuration["CLIENT_SEQUENCE_COLLECTION_NAME"];
+        _queryStructureCollectionName = configuration["QUERY_STRUCTURE_COLLECTION_NAME"];
+        _queryStructureSequenceCollectionName = configuration["QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME"];
 
         ClearCollectionsData();
     }
@@ -29,7 +37,9 @@ public sealed class DatabaseKeeper
     {
         List<Task> tasks = new List<Task>
         {
-            ClearCollectionsData(_propertyCollectionName, _propertySequenceCollectionName),
+            ClearCollectionsData(_dummyCollectionName, _dummySequenceCollectionName),
+            ClearCollectionsData(_clientCollectionName, _clientSequenceCollectionName),
+            ClearCollectionsData(_queryStructureCollectionName, _queryStructureSequenceCollectionName),
         };
 
         Task.WhenAll(tasks);

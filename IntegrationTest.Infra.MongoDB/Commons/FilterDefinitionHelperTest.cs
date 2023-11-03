@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Infra.MongoDB.Commons.Helpers;
+using IntegrationTest.Infra.MongoDB.Commons.Dummies;
 using MongoDB.Driver;
 using Xunit;
 

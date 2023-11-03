@@ -12,24 +12,34 @@ namespace IntegrationTest.Infra.MongoDB.Domains.QueryStructures.Providers;
 internal sealed class RegisterClientProviderTestFixture : IDisposable
 {
     private readonly IRepository<ClientEntity> _repository;
+    private readonly ISequenceRepository<ClientSequence> _sequenceRepository;
 
     public RegisterClientProviderTestFixture(Context context)
     {
         _repository = context.ServiceResolver.Resolve<IRepository<ClientEntity>>();
+        _sequenceRepository = context.ServiceResolver.Resolve<ISequenceRepository<ClientSequence>>();
 
-        Task task = _repository.SaveAsync
-        (
-            new ClientEntity
-            {
-                Uid = "490f1db4-ed14-4cdc-a09f-401048951b17",
-                Name = "already-exists-client-structure",
-                Description = "Already exists client",
-                CreatedAt = new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local).ToUniversalTime(),
-                UpdatedAt = new DateTime(2023, 08, 04, 18, 21, 30, DateTimeKind.Local).ToUniversalTime()
-            }
-        );
+        ClientEntity entity = new ClientEntity
+        {
+            Uid = "490f1db4-ed14-4cdc-a09f-401048951b17",
+            Name = "already-exists-client",
+            Description = "Already exists client",
+            CreatedAt = new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local).ToUniversalTime(),
+            UpdatedAt = new DateTime(2023, 08, 04, 18, 21, 30, DateTimeKind.Local).ToUniversalTime()
+        };
+        
+        IncrementId(entity).Wait();
+
+        Task task = _repository.SaveAsync(entity);
         
         task.Wait();
+    }
+    
+    private async Task IncrementId(Entity entity)
+    {
+        FilterDefinition<ClientSequence> filterDefinition = Builders<ClientSequence>.Filter.Eq(sequence => sequence.SequenceName, "id");
+        ISequence sequence = await _sequenceRepository.GetSequenceAndUpdate(filterDefinition);
+        entity.Id = sequence.SequenceValue;
     }
 
     ~RegisterClientProviderTestFixture() => Dispose();

@@ -31,9 +31,9 @@ public sealed class GetUserActionFilter : IActionFilter
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
         JwtSecurityToken jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
-        _webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == "azp")?.Value;
-        _webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
-        _webRequest.Email = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+        _webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "aud")?.Value;
+        _webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "name")?.Value;
+        _webRequest.Email = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower() == "email")?.Value;
     }
 
     public void OnActionExecuted(ActionExecutedContext context)
@@ -45,6 +45,6 @@ public sealed class GetUserActionFilter : IActionFilter
         if (!headers.TryGetValue("authorization", out StringValues authorization)) return null;
         string[] parts = authorization.ToString().Split(' ');
         
-        return parts is {Length: 2} && parts[0] == "Bearer" ? parts[1] : null;
+        return parts is ["Bearer", _] ? parts[1] : null;
     }
 }
