@@ -33,7 +33,7 @@ jobs:
           docker-compose version
 
       - name: Start MongoDB Container
-        working-directory: ./IntegrationTest.Infra.MongoDB
+        working-directory: ./src/test/IntegrationTest.Infra.MongoDB
         run: docker-compose up -d
 
       - name: Resolve dependencies
@@ -41,10 +41,10 @@ jobs:
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
 
       - name: Build in Debug Mode
         run: dotnet build --configuration Debug --no-restore
