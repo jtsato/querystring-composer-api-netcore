@@ -43,7 +43,7 @@ jobs:
           docker-compose version
 
       - name: Start MongoDB Container
-        working-directory: ./IntegrationTest.Infra.MongoDB
+        working-directory: ./src/test/IntegrationTest.Infra.MongoDB
         run: docker-compose up -d
 
       - name: Resolve dependencies
@@ -51,25 +51,25 @@ jobs:
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
 
       - name: Build in Debug Mode
         run: dotnet build --configuration Debug --no-restore
 
       - name: Test [Core]
-        run: dotnet test ./UnitTest.Core/UnitTest.Core.csproj --configuration Debug --no-build --nologo -v n
+        run: dotnet test ./src/test/UnitTest.Core/UnitTest.Core.csproj --configuration Debug --no-build --nologo -v n
 
       - name: Test [EntryPoint.WebApi]
-        run: dotnet test ./IntegrationTest.EntryPoint.WebApi/IntegrationTest.EntryPoint.WebApi.csproj --configuration Debug --no-build --nologo -v n
+        run: dotnet test ./src/test/IntegrationTest.EntryPoint.WebApi/IntegrationTest.EntryPoint.WebApi.csproj --configuration Debug --no-build --nologo -v n
 
       - name: Test [Infra.MongoDB]
-        run: dotnet test ./IntegrationTest.Infra.MongoDB/IntegrationTest.Infra.MongoDB.csproj --configuration Debug --no-build --nologo -v n
+        run: dotnet test ./src/test/IntegrationTest.Infra.MongoDB/IntegrationTest.Infra.MongoDB.csproj --configuration Debug --no-build --nologo -v n
 
       - name: Test [Infra.HttpClient]
-        run: dotnet test ./IntegrationTest.Infra.HttpClient/IntegrationTest.Infra.HttpClient.csproj --configuration Debug --no-build --nologo -v n
+        run: dotnet test ./src/test/IntegrationTest.Infra.HttpClient/IntegrationTest.Infra.HttpClient.csproj --configuration Debug --no-build --nologo -v n
 
       - name: Environment Teardown
         if: always()
