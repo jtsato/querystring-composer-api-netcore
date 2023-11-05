@@ -6,25 +6,23 @@
         <ImplicitUsings>false</ImplicitUsings>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>IntegrationTest.Infra.MongoDB</RootNamespace>
+        <RootNamespace>IntegrationTest.EntryPoint.WebApi</RootNamespace>
+		<EnableProfileGuidedOptimization>true</EnableProfileGuidedOptimization>
     </PropertyGroup>
 
-    <ItemGroup>
-        <SonarQubeSetting Include="sonar.coverage.exclusions">
-            <Value>mongo-init.js</Value>
-        </SonarQubeSetting>
-    </ItemGroup>    
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <Optimize>True</Optimize>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.msbuild" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Ductus.FluentDocker" Version="2.10.59"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3"/>
-        <PackageReference Include="xunit" Version="2.5.0"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2"/>
+        <PackageReference Include="Moq" Version="4.20.69"/>
+        <PackageReference Include="xunit" Version="2.5.1"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -35,16 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Infra.MongoDB\Infra.MongoDB.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="local.settings.json"/>
-        <Content Include="test.settings.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        </Content>
-        <None Remove="StrykerOutput\**"/>
+        <ProjectReference Include="..\..\main\EntryPoint.WebApi\EntryPoint.WebApi.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

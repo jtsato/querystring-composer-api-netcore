@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Infra.HttpClient\Infra.HttpClient.csproj" />
+      <ProjectReference Include="..\..\main\Infra.HttpClient\Infra.HttpClient.csproj" />
     </ItemGroup>
 
 </Project>

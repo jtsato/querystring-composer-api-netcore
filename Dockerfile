@@ -4,17 +4,17 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /source
 
-COPY ["Core/Core.csproj", "./Core/"]
-COPY ["Infra.HttpClient/Infra.HttpClient.csproj", "./Infra.HttpClient/"]
-COPY ["Infra.MongoDB/Infra.MongoDB.csproj", "./Infra.MongoDB/"]
-COPY ["EntryPoint.WebApi/EntryPoint.WebApi.csproj", "./EntryPoint.WebApi/"]
+COPY ["./src/main/Core/Core.csproj", "./Core/"]
+COPY ["./src/main/Infra.HttpClient/Infra.HttpClient.csproj", ".Infra.HttpClient/"]
+COPY ["./src/main/Infra.MongoDB/Infra.MongoDB.csproj", "./Infra.MongoDB/"]
+COPY ["./src/main/EntryPoint.WebApi/EntryPoint.WebApi.csproj", "./EntryPoint.WebApi/"]
 
 RUN dotnet restore "./EntryPoint.WebApi/EntryPoint.WebApi.csproj" --force --no-cache
 
-COPY ./Core/. ./Core/
-COPY ./Infra.HttpClient/. ./Infra.HttpClient/
-COPY ./Infra.MongoDB/. ./Infra.MongoDB/
-COPY ./EntryPoint.WebApi/. ./EntryPoint.WebApi/
+COPY ./src/main/Core/. ./Core/
+COPY ./src/main/Infra.HttpClient/. ./Infra.HttpClient/
+COPY ./src/main/Infra.MongoDB/. ./Infra.MongoDB/
+COPY ./src/main/EntryPoint.WebApi/. ./EntryPoint.WebApi/
 
 WORKDIR "/source/EntryPoint.WebApi"
 FROM build AS publish

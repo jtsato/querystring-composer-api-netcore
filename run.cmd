@@ -23,7 +23,7 @@ SET timeout=30
 
 ECHO.
 ECHO Starting the integration test database...
-CALL docker-compose -f IntegrationTest.Infra.MongoDB/docker-compose.yml up -d
+CALL docker-compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml up -d
 
 ECHO.
 :wait_loop
