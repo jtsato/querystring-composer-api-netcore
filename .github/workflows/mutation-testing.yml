@@ -48,7 +48,7 @@ jobs:
           docker-compose version
 
       - name: Start MongoDB Container
-        working-directory: ./IntegrationTest.Infra.MongoDB
+        working-directory: ./src/test/IntegrationTest.Infra.MongoDB
         run: docker-compose up -d
 
       - name: Resolve dependencies
@@ -56,10 +56,10 @@ jobs:
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
-          mkdir -p IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
 
       - name: Build in Debug Mode
         run: dotnet build --configuration Debug --no-restore
@@ -69,48 +69,48 @@ jobs:
           dotnet new tool-manifest
           dotnet tool install dotnet-stryker --version 3.10.0
           dotnet stryker
-        working-directory: ./UnitTest.Core
+        working-directory: ./src/test/UnitTest.Core
 
       - name: Copy report to right place [Core]
         run: |
           mkdir -p ./docs/mutation-reports/Core
-          find ./UnitTest.Core/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Core' ';'
+          find ./src/test/UnitTest.Core/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Core' ';'
 
       - name: Mutation [EntryPoint WebApi]
         run: |
           dotnet new tool-manifest
           dotnet tool install dotnet-stryker --version 3.10.0
           dotnet stryker -p "EntryPoint.WebApi.csproj"
-        working-directory: ./IntegrationTest.EntryPoint.WebApi
+        working-directory: ./src/test/IntegrationTest.EntryPoint.WebApi
 
       - name: Copy report to right place [WebApi]
         run: |
           mkdir -p ./docs/mutation-reports/EntryPoint.WebApi
-          find ./IntegrationTest.EntryPoint.WebApi/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/EntryPoint.WebApi' ';'
+          find ./src/test/IntegrationTest.EntryPoint.WebApi/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/EntryPoint.WebApi' ';'
 
       - name: Mutation [Infra MongoDB]
         run: |
           dotnet new tool-manifest
           dotnet tool install dotnet-stryker --version 3.10.0
           dotnet stryker -p "Infra.MongoDB.csproj"
-        working-directory: ./IntegrationTest.Infra.MongoDB
+        working-directory: ./src/test/IntegrationTest.Infra.MongoDB
 
       - name: Copy report to right place [Infra MongoDB]
         run: |
           mkdir -p ./docs/mutation-reports/Infra.MongoDB
-          find ./IntegrationTest.Infra.MongoDB/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.MongoDB' ';'
+          find ./src/test/IntegrationTest.Infra.MongoDB/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.MongoDB' ';'
 
       - name: Mutation [Infra HttpClient]
         run: |
           dotnet new tool-manifest
           dotnet tool install dotnet-stryker --version 3.10.0
           dotnet stryker -p "Infra.HttpClient.csproj"
-        working-directory: ./IntegrationTest.Infra.HttpClient
+        working-directory: ./src/test/IntegrationTest.Infra.HttpClient
 
       - name: Copy report to right place [Infra HttpClient]
         run: |
           mkdir -p ./docs/mutation-reports/Infra.HttpClient
-          find ./IntegrationTest.Infra.HttpClient/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.HttpClient' ';'
+          find ./src/test/IntegrationTest.Infra.HttpClient/StrykerOutput -name '*.html' -exec cp -prv '{}' './docs/mutation-reports/Infra.HttpClient' ';'
 
       - name: Check for changes
         run: |
