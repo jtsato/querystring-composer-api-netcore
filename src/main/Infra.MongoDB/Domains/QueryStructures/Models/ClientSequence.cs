@@ -1,9 +1,12 @@
-﻿using Infra.MongoDB.Commons.Repository;
+﻿using System.Diagnostics.CodeAnalysis;
+using Infra.MongoDB.Commons.Repository;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Models;
 
+// ReSharper disable ClassNeverInstantiated.Global
+[ExcludeFromCodeCoverage]
 public sealed class ClientSequence : ISequence
 {
     [BsonId]

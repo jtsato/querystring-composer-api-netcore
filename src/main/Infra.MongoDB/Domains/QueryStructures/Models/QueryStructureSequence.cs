@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Models;
 
+// ReSharper disable ClassNeverInstantiated.Global
 [ExcludeFromCodeCoverage]
 public sealed class QueryStructureSequence : ISequence
 {
