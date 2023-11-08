@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Core.Commons;
 using Core.Domains.QueryStructures.Commands;
-using Core.Domains.QueryStructures.Gateways;
 using Core.Domains.QueryStructures.Interfaces;
 using Core.Domains.QueryStructures.Models;
 using Core.Domains.QueryStructures.UseCases;
@@ -14,36 +14,40 @@ using Xunit.Abstractions;
 
 namespace UnitTest.Core.Domains.QueryStructures.UseCases;
 
-public sealed class RegisterQueryStructureUseCaseTest : IDisposable
+public sealed class AddQueryStructureItemUseCaseTest : IDisposable
 {
     private readonly ITestOutputHelper _outputHelper;
-    private readonly Mock<IRegisterQueryStructureGateway> _registerQueryStructureGateway;
+    private readonly Mock<IGetQueryStructureByIdGateway> _getQueryStructureByIdGateway;
+    private readonly Mock<IUpdateQueryStructureGateway> _updateQueryStructureGateway;
     private readonly Mock<IGetDateTime> _getDateTime;
-    private readonly IRegisterQueryStructureUseCase _useCase;
+    private readonly IAddQueryStructureItemUseCase _useCase;
 
-    public RegisterQueryStructureUseCaseTest(ITestOutputHelper outputHelper)
+    public AddQueryStructureItemUseCaseTest(ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
-        _registerQueryStructureGateway = new Mock<IRegisterQueryStructureGateway>(MockBehavior.Strict);
+        _getQueryStructureByIdGateway = new Mock<IGetQueryStructureByIdGateway>(MockBehavior.Strict);
+        _updateQueryStructureGateway = new Mock<IUpdateQueryStructureGateway>(MockBehavior.Strict);
         _getDateTime = new Mock<IGetDateTime>(MockBehavior.Strict);
 
         ServiceResolverMocker serviceResolverMocker = new ServiceResolverMocker()
-            .AddService(_registerQueryStructureGateway.Object)
+            .AddService(_getQueryStructureByIdGateway.Object)
+            .AddService(_updateQueryStructureGateway.Object)
             .AddService(_getDateTime.Object);
 
-        _useCase = new RegisterQueryStructureUseCase(serviceResolverMocker.Object);
+        _useCase = new AddQueryStructureItemUseCase(serviceResolverMocker.Object);
     }
 
     private bool _disposed;
 
-    ~RegisterQueryStructureUseCaseTest() => Dispose(false);
+    ~AddQueryStructureItemUseCaseTest() => Dispose(false);
 
     public void Dispose()
     {
-        _registerQueryStructureGateway.VerifyAll();
+        _getQueryStructureByIdGateway.VerifyAll();
+        _updateQueryStructureGateway.VerifyAll();
         _getDateTime.VerifyAll();
         Dispose(true);
-        _outputHelper.WriteLine($"{nameof(RegisterQueryStructureUseCaseTest)} disposed.");
+        _outputHelper.WriteLine($"{nameof(AddQueryStructureItemUseCaseTest)} disposed.");
         GC.SuppressFinalize(this);
     }
 
@@ -55,12 +59,14 @@ public sealed class RegisterQueryStructureUseCaseTest : IDisposable
     }
 
     [Trait("Category", "Core Business tests")]
-    [Fact(DisplayName = "Success to register query structure")]
-    public async Task SuccessToRegisterQueryStructure()
+    [Fact(DisplayName = "Success to add query structure item")]
+    public async Task SuccessToAddQueryStructureItem()
     {
         // Arrange
-        _registerQueryStructureGateway
-            .Setup(gateway => gateway.ExecuteAsync(
+        _getQueryStructureByIdGateway
+            .Setup(gateway => gateway.ExecuteAsync(1))
+            .ReturnsAsync(Optional<QueryStructure>.Of
+            (
                 new QueryStructure
                 {
                     ClientUid = "9419357e-123b-494a-8bc3-fd17373c218b",
@@ -78,10 +84,16 @@ public sealed class RegisterQueryStructureUseCaseTest : IDisposable
                     CreatedAt = new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local),
                     UpdatedAt = new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local)
                 }
-            ))
+            ));
+        
+        _getDateTime
+            .Setup(service => service.Now())
+            .Returns(new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local));
+        
+        _updateQueryStructureGateway.Setup(gateway => gateway.ExecuteAsync(It.IsAny<QueryStructure>()))
             .ReturnsAsync(new QueryStructure
             {
-                Id = 1001,
+                Id = 1,
                 ClientUid = "9419357e-123b-494a-8bc3-fd17373c218b",
                 Name = "White Duck Home",
                 Description = "White Duck Home is a platform that brings together properties in one place.",
@@ -95,34 +107,35 @@ public sealed class RegisterQueryStructureUseCaseTest : IDisposable
                     PromptTemplate = "prompt_template"
                 },
                 CreatedAt = new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local),
-                UpdatedAt = new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local)
+                UpdatedAt = new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local),
+                Items = new List<Item>
+                {
+                    new Item
+                    {
+                        Name = "minBedrooms",
+                        Description = "Minimum Bedrooms",
+                        IsCountable = true,
+                        WaitForConfirmationWords = false,
+                        ConfirmationWords = new List<string> {"com", "acima", "desde", "maior", "mais", "min", "mínimo", "partir"},
+                        RevocationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"}
+                    }
+                }
             });
 
-        _getDateTime
-            .Setup(getDateTime => getDateTime.Now())
-            .Returns(new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local));
-
         // Act
-        QueryStructure queryStructure = await _useCase.ExecuteAsync(new RegisterQueryStructureCommand
+        QueryStructure queryStructure = await _useCase.ExecuteAsync(new AddQueryStructureItemCommand
         (
-            clientUid: "9419357e-123b-494a-8bc3-fd17373c218b",
-            name: "White Duck Home",
-            description: "White Duck Home is a platform that brings together properties in one place.",
-            aiSettings: new AiSettingsCommand
-            (
-                usagePercentage: "50",
-                apiKey: "api_key",
-                model: "model",
-                temperature: "0.5",
-                maxTokens: "1024",
-                promptTemplate: "prompt_template"
-            )
+            queryStructureId: 1,
+            name: "minBedrooms",
+            description: "Minimum Bedrooms",
+            isCountable: true,
+            waitForConfirmationWords: false,
+            confirmationWords: new List<string> {"com", "acima", "desde", "maior", "mais", "min", "mínimo", "partir"},
+            revocationWords: new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"}
         ));
 
         // Assert
-        Assert.NotNull(queryStructure);
-
-        Assert.Equal(1001, queryStructure.Id);
+        Assert.Equal(1, queryStructure.Id);
         Assert.Equal("9419357e-123b-494a-8bc3-fd17373c218b", queryStructure.ClientUid);
         Assert.Equal("White Duck Home", queryStructure.Name);
         Assert.Equal("White Duck Home is a platform that brings together properties in one place.", queryStructure.Description);
@@ -134,5 +147,12 @@ public sealed class RegisterQueryStructureUseCaseTest : IDisposable
         Assert.Equal("prompt_template", queryStructure.AiSettings.PromptTemplate);
         Assert.Equal(new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local), queryStructure.CreatedAt);
         Assert.Equal(new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local), queryStructure.UpdatedAt);
+        Assert.Single(queryStructure.Items);
+        Assert.Equal("minBedrooms", queryStructure.Items[0].Name);
+        Assert.Equal("Minimum Bedrooms", queryStructure.Items[0].Description);
+        Assert.True(queryStructure.Items[0].IsCountable);
+        Assert.False(queryStructure.Items[0].WaitForConfirmationWords);
+        Assert.Equal(new List<string> {"com", "acima", "desde", "maior", "mais", "min", "mínimo", "partir"}, queryStructure.Items[0].ConfirmationWords);
+        Assert.Equal(new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"}, queryStructure.Items[0].RevocationWords);
     }
 }

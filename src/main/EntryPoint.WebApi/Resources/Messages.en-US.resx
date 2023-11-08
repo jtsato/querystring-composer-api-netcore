@@ -39,7 +39,7 @@
     <data name="ValidationSearchTermsIsNullOrEmpty" xml:space="preserve">
         <value>The 'search term' is required.</value>
     </data>
-    <data name="ValidationQueryStructureNotFound" xml:space="preserve">
+    <data name="ValidationQueryStructureByClientAndNameNotFound" xml:space="preserve">
         <value>No query structure was found with client uid {0} and query name {1}.</value>
     </data>
     <data name="ValidationClientUidIsNullOrEmpty" xml:space="preserve">

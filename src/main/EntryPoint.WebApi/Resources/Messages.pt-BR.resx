@@ -39,7 +39,7 @@
     <data name="ValidationSearchTermsIsNullOrEmpty" xml:space="preserve">
         <value>O campo 'termo de busca' é obrigatório.</value>
     </data>
-    <data name="ValidationQueryStructureNotFound" xml:space="preserve">
+    <data name="ValidationQueryStructureByClientAndNameNotFound" xml:space="preserve">
         <value>Nenhuma estrutura de consulta foi encontrada para o cliente {0} e nome de consulta {1}.</value>
     </data>
     <data name="ValidationClientUidIsNullOrEmpty" xml:space="preserve">

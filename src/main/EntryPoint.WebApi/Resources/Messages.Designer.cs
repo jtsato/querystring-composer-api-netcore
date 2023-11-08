@@ -224,9 +224,9 @@ namespace EntryPoint.WebApi.Resources {
         /// <summary>
         ///   Looks up a localized string similar to No query structure was found with client uid {0} and query name {1}..
         /// </summary>
-        internal static string ValidationQueryStructureNotFound {
+        internal static string ValidationQueryStructureByClientAndNameNotFound {
             get {
-                return ResourceManager.GetString("ValidationQueryStructureNotFound", resourceCulture);
+                return ResourceManager.GetString("ValidationQueryStructureByClientAndNameNotFound", resourceCulture);
             }
         }
         

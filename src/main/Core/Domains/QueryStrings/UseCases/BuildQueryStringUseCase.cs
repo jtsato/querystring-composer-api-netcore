@@ -47,7 +47,7 @@ public class BuildQueryStringUseCase : IBuildQueryStringUseCase
     {
         Optional<QueryStructure> optional = await _getQueryStructureByNameGateway.ExecuteAsync(clientUid, queryName);
 
-        return optional.OrElseThrow(() => new NotFoundException("ValidationQueryStructureNotFound", clientUid, queryName));
+        return optional.OrElseThrow(() => new NotFoundException("ValidationQueryStructureByClientAndNameNotFound", clientUid, queryName));
     }
 
     private Output BuildOutput(BuildQueryStringCommand command, string queryString, bool createdByAi)

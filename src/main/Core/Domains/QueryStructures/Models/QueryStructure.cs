@@ -14,7 +14,7 @@ public sealed class QueryStructure
     public string Description { get; init; }
     public AiSettings AiSettings { get; init; }
     public DateTime CreatedAt { get; init; }
-    public DateTime UpdatedAt { get; init; }
+    public DateTime UpdatedAt { get; set; }
 
     public IList<Item> Items { get; init; } = new List<Item>();
 

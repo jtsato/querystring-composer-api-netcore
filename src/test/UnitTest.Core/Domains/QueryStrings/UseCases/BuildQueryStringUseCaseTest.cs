@@ -82,7 +82,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
             )));
 
         // Assert
-        Assert.Equal("ValidationQueryStructureNotFound", exception.Message);
+        Assert.Equal("ValidationQueryStructureByClientAndNameNotFound", exception.Message);
         Assert.Equal("9419357e-123b-494a-8bc3-fd17373c218b", exception.Parameters[0]);
         Assert.Equal("General Properties", exception.Parameters[1]);
     }
