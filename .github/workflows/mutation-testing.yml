@@ -141,5 +141,5 @@ jobs:
       - name: Environment Teardown
         if: always()
         run: |
-          docker-compose -f /src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml down
+          docker-compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml down
           echo "Environment Teardown"
