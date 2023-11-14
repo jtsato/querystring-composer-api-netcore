@@ -7,6 +7,7 @@ using Core.Domains.QueryStructures.Commands;
 using Core.Domains.QueryStructures.Interfaces;
 using Core.Domains.QueryStructures.Models;
 using Core.Domains.QueryStructures.UseCases;
+using Core.Exceptions;
 using Moq;
 using UnitTest.Core.Commons;
 using Xunit;
@@ -56,6 +57,34 @@ public sealed class AddQueryStructureItemUseCaseTest : IDisposable
     {
         if (_disposed || !disposing) return;
         _disposed = true;
+    }
+    
+    [Trait("Category", "Core Business tests")]
+    [Fact(DisplayName = "Fail to add query structure item due to query structure not found")]
+    public async Task FailToAddQueryStructureItemDueToQueryStructureNotFound()
+    {
+        // Arrange
+        _getQueryStructureByIdGateway
+            .Setup(gateway => gateway.ExecuteAsync(1))
+            .ReturnsAsync(Optional<QueryStructure>.Empty);
+        
+        // Act
+        Exception exception = await Record.ExceptionAsync(() => _useCase.ExecuteAsync(new AddQueryStructureItemCommand
+        (
+            queryStructureId: 1,
+            name: "minBedrooms",
+            description: "Minimum Bedrooms",
+            isCountable: true,
+            waitForConfirmationWords: false,
+            confirmationWords: new List<string> {"com", "acima", "desde", "maior", "mais", "min", "mínimo", "partir"},
+            revocationWords: new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"}
+        )));
+
+        // Assert
+        Assert.NotNull(exception);
+        Assert.IsType<NotFoundException>(exception);
+        Assert.Equal("ValidationQueryStructureByIdNotFound", exception.Message);
+        Assert.Equal(1, ((NotFoundException) exception).Parameters[0]);
     }
 
     [Trait("Category", "Core Business tests")]

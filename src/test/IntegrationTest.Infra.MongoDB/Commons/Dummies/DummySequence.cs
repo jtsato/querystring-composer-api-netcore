@@ -1,9 +1,11 @@
-﻿using Infra.MongoDB.Commons.Repository;
+﻿using System.Diagnostics.CodeAnalysis;
+using Infra.MongoDB.Commons.Repository;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace IntegrationTest.Infra.MongoDB.Commons.Dummies;
 
+[ExcludeFromCodeCoverage]
 public sealed class DummySequence : ISequence
 {
     [BsonId]
