@@ -87,4 +87,10 @@
     <data name="ValidationUsagePercentageIsNullOrEmpty" xml:space="preserve">
         <value>O campo percentual é obrigatório quando a IA está habilitada.</value>
     </data>
+    <data name="ValidationQueryStructureByIdNotFound" xml:space="preserve">
+        <value>Nenhuma estrutura de consulta foi encontrada com o identificador {0}.</value>
+    </data>
+    <data name="ValidationQueryStructureIdIsLessThanZero" xml:space="preserve">
+        <value>O identificador da query é inválido.</value>
+    </data>
 </root>

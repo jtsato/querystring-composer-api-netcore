@@ -231,6 +231,24 @@ namespace EntryPoint.WebApi.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No query structure was found with identifier {0}..
+        /// </summary>
+        internal static string ValidationQueryStructureByIdNotFound {
+            get {
+                return ResourceManager.GetString("ValidationQueryStructureByIdNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;query identifier&apos; is invalid..
+        /// </summary>
+        internal static string ValidationQueryStructureIdIsLessThanZero {
+            get {
+                return ResourceManager.GetString("ValidationQueryStructureIdIsLessThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;search term&apos; is missing..
         /// </summary>
         internal static string ValidationSearchTermsIsNullOrEmpty {

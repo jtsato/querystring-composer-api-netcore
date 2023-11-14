@@ -93,4 +93,10 @@
     <data name="ValidationUsagePercentageIsNullOrEmpty" xml:space="preserve">
         <value>The 'percentage' is missing.</value>
     </data>
+    <data name="ValidationQueryStructureByIdNotFound" xml:space="preserve">
+        <value>No query structure was found with identifier {0}.</value>
+    </data>
+    <data name="ValidationQueryStructureIdIsLessThanZero" xml:space="preserve">
+        <value>The 'query identifier' is invalid.</value>
+    </data>
 </root>
