@@ -19,9 +19,6 @@ public sealed class Context : IDisposable
     {
         IConfiguration configuration = InitConfiguration();
 
-        DockerKeeper dockerKeeper = new DockerKeeper(configuration);
-        dockerKeeper.DockerComposeUp();
-
         DatabaseKeeper databaseKeeper = new DatabaseKeeper(configuration);
         databaseKeeper.ClearCollectionsData();
 
