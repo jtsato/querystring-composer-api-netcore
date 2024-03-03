@@ -18,7 +18,7 @@ IF /I NOT "%~1"=="test" (
 :: Set the MongoDB host and port for the integration tests 
 
 SET host=127.0.0.1
-SET port=27018
+SET port=27019
 SET timeout=30
 
 ECHO.

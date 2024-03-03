@@ -1,6 +1,6 @@
 {
   "DOCKER_COMPOSE_FILE": "docker-compose.yml",
-  "MONGODB_URL": "mongodb://xunit:xunit@localhost:27018/querystring-mongodb",
+  "MONGODB_URL": "mongodb://xunit:xunit@localhost:27019/querystring-mongodb",
   "MONGODB_DATABASE": "querystring-mongodb",
   "DUMMY_COLLECTION_NAME": "dummies",
   "DUMMY_SEQUENCE_COLLECTION_NAME": "dummies_sequences",
