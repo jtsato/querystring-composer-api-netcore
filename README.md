@@ -23,13 +23,13 @@ This is a sample project to demonstrate the Clean Architecture principles using 
 ***
 ## Technology stack
 
-![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
-![c-sharp](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
-![Web Api](https://img.shields.io/badge/Web%20Api-grey?style=for-the-badge&logo=dotnet&logoColor=white)
-![swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
-![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/githubactions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-9ECAFA.svg?logo=docker&style=for-the-badge)
+![.Net](https://img.shields.io/badge/.NET-5C2D91?logo=.net&logoColor=white)
+![c-sharp](https://img.shields.io/badge/C%23-239120?logo=c-sharp&logoColor=white)
+![Web Api](https://img.shields.io/badge/Web%20Api-grey?logo=dotnet&logoColor=white)
+![swagger](https://img.shields.io/badge/Swagger-85EA2D?logo=Swagger&logoColor=white)
+![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?logo=gnu-bash&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/githubactions-%232671E5.svg?logo=githubactions&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-9ECAFA.svg?logo=docker)
 
 ## Prerequisites
 
