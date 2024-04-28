@@ -13,7 +13,10 @@ public sealed class DummySequence : ISequence
     [BsonElement("_id")]
     public string Id { get; init; }
 
+    [BsonElement("sequence_name")]
     public string SequenceName { get; init; }
+    
+    [BsonElement("sequence_value")]
     public int SequenceValue { get; init; }
 
     public override string ToString()

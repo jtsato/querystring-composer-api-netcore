@@ -14,10 +14,10 @@ public sealed class ClientSequence : ISequence
     [BsonElement("_id")]
     public string Id { get; init; }
 
-    [BsonElement("sequenceName")]
+    [BsonElement("sequence_name")]
     public string SequenceName { get; init; }
     
-    [BsonElement("sequenceValue")]
+    [BsonElement("sequence_value")]
     public int SequenceValue { get; init; }
 
     public override string ToString()
