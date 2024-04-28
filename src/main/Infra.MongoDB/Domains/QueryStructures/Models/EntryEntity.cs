@@ -22,10 +22,10 @@ public class EntryEntity
     [BsonElement("immiscible")]
     public bool Immiscible { get; set; }
     
-    [BsonElement("KeyWords")]
+    [BsonElement("keyWords")]
     public IList<string> KeyWords { get; set; }
     
     [BsonIgnoreIfNull]
-    [BsonElement("IncompatibleWith")]
+    [BsonElement("incompatibleWith")]
     public IDictionary<string, string> IncompatibleWith { get; set; }
 }

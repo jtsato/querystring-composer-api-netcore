@@ -28,7 +28,7 @@ public class BuildQueryStringUseCase : IBuildQueryStringUseCase
     {
         QueryStructure queryStructure = await GetQueryStructure(command.ClientUid, command.QueryName);
 
-        int percentageRange = RandomNumberGeneratorInPercentageRange.Generate(1, 100);
+        int percentageRange = RandomNumberGeneratorByRange.Generate(1, 100);
         
         bool shouldUseAi = queryStructure.AiSettings.UsagePercentage >= percentageRange;
 
