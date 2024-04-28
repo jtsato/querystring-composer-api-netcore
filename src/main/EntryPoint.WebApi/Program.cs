@@ -64,7 +64,21 @@ public static class Program
 
         Dictionary<Type, ServiceLifetime> lifetimeByType = DependencyInjector.ConfigureServices(builder.Services);
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "AllowSpecificOrigins",
+                policy =>
+                {
+                    policy
+                        .WithOrigins("https://patolar-dev.flutterflow.app", "https://patolar.com.br")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
+
         WebApplication app = builder.Build();
+        
+        app.UseCors("AllowSpecificOrigins");
 
         if (app.Services.GetService(typeof(IServiceResolver)) is ServiceResolver serviceResolver)
         {
