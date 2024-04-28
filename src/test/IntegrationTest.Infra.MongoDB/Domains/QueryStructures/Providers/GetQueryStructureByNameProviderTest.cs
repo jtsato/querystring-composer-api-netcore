@@ -51,7 +51,7 @@ public sealed class GetQueryStructureByNameProviderTest : IClassFixture<GetQuery
         Assert.Equal(100, aiSettings.UsagePercentage);
         Assert.Equal("ww-XyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyz", aiSettings.ApiKey);
         Assert.Equal("gpt-3.5-turbo-instruct", aiSettings.Model);
-        Assert.Equal(0.2f, aiSettings.Temperature);
+        Assert.Equal(0.2, aiSettings.Temperature);
         Assert.Equal(1024, aiSettings.MaxTokens);
         Assert.Equal("You are a query string builder for property search...", aiSettings.PromptTemplate);
         Assert.Equal(new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local), queryStructure.CreatedAt);

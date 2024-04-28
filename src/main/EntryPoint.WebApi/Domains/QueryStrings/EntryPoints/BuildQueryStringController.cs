@@ -32,6 +32,7 @@ public sealed class BuildQueryStringController : IBuildQueryStringController
             queryName: request.QueryName,
             searchTerms: request.Body.SearchTerms
         );
+        
         Output output = await _useCase.ExecuteAsync(command);
         OutputResponse response = OutputResponsePresenter.Map(output);
         

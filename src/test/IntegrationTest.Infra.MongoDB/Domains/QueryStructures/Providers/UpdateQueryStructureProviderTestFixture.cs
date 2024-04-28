@@ -29,7 +29,7 @@ internal sealed class UpdateQueryStructureProviderTestFixture : IDisposable
                 UsagePercentage = 50,
                 ApiKey = "api-key",
                 Model = "model",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 100,
                 PromptTemplate = "prompt-template"
             },

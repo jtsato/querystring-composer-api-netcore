@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Refit;
+using System.Text.Json.Serialization;
 
 namespace Infra.HttpClient.Domains.QueryStrings.Models;
 
 public sealed class CompletionRequest
 {
-    [AliasAs("model")] 
+    [JsonPropertyName("model")] 
     public string Model { get; init; }
 
-    [AliasAs("temperature")] 
-    public float Temperature { get; init; }
+    [JsonPropertyName("temperature")] 
+    public double Temperature { get; init; }
 
-    [AliasAs("max_tokens")] 
+    [JsonPropertyName("max_tokens")] 
     public int MaxTokens { get; init; }
 
-    [AliasAs("prompt")] 
+    [JsonPropertyName("prompt")] 
     public string Prompt { get; init; }
 
     [ExcludeFromCodeCoverage]

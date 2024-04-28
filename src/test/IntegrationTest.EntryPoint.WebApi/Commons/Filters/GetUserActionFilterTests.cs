@@ -169,14 +169,14 @@ public sealed class GetUserActionFilterTests : IDisposable
         );
 
         httpContext.Request.Headers["Authorization"] =
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2OTg5NTU1ODcsImV4cCI6MTczMDQ5MTU4NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoidXNlckBleGFtcGxlLmNvbSIsIm5hbWUiOiJKb2huIFNtaXRoIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6WyJUZWNobmljYWwgUHJvZHVjdCBNYW5hZ2VyIiwiVGVjaG5pY2FsIExlYWRlciJdfQ.wBO2Z6LbarU7n_5-FjoWkXDdpcdGegTnkQ0Jw7qZtIY";
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTQzMzM5NjgsImV4cCI6MTc0NTg2OTk2OCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiSm9obiBTbWl0aCIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImNsaWVudFVpZCI6Ijk0MTkzNTdlLTEyM2ItNDk0YS04YmMzLWZkMTczNzNjMjE4YyJ9.Q8ePzx52p0WUcbmTgNE-g8tsv3vtsVqyg-JXQ85wwis";
 
         // Act
         actionFilter.OnActionExecuting(executingContext);
         actionFilter.OnActionExecuted(executedContext);
 
         // Assert
-        Assert.Equal("www.example.com", webRequest.ClientUid);
+        Assert.Equal("9419357e-123b-494a-8bc3-fd17373c218c", webRequest.ClientUid);
         Assert.Equal("user@example.com", webRequest.Email);
         Assert.Equal("John Smith", webRequest.Username);
     }

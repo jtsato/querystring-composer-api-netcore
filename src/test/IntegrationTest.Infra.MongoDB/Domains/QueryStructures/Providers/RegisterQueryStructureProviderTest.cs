@@ -39,7 +39,7 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
                         UsagePercentage = 50,
                         ApiKey = "api-key",
                         Model = "model",
-                        Temperature = 0.2f,
+                        Temperature = 0.2,
                         MaxTokens = 100,
                         PromptTemplate = "prompt-template"
                     },
@@ -79,7 +79,7 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
                     UsagePercentage = 50,
                     ApiKey = "api-key",
                     Model = "model",
-                    Temperature = 0.2f,
+                    Temperature = 0.2,
                     MaxTokens = 100,
                     PromptTemplate = "prompt-template"
                 },
@@ -99,7 +99,7 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
         Assert.Equal(50, queryStructure.AiSettings.UsagePercentage);
         Assert.Equal("api-key", queryStructure.AiSettings.ApiKey);
         Assert.Equal("model", queryStructure.AiSettings.Model);
-        Assert.Equal(0.2f, queryStructure.AiSettings.Temperature);
+        Assert.Equal(0.2, queryStructure.AiSettings.Temperature);
         Assert.Equal(100, queryStructure.AiSettings.MaxTokens);
         Assert.Equal("prompt-template", queryStructure.AiSettings.PromptTemplate);
         Assert.Equal(new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local), queryStructure.CreatedAt);

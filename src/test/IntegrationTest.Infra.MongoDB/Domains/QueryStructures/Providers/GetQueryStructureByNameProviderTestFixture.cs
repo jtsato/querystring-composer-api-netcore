@@ -29,7 +29,7 @@ public sealed class GetQueryStructureByNameProviderTestFixture : IDisposable
                 UsagePercentage = 100,
                 ApiKey = "ww-XyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyzXyz",
                 Model = "gpt-3.5-turbo-instruct",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 1024,
                 PromptTemplate = "You are a query string builder for property search..."
             },

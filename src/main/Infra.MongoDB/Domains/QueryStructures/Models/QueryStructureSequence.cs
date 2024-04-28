@@ -14,7 +14,10 @@ public sealed class QueryStructureSequence : ISequence
     [BsonElement("_id")]
     public string Id { get; init; }
 
+    [BsonElement("sequenceName")]
     public string SequenceName { get; init; }
+    
+    [BsonElement("sequenceValue")]
     public int SequenceValue { get; init; }
 
     public override string ToString()

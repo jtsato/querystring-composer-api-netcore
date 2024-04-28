@@ -106,7 +106,7 @@ public sealed class AddQueryStructureItemUseCaseTest : IDisposable
                         UsagePercentage = 50,
                         ApiKey = "api_key",
                         Model = "model",
-                        Temperature = 0.5f,
+                        Temperature = 0.5,
                         MaxTokens = 1024,
                         PromptTemplate = "prompt_template"
                     },
@@ -131,7 +131,7 @@ public sealed class AddQueryStructureItemUseCaseTest : IDisposable
                     UsagePercentage = 50,
                     ApiKey = "api_key",
                     Model = "model",
-                    Temperature = 0.5f,
+                    Temperature = 0.5,
                     MaxTokens = 1024,
                     PromptTemplate = "prompt_template"
                 },
@@ -171,7 +171,7 @@ public sealed class AddQueryStructureItemUseCaseTest : IDisposable
         Assert.Equal(50, queryStructure.AiSettings.UsagePercentage);
         Assert.Equal("api_key", queryStructure.AiSettings.ApiKey);
         Assert.Equal("model", queryStructure.AiSettings.Model);
-        Assert.Equal(0.5f, queryStructure.AiSettings.Temperature);
+        Assert.Equal(0.5, queryStructure.AiSettings.Temperature);
         Assert.Equal(1024, queryStructure.AiSettings.MaxTokens);
         Assert.Equal("prompt_template", queryStructure.AiSettings.PromptTemplate);
         Assert.Equal(new DateTime(2023, 10, 25, 02, 30, 01, DateTimeKind.Local), queryStructure.CreatedAt);

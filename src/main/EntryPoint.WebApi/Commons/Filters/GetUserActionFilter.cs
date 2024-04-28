@@ -31,8 +31,8 @@ public sealed class GetUserActionFilter : IActionFilter
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
         JwtSecurityToken jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
-        _webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "aud")?.Value;
-        _webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "name")?.Value;
+        _webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower() == "clientuid")?.Value;
+        _webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "username")?.Value;
         _webRequest.Email = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower() == "email")?.Value;
     }
 

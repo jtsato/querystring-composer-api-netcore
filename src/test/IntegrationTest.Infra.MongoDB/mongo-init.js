@@ -13,6 +13,8 @@ db.createUser({
     ],
 });
 
+db.createCollection('clients', {capped: false});
+db.createCollection('clients_sequences', {capped: false});
 db.createCollection('query_structures', {capped: false});
 db.createCollection('query_structures_sequences', {capped: false});
 

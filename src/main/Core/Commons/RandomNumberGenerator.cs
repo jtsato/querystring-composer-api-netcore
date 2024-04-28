@@ -14,7 +14,8 @@ public static class RandomNumberGeneratorInPercentageRange
 
         int randomNumber = BitConverter.ToInt32(randomBytes, 0) % 100 + 1;
 
-        int scaledNumber = (int) Math.Floor((max - min + 1) * (randomNumber / (double) int.MaxValue)) + min;
+        double scaleFactor = (double) (max - min + 1) / int.MaxValue;
+        int scaledNumber = (int) Math.Floor(scaleFactor * randomNumber) + min;
 
         return Math.Min(max, Math.Max(min, scaledNumber));
     }

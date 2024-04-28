@@ -6,17 +6,17 @@ namespace Core.Domains.QueryStructures.Models;
 
 public sealed class AiSettings
 {
-    public byte UsagePercentage { get; init; }
+    public int UsagePercentage { get; init; }
     public string ApiKey { get; init; }
     public string Model { get; init; }
-    public float Temperature { get; init; }
+    public double Temperature { get; init; }
     public int MaxTokens { get; init; }
     public string PromptTemplate { get; init; }
 
     [ExcludeFromCodeCoverage]
     private bool Equals(AiSettings other)
     {
-        return UsagePercentage == other.UsagePercentage
+        return UsagePercentage.Equals(other.UsagePercentage)
                && ApiKey == other.ApiKey
                && Model == other.Model
                && Temperature.Equals(other.Temperature)

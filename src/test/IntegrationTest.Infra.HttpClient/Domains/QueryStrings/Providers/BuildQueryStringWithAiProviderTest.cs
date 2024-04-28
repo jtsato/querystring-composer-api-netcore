@@ -59,7 +59,7 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
                 UsagePercentage = 100,
                 ApiKey = "sk-fake-api-key",
                 Model = "gpt-3.5-turbo-instruct",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 1024,
                 PromptTemplate = "You are a query string builder for property search. " +
                                  "Your task is to convert user search terms into an HTTP query string format, " +
@@ -82,10 +82,10 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
         };
 
         _openAiApiClientMock
-            .Setup(apiClient => apiClient.GetCompletionAsync(new CompletionRequest
+            .Setup(apiClient => apiClient.GetCompletionAsync("Bearer sk-fake-api-key", new CompletionRequest
             {
                 Model = "gpt-3.5-turbo-instruct",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 1024,
                 Prompt = "You are a query string builder for property search. " +
                          "Your task is to convert user search terms into an HTTP query string format, " +
@@ -120,7 +120,7 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
             .Setup(getRetryPolicy => getRetryPolicy.Attempts)
             .Returns(1)
             .Verifiable();
-
+        
         BuildQueryStringWithAiProvider provider = new BuildQueryStringWithAiProvider(_openAiApiClientMock.Object, _getRetryPolicyMock.Object);
 
         // Act
@@ -143,7 +143,7 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
                 UsagePercentage = 100,
                 ApiKey = "sk-fake-api-key",
                 Model = "gpt-3.5-turbo-instruct",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 1024,
                 PromptTemplate =
                     "You are a query string builder for property search. Your task is to convert user search terms into an HTTP query string format, excluding parameters that are not explicitly mentioned in the search text. Here's an example with all possible parameters for reference: ?types=HOUSE,APARTMENT&transaction=RENT,SALE&minBedrooms=0&maxBedrooms=10&minToilets=0&maxToilets=10&minGarages=0&maxGarages=10&minArea=0&maxArea=1000&minBuiltArea=0&maxBuiltArea=1000&minPrice=0&maxPrice=100000. Transactions (can be combined): RENT,SALE. Property Types (can be combined): APARTMENT,WAREHOUSE,HOUSE,COUNTRY_HOUSE,FARM,GARAGE,LAND_DIVISION,BUSINESS_PREMISES,OFFICE,TWO_STOREY_HOUSE,LAND. Please ensure that the district names are correctly according to the list of districts. Districts list (can be combined): Aeroporto,Alto da Glória,Alvorada,Amadori,Anchieta,Baixada,Bancários,Bela Vista,Bonatto,Bortot,Brasília,Cadorin,Centro,Cristo Rei,Dall Ross,Fraron,Gralha Azul,Industrial,Jardim Floresta,Jardim Primavera,Jardim das Américas,La Salle,Menino Deus,Morumbi,Novo Horizonte,Pagnoncelli,Parque do Som,Parzianello,Pinheirinho,Pinheiros,Planalto,Sambugaro,Santa Terezinha,Santo Antônio,São Cristóvão,São Francisco,São João,São Luiz,São Roque,São Vicente,Sudoeste,Trevo da Guarany,Veneza,Vila Esperança,Vila Isabel. The search term is '{{searchTerm}}'"
@@ -151,10 +151,10 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
         };
 
         _openAiApiClientMock
-            .Setup(apiClient => apiClient.GetCompletionAsync(new CompletionRequest
+            .Setup(apiClient => apiClient.GetCompletionAsync("Bearer sk-fake-api-key", new CompletionRequest
             {
                 Model = "gpt-3.5-turbo-instruct",
-                Temperature = 0.2f,
+                Temperature = 0.2,
                 MaxTokens = 1024,
                 Prompt =
                     @"You are a query string builder for property search. Your task is to convert user search terms into an HTTP query string format, excluding parameters that are not explicitly mentioned in the search text. Here's an example with all possible parameters for reference: ?types=HOUSE,APARTMENT&transaction=RENT,SALE&minBedrooms=0&maxBedrooms=10&minToilets=0&maxToilets=10&minGarages=0&maxGarages=10&minArea=0&maxArea=1000&minBuiltArea=0&maxBuiltArea=1000&minPrice=0&maxPrice=100000. Transactions (can be combined): RENT,SALE. Property Types (can be combined): APARTMENT,WAREHOUSE,HOUSE,COUNTRY_HOUSE,FARM,GARAGE,LAND_DIVISION,BUSINESS_PREMISES,OFFICE,TWO_STOREY_HOUSE,LAND. Please ensure that the district names are correctly according to the list of districts. Districts list (can be combined): Aeroporto,Alto da Glória,Alvorada,Amadori,Anchieta,Baixada,Bancários,Bela Vista,Bonatto,Bortot,Brasília,Cadorin,Centro,Cristo Rei,Dall Ross,Fraron,Gralha Azul,Industrial,Jardim Floresta,Jardim Primavera,Jardim das Américas,La Salle,Menino Deus,Morumbi,Novo Horizonte,Pagnoncelli,Parque do Som,Parzianello,Pinheirinho,Pinheiros,Planalto,Sambugaro,Santa Terezinha,Santo Antônio,São Cristóvão,São Francisco,São João,São Luiz,São Roque,São Vicente,Sudoeste,Trevo da Guarany,Veneza,Vila Esperança,Vila Isabel. The search term is 'Apartamento ou 🏠 no centro ou no fraron para venda com no mínimo 3 quartos e dois banheiro, de até 500000 reais'"

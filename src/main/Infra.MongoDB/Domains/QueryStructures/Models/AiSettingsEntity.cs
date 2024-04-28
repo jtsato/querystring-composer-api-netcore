@@ -10,7 +10,7 @@ namespace Infra.MongoDB.Domains.QueryStructures.Models;
 public class AiSettingsEntity
 {
     [BsonElement("usagePercentage")]
-    public byte UsagePercentage { get; set; }
+    public int UsagePercentage { get; set; }
     
     [BsonElement("apiKey")]
     public string ApiKey { get; set; }
@@ -19,7 +19,7 @@ public class AiSettingsEntity
     public string Model { get; set; }
     
     [BsonElement("temperature")]
-    public float Temperature { get; set; }
+    public double Temperature { get; set; }
     
     [BsonElement("maxTokens")]
     public int MaxTokens { get; set; }

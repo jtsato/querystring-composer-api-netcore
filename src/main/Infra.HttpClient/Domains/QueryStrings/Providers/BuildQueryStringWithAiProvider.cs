@@ -38,8 +38,9 @@ public sealed class BuildQueryStringWithAiProvider : IBuildQueryStringWithAiGate
             MaxTokens = queryStructure.AiSettings.MaxTokens,
             Prompt = CreatePrompt(queryStructure.AiSettings, searchTerm),
         };
-
-        CompletionResponse completionResponse = await _openAiApiClient.GetCompletionAsync(request);
+        
+        string apiKey = $"Bearer {queryStructure.AiSettings.ApiKey}";
+        CompletionResponse completionResponse = await _openAiApiClient.GetCompletionAsync(apiKey, request);
         string response = completionResponse?.Choices?.FirstOrDefault()?.Text?.SubstringAfter("?").Trim();
         
         return string.IsNullOrWhiteSpace(response) ? Optional<string>.Empty() : Optional<string>.Of($"?{response}");
