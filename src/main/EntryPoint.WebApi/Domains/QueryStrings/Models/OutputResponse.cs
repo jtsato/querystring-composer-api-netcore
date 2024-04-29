@@ -4,21 +4,21 @@ namespace EntryPoint.WebApi.Domains.QueryStrings.Models;
 
 public sealed class OutputResponse
 {
-    [SwaggerSchema(Nullable = false, Description = "Client UID")]
+    [SwaggerSchema(Description = "Client UID")]
     public string ClientUid { get; init; }
     
-    [SwaggerSchema(Nullable = false, Description = "Query name")]
+    [SwaggerSchema(Description = "Query name")]
     public string QueryName { get; init; }
     
-    [SwaggerSchema(Nullable = false, Description = "Search terms")]
+    [SwaggerSchema(Description = "Search terms")]
     public string SearchTerms { get; init; }
     
-    [SwaggerSchema(Nullable = false, Description = "Query string")]
+    [SwaggerSchema(Description = "Query string")]
     public string QueryString { get; init; }
     
-    [SwaggerSchema(Nullable = false, Description = "Created by AI")]
+    [SwaggerSchema(Description = "Created by AI")]
     public bool CreatedByAi { get; init; }
     
-    [SwaggerSchema(Nullable = false, Description = "Created at")]
+    [SwaggerSchema(Description = "Created at")]
     public string CreatedAt { get; init; }
 }
