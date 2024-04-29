@@ -13,7 +13,7 @@ public static class OutputResponsePresenter
             QueryName = output.QueryName,
             SearchTerms = output.SearchTerms,
             QueryString = output.QueryString,
-            CreatedByAi = output.CreatedByAi,
+            CreatedByAi = output.CreatedByAi ? "Yes" : "No",
             CreatedAt = output.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ss.fff"),
         };
     }

@@ -180,7 +180,7 @@ public sealed class BuildQueryStringApiMethodTest : IDisposable
             .AndExpectThat(JsonFrom.Path("$.queryName"), Is<string>.EqualTo("queryName"))
             .AndExpectThat(JsonFrom.Path("$.searchTerms"), Is<string>.EqualTo("searchTerms"))
             .AndExpectThat(JsonFrom.Path("$.queryString"), Is<string>.EqualTo("?q=searchTerms"))
-            .AndExpectThat(JsonFrom.Path("$.createdByAi"), Is<bool>.EqualTo(false))
+            .AndExpectThat(JsonFrom.Path("$.createdByAi"), Is<string>.EqualTo("No"))
             .AndExpectThat(JsonFrom.Path("$.createdAt"), Is<string>.EqualTo("2023-08-04T17:21:30.000"));
     }
 }
