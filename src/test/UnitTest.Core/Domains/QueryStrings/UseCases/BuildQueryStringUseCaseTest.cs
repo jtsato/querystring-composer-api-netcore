@@ -511,6 +511,11 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Apartamento no Sao Cristovao para venda até 200 mil reais",
         "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&minPrice=1&maxPrice=200000"
     )]
+    [InlineData
+    (
+        "Nada",
+        ""
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange

@@ -41,7 +41,7 @@ public static class SentenceParserHelper
         {
             string[] nounWords = noun.Split(' ');
             int nounWordsLength = nounWords.Length;
-            string[] combinations = GetCombinations(singleString, nounWordsLength);
+            IEnumerable<string> combinations = GetCombinations(singleString, nounWordsLength);
             foreach (string combination in combinations)
             {
                 double similarity = GetSimilarityHelper.GetSimilarity(noun, combination);
@@ -93,12 +93,13 @@ public static class SentenceParserHelper
         public int OriginalIndex { get; init; }
     }
     
-    private static string[] GetCombinations(string phrase, int number) {
+    private static IEnumerable<string> GetCombinations(string phrase, int number) {
         string[] words = phrase.Split(' ');
-        string[] combinations = new string[words.Length - number + 1];
-        
-        for (int i = 0; i <= words.Length - number; i++) {
-            combinations[i] = string.Join(" ", words, i, number);
+        int numbCombinations = Math.Max(0, words.Length - number + 1);
+        string[] combinations = new string[numbCombinations];
+
+        for (int index = 0; index < numbCombinations; index++) {
+            combinations[index] = string.Join(" ", words, index, number);
         }
 
         return combinations;
