@@ -273,19 +273,19 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     )]
     [InlineData(
         "Imóveis entre 100 e 200 metros quadrados para alugar no centro",
-        "?transaction=RENT&districts=Centro&minArea=100&maxArea=200"
+        "?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200"
     )]
     [InlineData(
         "Imóveis entre 100 e 200 m para alugar no centro",
-        "?transaction=RENT&districts=Centro&minArea=100&maxArea=200"
+        "?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200"
     )]
     [InlineData(
         "Imóveis entre 100 a 200 metros quadrados para alugar no centro",
-        "?transaction=RENT&districts=Centro&minArea=100&maxArea=200"
+        "?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200"
     )]
     [InlineData(
         "Imóveis entre 100 a 200 m para alugar no centro",
-        "?transaction=RENT&districts=Centro&minArea=100&maxArea=200"
+        "?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200"
     )]
     [InlineData
     (
@@ -305,22 +305,22 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Imóveis entre 1000 a 2000 m para alugar no centro entre 1 bilhão e 500 milhões e 2 bilhões e 300 milhões e 400 mil reais",
-        "?transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000"
+        "?types=ALL&transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000"
     )]
     [InlineData
     (
         "Imóveis entre 1000 a 2000 m para alugar no centro entre 1 bilhão e 500 milhões a 2 bilhões e 300 milhões e 400 mil reais",
-        "?transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000"
+        "?types=ALL&transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000"
     )]
     [InlineData
     (
         "Imóveis entre 1 a 2 m para alugar no centro entre 1000 reais e 100 mil reais",
-        "?transaction=RENT&districts=Centro&minPrice=1000&maxPrice=100000&minArea=1&maxArea=2"
+        "?types=ALL&transaction=RENT&districts=Centro&minPrice=1000&maxPrice=100000&minArea=1&maxArea=2"
     )]
     [InlineData
     (
         "Imóveis entre 3 a 4 m para alugar no centro entre 1 reals e 2 reais",
-        "?transaction=RENT&districts=Centro&minPrice=1&maxPrice=2&minArea=3&maxArea=4"
+        "?types=ALL&transaction=RENT&districts=Centro&minPrice=1&maxPrice=2&minArea=3&maxArea=4"
     )]
     [InlineData
     (
@@ -330,7 +330,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Apartamentoo para venda no fraron ou no alvorada com garage de até dez vagas e até 100000 reais",
-        "?types=APARTMENT&transaction=SALE&districts=Alvorada,Fraron&minGarages=1&maxGarages=10&minPrice=1&maxPrice=100000"
+        "?types=APARTMENT&transaction=SALE&districts=Alvorada,Fraron&minGarages=1&maxGarages=10&maxPrice=100000"
     )]
     [InlineData
     (
@@ -345,7 +345,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Apartamentuu ou Casa no centro ou no fraron para venda com no mínimo 3 quartos e dois banheiro, de até 500000 reais",
-        "?types=APARTMENT,HOUSE&transaction=SALE&districts=Centro,Fraron&minBedrooms=3&minToilets=2&minPrice=1&maxPrice=500000"
+        "?types=APARTMENT,HOUSE&transaction=SALE&districts=Centro,Fraron&minBedrooms=3&minToilets=2&maxPrice=500000"
     )]
     [InlineData
     (
@@ -499,22 +499,27 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Apartamento no Sâo Cristovao para venda até 200 mil reais",
-        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&minPrice=1&maxPrice=200000"
+        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000"
     )]
     [InlineData
     (
         "Apartamento no Sao Cristovão para venda até 200 mil reais",
-        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&minPrice=1&maxPrice=200000"
+        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000"
     )]
     [InlineData
     (
         "Apartamento no Sao Cristovao para venda até 200 mil reais",
-        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&minPrice=1&maxPrice=200000"
+        "?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000"
     )]
     [InlineData
     (
         "Nada",
         ""
+    )]
+    [InlineData
+    (
+        "Apartamento no centro com dois quartos até 10000 reais",
+        "?types=APARTMENT&districts=Centro&minBedrooms=2&maxPrice=10000"
     )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
@@ -547,18 +552,18 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                     {
                         new Entry
                         {
-                            Rank = 0, Key = "ALL", Exclusive = true,
-                            KeyWords = new List<string> {"todos", "todas", "tudo", "todes", "tudinho", "tudinha"}
+                            Rank = 1, Key = "ALL", Exclusive = true,
+                            KeyWords = new List<string> {"todos", "todas", "tudo", "todes", "tudinho", "tudinha", "imóvel", "imóveis", "imovel", "imoveis", "propriedade", "propriedades"}
                         },
 
                         new Entry
                         {
-                            Rank = 1, Key = "TWO_STOREY_HOUSE",
+                            Rank = 2, Key = "TWO_STOREY_HOUSE",
                             KeyWords = new List<string> {"🏘️", "sobrado", "andares"}
                         },
                         new Entry
                         {
-                            Rank = 2, Key = "APARTMENT",
+                            Rank = 3, Key = "APARTMENT",
                             KeyWords = new List<string>
                             {
                                 "🏢", "🏬", "apartamento", "apartamentos", "ap", "ape", "apt", "apzinho",
@@ -568,7 +573,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 3, Key = "HOUSE",
+                            Rank = 4, Key = "HOUSE",
                             KeyWords = new List<string>
                             {
                                 "🏠", "🏚️", "casa", "casinha", "chalé", "edícula", "kaza", "kza", "mansão", "vivenda"
@@ -576,12 +581,12 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 4, Key = "LAND",
-                            KeyWords = new List<string> {"🏞️", "🌄", "terreno", "lote"}
+                            Rank = 5, Key = "LAND",
+                            KeyWords = new List<string> {"🏞️", "🌄", "terreno", "lote", "terrenos", "lotes"}
                         },
                         new Entry
                         {
-                            Rank = 5, Key = "COUNTRY_HOUSE",
+                            Rank = 6, Key = "COUNTRY_HOUSE",
                             KeyWords = new List<string>
                             {
                                 "🌳", "🏡", "chácara", "campo", "chacarazinha", "chacarazito", "chacarinha",
@@ -590,12 +595,12 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 6, Key = "FARM",
+                            Rank = 7, Key = "FARM",
                             KeyWords = new List<string> {"🚜", "🌾", "🐄", "fazenda", "sítio"}
                         },
                         new Entry
                         {
-                            Rank = 7, Key = "GARAGE", Immiscible = true,
+                            Rank = 8, Key = "GARAGE", Immiscible = true,
                             KeyWords = new List<string>
                             {
                                 "🚗", "🚘", "🅿️", "garagem", "estacionamento", "garage", "vaga", "carro",
@@ -603,7 +608,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 8, Key = "WAREHOUSE",
+                            Rank = 9, Key = "WAREHOUSE",
                             KeyWords = new List<string>
                             {
                                 "🏭", "📦", "barracão", "armazém", "armazem", "galpão", "galpao", "depósito",
@@ -611,22 +616,22 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 9, Key = "OFFICE",
+                            Rank = 10, Key = "OFFICE",
                             KeyWords = new List<string> {"🖥️", "🏛️", "sala", "escritório"}
                         },
                         new Entry
                         {
-                            Rank = 10, Key = "BUSINESS_PREMISES",
+                            Rank = 11, Key = "BUSINESS_PREMISES",
                             KeyWords = new List<string> {"🏪", "🛍️", "ponto", "loja", "comércio"}
                         },
                         new Entry
                         {
-                            Rank = 11, Key = "LAND_DIVISION",
+                            Rank = 12, Key = "LAND_DIVISION",
                             KeyWords = new List<string> {"🏞️", "🌄", "loteamento", "lote"}
                         },
                         new Entry
                         {
-                            Rank = 12, Key = "OTHER",
+                            Rank = 13, Key = "OTHER",
                             KeyWords = new List<string> {"❓", "❔", "outro", "outros"}
                         },
                     }
@@ -748,7 +753,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         {
                             Rank = 1, Key = "minGarages", KeyWords = new List<string>
                             {
-                                "🚗", "🚘", "🅿️", "garagem", "garagens", "vaga", "vagas", "carro", "carros",
+                                "🚗", "🚘", "🅿️", "garage", "garagem", "garagens", "vaga", "vagas", "carro", "carros",
                                 "automóvel", "automóveis", "estacionamento", "estacionamentos"
                             }, 
                             // "Garagem no centro" means that the user wants a property with a garage in the district "Centro"
@@ -769,7 +774,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         {
                             Rank = 1, Key = "maxGarages", KeyWords = new List<string>
                             {
-                                "🚗", "🚘", "🅿️", "garagem", "garagens", "vaga", "vagas", "carro", "carros",
+                                "🚗", "🚘", "🅿️", "garage", "garagem", "garagens", "vaga", "vagas", "carro", "carros",
                                 "automóvel", "automóveis", "estacionamento", "estacionamentos"
                             },
                             IncompatibleWith = new Dictionary<string, string> {["types"] = "garage"}

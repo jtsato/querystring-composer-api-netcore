@@ -129,6 +129,7 @@ public static partial class ManualQueryBuilderHelper
             WordInfo wordInfo = wordInfos[index];
 
             if (HandleQuantifiedNoun(wordInfo, keyWords, candidates)) continue;
+            if (wordInfo.Type == WordInfoType.Noun && index > 0 && wordInfos[index - 1].Type == WordInfoType.QuantifiedNoun) continue;
             if (HandleNoun(wordInfo, keyWords, wordInfoList, waitForConfirmation)) continue;
             if (HandleConfirmationIndicator(wordInfo, candidates, wordInfoList)) continue;
 
@@ -165,10 +166,9 @@ public static partial class ManualQueryBuilderHelper
             previousWordInfo.Value = $"{number + 1} {wordInfo.Value}";
             return true;
         }
-
+        
         wordInfo.Type = WordInfoType.QuantifiedNoun;
         wordInfo.Value = $"1 {wordInfo.Value}";
-
         wordInfoList.Add(wordInfo);
 
         return true;

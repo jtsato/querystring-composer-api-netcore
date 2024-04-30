@@ -187,28 +187,6 @@ public static class SentenceParserHelper
         return (maxSimilarity, mostSimilarWord);
     }
 
-    private static List<WordInfo> Summarize(IList<WordInfo> wordInfos, List<string> nouns)
-    {
-        HashSet<string> indicators = new HashSet<string>(nouns);
-
-        List<WordInfo> summarize = new List<WordInfo>();
-
-        State state = new State();
-
-        for (int index = 0; index < wordInfos.Count; index++)
-        {
-            WordInfo wordInfo = wordInfos[index];
-
-            if (wordInfo.Type != WordInfoType.QuantitativeAdjective)
-            {
-                Console.WriteLine("WordInfoType is not QuantitativeAdjective");
-                continue;
-            }
-        }
-
-        return summarize;
-    }
-    
     private static List<WordInfo> Summarize(IList<WordInfo> wordInfos, IList<string> confirmationWords, IList<string> revocationWords)
     {
         HashSet<string> indicators = new HashSet<string>(confirmationWords);
@@ -343,7 +321,7 @@ public static class SentenceParserHelper
             WordInfo wordInfo = optional.GetValue();
             string value = wordInfo.Value.Split(' ')[1];
             double similarity = GetSimilarityHelper.GetSimilarity(value, noun);
-            if (similarity >= 0.51)
+            if (similarity >= SimilarityLimit)
             {
                 WordInfoType type = confirmationWords.Contains(DefaultIntervalPreposition)
                     ? WordInfoType.ConfirmationIndicator
