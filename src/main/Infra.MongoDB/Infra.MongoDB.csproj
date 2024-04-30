@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="MongoDB.Bson" Version="2.21.0"/>
         <PackageReference Include="MongoDB.Driver" Version="2.21.0"/>
+        <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

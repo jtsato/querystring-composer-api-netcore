@@ -31,7 +31,7 @@ EXPOSE 8000
 ENV ASPNETCORE_URLS=http://*:8000
 
 RUN addgroup --group ragnarok --gid 2000 \
-&& adduser \    
+&& adduser \
     --uid 1000 \
     --gid 2000 \
     "surtur" 
