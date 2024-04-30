@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Core.Commons;
 using Core.Domains.QueryStrings.Models;
 
@@ -18,11 +19,89 @@ public static class SentenceParserHelper
 
     private static readonly List<long> ScaleSeparators = new List<long> {1000, 1000000, 1000000000};
 
+    // “Much of the best work of the world has been done against seeming impossibilities.” by Dale Carnegie
     public static IList<WordInfo> Parse(IList<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
         IList<WordInfo> wordInfos = Classify(words, nouns, confirmationWords, revocationWords);
+        
+        IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, nouns);
 
-        return Summarize(wordInfos, confirmationWords, revocationWords).ToArray();
+        return Summarize(finalWordInfos, confirmationWords, revocationWords).ToArray();
+    }
+
+    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(IList<WordInfo> wordInfos, IList<string> nouns)
+    {
+        IList<WordInfo> finalWordInfos = new List<WordInfo>();
+
+        string singleString = wordInfos.Select(wordInfo => wordInfo.Value).Aggregate((a, b) => $"{a} {b}");
+        IList<string> nounsWithWhiteSpaces = nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant()).ToList();
+        IList<CompositeWord> compositeWords = new List<CompositeWord>();
+        
+        foreach (string noun in nounsWithWhiteSpaces)
+        {
+            string[] nounWords = noun.Split(' ');
+            int nounWordsLength = nounWords.Length;
+            string[] combinations = GetCombinations(singleString, nounWordsLength);
+            foreach (string combination in combinations)
+            {
+                double similarity = GetSimilarityHelper.GetSimilarity(noun, combination);
+                if (similarity < SimilarityLimit) continue;
+                int originalIndex = singleString.Split(' ').ToList().IndexOf(combination.Split(' ')[0]);
+                CompositeWord compositeWord = new CompositeWord
+                {
+                    Value = combination,
+                    OriginalIndex = originalIndex
+                };
+                compositeWords.Add(compositeWord);
+                break;
+            }
+        }
+        
+        int compositeWordsCount = compositeWords.Count;
+        if (compositeWordsCount == 0) return wordInfos;
+
+        for (int index = 0; index < compositeWordsCount; index++)
+        {
+            CompositeWord compositeWord = compositeWords[index];
+            string[] compositeWordWords = compositeWord.Value.Split(' ');
+            int compositeWordWordsLength = compositeWordWords.Length;
+            int originalIndex = compositeWord.OriginalIndex;
+            int wordInfosCount = wordInfos.Count;
+            for (int secondIndex = 0; secondIndex < wordInfosCount; secondIndex++)
+            {
+                WordInfo wordInfo = wordInfos[secondIndex];
+                if (secondIndex < originalIndex || secondIndex >= originalIndex + compositeWordWordsLength)
+                {
+                    finalWordInfos.Add(wordInfo);
+                    continue;
+                }
+                WordInfo newWordInfo = new WordInfo
+                {
+                    Type = WordInfoType.Noun,
+                    Value = compositeWord.Value.Replace(" ", "_")
+                };
+                finalWordInfos.Add(newWordInfo);
+            }
+        }        
+        
+        return finalWordInfos;
+    }
+    
+    private sealed class CompositeWord
+    {
+        public string Value { get; init; }
+        public int OriginalIndex { get; init; }
+    }
+    
+    private static string[] GetCombinations(string phrase, int number) {
+        string[] words = phrase.Split(' ');
+        string[] combinations = new string[words.Length - number + 1];
+        
+        for (int i = 0; i <= words.Length - number; i++) {
+            combinations[i] = string.Join(" ", words, i, number);
+        }
+
+        return combinations;
     }
 
     private static IList<WordInfo> Classify(IList<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
@@ -107,6 +186,28 @@ public static class SentenceParserHelper
         return (maxSimilarity, mostSimilarWord);
     }
 
+    private static List<WordInfo> Summarize(IList<WordInfo> wordInfos, List<string> nouns)
+    {
+        HashSet<string> indicators = new HashSet<string>(nouns);
+
+        List<WordInfo> summarize = new List<WordInfo>();
+
+        State state = new State();
+
+        for (int index = 0; index < wordInfos.Count; index++)
+        {
+            WordInfo wordInfo = wordInfos[index];
+
+            if (wordInfo.Type != WordInfoType.QuantitativeAdjective)
+            {
+                Console.WriteLine("WordInfoType is not QuantitativeAdjective");
+                continue;
+            }
+        }
+
+        return summarize;
+    }
+    
     private static List<WordInfo> Summarize(IList<WordInfo> wordInfos, IList<string> confirmationWords, IList<string> revocationWords)
     {
         HashSet<string> indicators = new HashSet<string>(confirmationWords);

@@ -25,7 +25,11 @@ public static partial class ManualQueryBuilderHelper
         string searchTerms = NormalizeSearchTerms(rawSearchTerms);
 
         IList<string> words = searchTerms.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries).ToList();
-        IList<string> allNouns = queryStructure.Items.SelectMany(element => element.Entries).SelectMany(entry => entry.KeyWords).ToList();
+        
+        IList<string> allNouns = queryStructure.Items
+            .SelectMany(element => element.Entries)
+            .SelectMany(entry => entry.KeyWords)
+            .ToList();
 
         IDictionary<string, string> queryParameters = new Dictionary<string, string>();
         foreach (Item item in queryStructure.Items)
@@ -251,7 +255,7 @@ public static partial class ManualQueryBuilderHelper
             entrySimilarity.Add(entry, (int) (maxSimilarity * 100));
         }
 
-        Dictionary<Entry, int> topEntrySimilarity = entrySimilarity.Where(keyValuePair => keyValuePair.Value >= 75)
+        Dictionary<Entry, int> topEntrySimilarity = entrySimilarity.Where(keyValuePair => keyValuePair.Value >= 85)
             .OrderByDescending(keyValuePair => keyValuePair.Value)
             .ToDictionary(keyValuePair => keyValuePair.Key, pair => pair.Value);
 
@@ -283,7 +287,7 @@ public static partial class ManualQueryBuilderHelper
         // If it's exclusive, return the key
         return topEntry.Exclusive
             ? new HashSet<string>(new[] {topEntry.Key})
-            // Otherwise, return all keys with the similarity greater than 75%
+            // Otherwise, return all keys with the similarity greater than 85%
             : new HashSet<string>(topEntrySimilarity.Keys.Select(entry => entry.Key));
     }
 
