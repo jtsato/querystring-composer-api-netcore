@@ -67,7 +67,13 @@ public static class Program
             options.AddPolicy("CorsPolicy",
                 policy =>
                 {
-                    policy.WithOrigins("https://*.patolar.com.br", "https://*.patolar-dev.flutterflow.app", "https://*.app.flutterflow.io", "https://*.run.app")
+                    policy.WithOrigins
+                        (
+                            "https://patolar.com.br", 
+                            "https://patolar-dev.flutterflow.app", 
+                            "https://app.flutterflow.io", 
+                            "https://run.app"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
