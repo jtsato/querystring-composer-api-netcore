@@ -94,7 +94,7 @@ public static class Program
             app.UseSwaggerUI(options =>
             {
                 options.RoutePrefix = "api/querystring-composer/v1/swagger";
-                options.SwaggerEndpoint("/api/querystring-composer/v1/api-docs/v1/swagger.yaml", "Properties Search API");
+                options.SwaggerEndpoint("/api/querystring-composer/v1/api-docs/v1/swagger.yaml", "QueryString Composer API");
             });
             RewriteOptions rewriteOptions = new RewriteOptions();
             rewriteOptions.AddRedirect("^$", "swagger");
@@ -131,9 +131,9 @@ public static class Program
 
         options.SwaggerDoc("v1", new OpenApiInfo
         {
-            Title = "Properties Search API",
+            Title = "QueryString Composer API",
             Version = "v1",
-            Description = "Properties Search API",
+            Description = "QueryString Composer API",
         });
 
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
