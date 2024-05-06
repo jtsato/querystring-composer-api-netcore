@@ -521,6 +521,21 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Apartamento no centro com dois quartos até 10000 reais",
         "?types=APARTMENT&districts=Centro&minBedrooms=2&maxPrice=10000"
     )]
+    [InlineData
+    (
+        "Casa de outros andares no Fraron com dois quartos até 10 mil reais",
+        "?types=TWO_STOREY_HOUSE&districts=Fraron&minBedrooms=2&maxPrice=10000"
+    )]
+    [InlineData
+    (
+        "Casa para alugar de dois andares no Fraron com três quartos até 10 mil reais",
+        "?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Fraron&minBedrooms=3&maxPrice=10000"
+    )]
+    [InlineData
+    (
+        "Casa para vender de dois andares no Fraron com três quartos até 300 mil reais",
+        "?types=TWO_STOREY_HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
@@ -558,8 +573,8 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
 
                         new Entry
                         {
-                            Rank = 2, Key = "TWO_STOREY_HOUSE",
-                            KeyWords = new List<string> {"🏘️", "sobrado", "andares"}
+                            Rank = 2, Key = "TWO_STOREY_HOUSE", Exclusive = true,
+                            KeyWords = new List<string> {"🏘️", "sobrado", "andares"},
                         },
                         new Entry
                         {
