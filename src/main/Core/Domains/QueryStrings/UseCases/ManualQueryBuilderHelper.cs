@@ -15,7 +15,7 @@ public static partial class ManualQueryBuilderHelper
 {
     private const string Anonymous = "Anonymous";
 
-    private static readonly string[] Separators = {" ", ", ", ". ", "", "?", ";", "", "-", "(", ")", "[", "]", "{", "}", "\"", "\""};
+    private static readonly string[] Separators = {" ", ",", ". ", "", "?", ";", "", "-", "(", ")", "[", "]", "{", "}", "\"", "\""};
 
     [GeneratedRegex("\\s+")]
     private static partial Regex BlankSpaces();

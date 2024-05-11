@@ -546,6 +546,11 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Casa com 103m², contendo 02 quartos, 01 sala , cozinha, 01 banheiro, área de serviço e 01 vaga de garagem",
         "?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=103"
     )]
+    [InlineData
+    (
+        "Casa com 102m\u00b2,contendo 02 quartos,01 sala,cozinha,01 banheiro,área de serviço e 01 vaga de garagem",
+        "?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=102"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
