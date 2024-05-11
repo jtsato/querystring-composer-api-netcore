@@ -15,7 +15,9 @@ public static partial class ManualQueryBuilderHelper
 {
     private const string Anonymous = "Anonymous";
 
-    private static readonly string[] Separators = {" ", ",", ". ", "", "?", ";", "", "-", "(", ")", "[", "]", "{", "}", "\"", "\""};
+    private static readonly string[] ReplaceBySpace = {". ", ",00", "?", ";", "-", "(", ")", "[", "]", "{", "}", "\"", "/", "\\"};
+    private static readonly string[] ReplaceByEmpty = {"."};
+    private static readonly string[] Separators = {" ", ","};
 
     [GeneratedRegex("\\s+")]
     private static partial Regex BlankSpaces();
@@ -69,6 +71,17 @@ public static partial class ManualQueryBuilderHelper
             if (char.IsSurrogatePair(textEnumerator.GetTextElement(), 0))
             {
                 stringBuilder.Append($" {textEnumerator.GetTextElement()} ");
+                continue;
+            }
+            
+            if (ReplaceBySpace.Contains(textEnumerator.GetTextElement()))
+            {
+                stringBuilder.Append(' ');
+                continue;
+            }
+            
+            if (ReplaceByEmpty.Contains(textEnumerator.GetTextElement()))
+            {
                 continue;
             }
 

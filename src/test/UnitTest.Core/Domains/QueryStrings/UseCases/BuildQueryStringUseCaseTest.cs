@@ -551,6 +551,16 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Casa com 102m\u00b2,contendo 02 quartos,01 sala,cozinha,01 banheiro,área de serviço e 01 vaga de garagem",
         "?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=102"
     )]
+    [InlineData
+    (
+        "alugar/apartamento/centro/pato-branco/pr/2-quartos/1-vaga/1-banheiro/100-m2",
+        "?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=2&minToilets=1&minGarages=1&minArea=100"
+    )]
+    [InlineData
+    (
+        "alugar-apartamento-centro-pato-branco-pr-2-quartos-1-vaga-1-banheiro-100-m²",
+        "?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=2&minToilets=1&minGarages=1&minArea=100"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
