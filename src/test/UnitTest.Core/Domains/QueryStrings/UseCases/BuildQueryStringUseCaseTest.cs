@@ -536,6 +536,16 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Casa para vender de dois andares no Fraron com três quartos até 300 mil reais",
         "?types=TWO_STOREY_HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000"
     )]
+    [InlineData
+    (
+        "Casa com 102m², contendo 02 quartos, 01 sala , cozinha, 01 banheiro, área de serviço e 01 vaga de garagem",
+        "?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=102"
+    )]
+    [InlineData
+    (
+        "Casa com 103m², contendo 02 quartos, 01 sala , cozinha, 01 banheiro, área de serviço e 01 vaga de garagem",
+        "?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=103"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
@@ -553,7 +563,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
             },
             CreatedAt = new DateTime(2023, 08, 04, 17, 21, 30, DateTimeKind.Local),
             UpdatedAt = new DateTime(2024, 09, 05, 18, 22, 31, DateTimeKind.Local),
-            
+
             // Exclusive means that only one entry can be selected
             // For example, if the user selects "ALL" automatically the other types are covered
             // Immiscible means that the entry can not be selected with other entries
@@ -631,8 +641,8 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                         new Entry
                         {
-                            Rank = 10, Key = "OFFICE",
-                            KeyWords = new List<string> {"🖥️", "🏛️", "sala", "escritório"}
+                            Rank = 10, Key = "OFFICE", Immiscible = true,
+                            KeyWords = new List<string> {"🖥️", "🏛️", "sala", "sala comercial", "sala_comercial", "escritório", "escritorio"}
                         },
                         new Entry
                         {

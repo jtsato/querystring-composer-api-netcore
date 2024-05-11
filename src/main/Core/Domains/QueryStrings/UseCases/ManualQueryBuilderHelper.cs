@@ -22,7 +22,7 @@ public static partial class ManualQueryBuilderHelper
 
     public static async Task<string> Build(QueryStructure queryStructure, string rawSearchTerms)
     {
-        string searchTerms = NormalizeSearchTerms(rawSearchTerms);
+        string searchTerms = AddSpaceAfterLastNumber(NormalizeSearchTerms(rawSearchTerms));
 
         IList<string> words = searchTerms.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries).ToList();
         
@@ -41,6 +41,22 @@ public static partial class ManualQueryBuilderHelper
         }
 
         return queryParameters.Count > 0 ? "?" + string.Join("&", queryParameters.Values) : string.Empty;
+    }
+    
+    private static string AddSpaceAfterLastNumber(string rawSearchTerms)
+    {
+        string[] words = rawSearchTerms.Split(' ');
+        if (words.Length == 0) return rawSearchTerms;
+
+        StringBuilder result = new StringBuilder();
+        foreach (string word in words)
+        {
+            Match lastNumber = Regex.Match(word, @"\d(?!.*\d)");
+            String element = lastNumber.Success ? word.Insert(lastNumber.Index + 1, " ") : word;
+            result.Append($"{element} ");
+        }
+        
+        return BlankSpaces().Replace(result.ToString().Trim(), " ");
     }
 
     private static string NormalizeSearchTerms(string rawSearchTerms)
