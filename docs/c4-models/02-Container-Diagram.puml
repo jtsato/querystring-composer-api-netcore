@@ -16,38 +16,69 @@ AddElementTag("storage", $shape=RoundedBoxShape())
 LAYOUT_LEFT_RIGHT()
 
 Person(seeker, "Property Seeker", "A person who is looking for a property")
-Person(agent, "Real State Agent", "A person who would like to promote properties")
+'Person(agent, "Real State Agent", "A person who would like to promote properties")
 
 System_Boundary(realState, "Real State Marketplace System", "A system that allows property seekers to find properties for sale or rent") {
-    Container(showcase, "Showcase", "Flutterflow", "A Showcase of properties for sale or for rent")
-    Container(cabinet, "Cabinet", "Flutterflow", "Advertisement Manager")
-    Container(showcaseBff, "Property API Service", ".NET Core C#", "A Web API Service to get properties", $tags = "microService")
-    ContainerDb(propertiesDB, "PropertiesDB", "MongoDB", "Properties Database", $tags = "storage")
-    Container(composer, "QueryString Composer", ".NET Core C#", "A Web API Service to compose query strings", $tags = "microService")
-    Container(cabinetBff, "Cabinet BFF Service", ".NET Core C#", "A Web API Service to manage advertisements", $tags = "microService")
-    ContainerDb(cabinetDB, "CabinetDB", "Supabase", "Cabinet Database", $tags = "storage")
-    Container(etl, "ETL", "NodeJS, Github Actions", "Extract, transform and load")
+    
+    System_Boundary(homeHost, "Home Host", "Hosting Service"){
+        Container(showcase, "Showcase", "Flutterflow", "A Showcase of properties for sale or for rent")
+        'Container(cabinet, "Cabinet", "Flutterflow", "Advertisement Manager")
+        'Container(backstage, "Backstage", "Flutterflow", "Admin Panel")
+    }
+    
+    System_Boundary(gcp, "Google Cloud Platform", "Cloud Provider"){
+        Container(propertyAPI, "Property API Service", ".NET Core C#", "A Web API Service to get properties", $tags = "microService")
+        Container(composer, "QueryString Composer", ".NET Core C#", "A Web API Service to compose query strings", $tags = "microService")
+        'Container(cabinetBff, "Cabinet BFF Service", ".NET Core C#", "A Web API Service to manage advertisements", $tags = "microService")
+        'Container(backstageBff, "Backstage BFF Service", ".NET Core C#", "A Web API Service to manage the admin panel", $tags = "microService")
+    }
+
+    System_Boundary(supabase, "Supabase", "Backend as a Service"){
+        Container(realStateAPI, "RealStateAPI", "Supabase", "Real State API", $tags = "microService")
+        ContainerDb(realStateDB, "RealStateDB", "Supabase", "Real States Database", $tags = "storage")
+    }
+
+    System_Boundary(atlas, "Mongo Atlas", "Database Provider"){
+        ContainerDb(propertiesDB, "PropertiesDB", "MongoDB", "Properties Database", $tags = "storage")
+        ContainerDb(composerDB, "ComposerDB", "MongoDB", "Composer Database", $tags = "storage")
+        'ContainerDb(cabinetDB, "CabinetDB", "Supabase", "Cabinet Database", $tags = "storage")
+    }
+
+    System_Boundary(etl, "ETL", "NodeJS, Github Actions", "Extract, transform and load"){
+        Container(aracne, "Web Scraper", "NodeJS, Puppeteer", "Extracts data from websites")
+        ContainerDb(aracneDB, "AracneDB", "JSON files", "Stores the extracted data")
+        Container(charon, "Publisher", "NodeJS", "Publishes data to the queue")
+        ContainerDb(charonDB, "CharonDB", "LavinMQ", "Stores messages to be consumed")
+        Container(mnemosyne, "Consumer", "NodeJS", "Consumes data from the queue and save it to the database")
+    }
 }
 
 System_Ext(chatGpt, "ChatGPT API", "An external API that supports diverse artificial intelligence functionalities")
 System_Ext(websites, "Real State Companies Websites", "An external websites that provides information about properties")
-System_Ext(stripe, "Stripe", "An external payment gateway")
+'System_Ext(stripe, "Stripe", "An external payment gateway")
 
 Rel(seeker, showcase, "Uses")
-Rel(showcase, showcaseBff, "Consumes the")
+Rel(showcase, propertyAPI, "Consumes the")
 Rel(showcase, composer, "Consumes the")
-Rel(composer, chatGpt, "Request improvements from")
-Rel(showcaseBff, propertiesDB, "Reads from and writes to")
+Rel(showcase, realStateAPI, "Consumes the")
+Rel(realStateAPI, realStateDB, "Reads from")
+' Rel_L(composer, chatGpt, "Request querystrings from")
+Rel(propertyAPI, propertiesDB, "Reads from")
+Rel(composer, composerDB, "Reads from")
 
-Rel(agent, cabinet, "Uses")
-Rel(cabinet, stripe, "Requests payment")
-Rel(stripe, cabinetBff, "Notifies about payment")
-Rel(cabinet, cabinetBff, "Consumes the")
-Rel(cabinetBff, cabinetDB, "Reads from and writes to")
+'Rel(agent, cabinet, "Uses")
+'Rel(cabinet, stripe, "Requests payment")
+'Rel(stripe, cabinetBff, "Notifies about payment")
+'Rel(cabinet, cabinetBff, "Consumes the")
+'Rel(cabinetBff, cabinetDB, "Reads from and writes to")
 
-Rel(etl, websites, "Extracts data from")
-Rel(etl, chatGpt, "Request improvements from")
-Rel_R(etl, propertiesDB, "Reads from and writes to")
+Rel(aracne, websites, "Extracts data from")
+Rel(aracne, aracneDB, "Writes to")
+Rel(charon, aracneDB, "Reads from")
+Rel(charon, charonDB, "Writes to")
+Rel(mnemosyne, charonDB, "Reads from")
+Rel_L(mnemosyne, chatGpt, "Request text improvements from")
+Rel(mnemosyne, propertiesDB, "Reads from and writes to")
 
 LAYOUT_WITH_LEGEND()
 
