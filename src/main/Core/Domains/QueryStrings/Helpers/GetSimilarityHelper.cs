@@ -6,6 +6,7 @@ namespace Core.Domains.QueryStrings.Helpers;
 public static class GetSimilarityHelper
 {
     private static readonly WeightedLevenshtein Levenshtein = new WeightedLevenshtein(new CharacterSubstitution());
+    private const float Epsilon = 0.0001f;
 
     public static double GetSimilarity(string word, string term)
     {
@@ -13,7 +14,7 @@ public static class GetSimilarityHelper
         double distance = Levenshtein.Distance(word, term);
 
         // No changes needed. It means the words are equal
-        if (distance == 0) return 1;
+        if (distance < Epsilon) return 1.0;
 
         // Get the maximum length between the two strings
         double maxLength = Math.Max(word.Length, term.Length);

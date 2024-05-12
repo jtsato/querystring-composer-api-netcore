@@ -561,6 +561,11 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "alugar-apartamento-centro-pato-branco-pr-2-quartos-1-vaga-1-banheiro-100-m²",
         "?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=2&minToilets=1&minGarages=1&minArea=100"
     )]
+    [InlineData
+    (
+        "casa para alugar no jardim primavera pato-branco pr 158m2 por 2950 reais",
+        "?types=HOUSE&transaction=RENT&districts=Jardim Primavera&maxPrice=2950&minArea=158"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
@@ -834,7 +839,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                     },
                     ConfirmationWords = new List<string> {"entre", "acima", "desde", "maior", "mais", "min", "mínimo", "partir", "superior"},
-                    RevocationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"},
+                    RevocationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por"},
                 },
                 new Item
                 {
@@ -846,7 +851,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                             Rank = 1, Key = "maxPrice", KeyWords = new List<string> {"Anonymous", "💲", "reais", "real", "R$"},
                         },
                     },
-                    ConfirmationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo"},
+                    ConfirmationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por"},
                     RevocationWords = new List<string> {"entre", "acima", "desde", "maior", "mais", "min", "mínimo", "partir", "superior"},
                 },
                 new Item

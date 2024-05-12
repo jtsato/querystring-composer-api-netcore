@@ -20,7 +20,7 @@ public static class SentenceParserHelper
     private static readonly List<long> ScaleSeparators = new List<long> {1000, 1000000, 1000000000};
 
     // “Much of the best work of the world has been done against seeming impossibilities.” by Dale Carnegie
-    public static IList<WordInfo> Parse(IList<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
+    public static IList<WordInfo> Parse(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
         IList<WordInfo> wordInfos = Classify(words, nouns, confirmationWords, revocationWords);
         
@@ -29,7 +29,7 @@ public static class SentenceParserHelper
         return Summarize(finalWordInfos, confirmationWords, revocationWords).ToArray();
     }
 
-    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(IList<WordInfo> wordInfos, IList<string> nouns)
+    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(IList<WordInfo> wordInfos, IEnumerable<string> nouns)
     {
         IList<WordInfo> finalWordInfos = new List<WordInfo>();
 
@@ -105,7 +105,7 @@ public static class SentenceParserHelper
         return combinations;
     }
 
-    private static IList<WordInfo> Classify(IList<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
+    private static IList<WordInfo> Classify(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
         List<WordInfo> wordInfos = new List<WordInfo>();
 
@@ -312,7 +312,7 @@ public static class SentenceParserHelper
         return Anonymous;
     }
 
-    private static void AddQuantifiedNoun(List<WordInfo> target, IList<string> confirmationWords, long totalValue, string noun)
+    private static void AddQuantifiedNoun(IList<WordInfo> target, IList<string> confirmationWords, long totalValue, string noun)
     {
         Optional<WordInfo> optional = GetLastQuantifiedNoun(target);
 
@@ -357,7 +357,7 @@ public static class SentenceParserHelper
         return Optional<WordInfo>.Empty();
     }
 
-    private static void AddIndicator(List<WordInfo> target, IList<string> confirmationWords, IList<string> revocationWords)
+    private static void AddIndicator(ICollection<WordInfo> target, IList<string> confirmationWords, IList<string> revocationWords)
     {
         WordInfoType type = GetWordInfoType(confirmationWords, revocationWords);
 

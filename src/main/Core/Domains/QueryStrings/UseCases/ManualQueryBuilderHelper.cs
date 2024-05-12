@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,8 +22,10 @@ public static partial class ManualQueryBuilderHelper
 
     [GeneratedRegex("\\s+")]
     private static partial Regex BlankSpaces();
+        [GeneratedRegex(@"\d+(?!\d)")]
+    private static partial Regex LastNumberOfNumericSequence();
 
-    public static async Task<string> Build(QueryStructure queryStructure, string rawSearchTerms)
+    public static Task<string> Build(QueryStructure queryStructure, string rawSearchTerms)
     {
         string searchTerms = AddSpaceAfterLastNumber(NormalizeSearchTerms(rawSearchTerms));
 
@@ -34,15 +37,40 @@ public static partial class ManualQueryBuilderHelper
             .ToList();
 
         IDictionary<string, string> queryParameters = new Dictionary<string, string>();
-        foreach (Item item in queryStructure.Items)
-        {
-            string queryParameter = await BuildParameterForItem(item, allNouns, queryParameters, words);
-            if (string.IsNullOrEmpty(queryParameter)) continue;
-            string key = queryParameter.Split('=')[0];
-            queryParameters[key] = queryParameter;
-        }
 
-        return queryParameters.Count > 0 ? "?" + string.Join("&", queryParameters.Values) : string.Empty;
+        IList<Item> nonCountableItems = queryStructure.Items.Where(item => !item.IsCountable).ToList();
+        ConcurrentDictionary<Item, string> dictionary = new ConcurrentDictionary<Item, string>();
+        
+        Parallel.ForEach(nonCountableItems, item =>
+        {
+            dictionary.TryAdd(item, BuildParamForNonCountableItem(item, allNouns, words).Result);
+        });
+        
+        dictionary.OrderBy(element => element.Key.Rank).ToList().ForEach(element =>
+        {
+            if (string.IsNullOrEmpty(element.Value)) return;
+            string key = element.Value.Split('=')[0];
+            queryParameters[key] = element.Value;
+        });
+        
+        
+        IList<Item> countableItems = queryStructure.Items.Where(item => item.IsCountable).ToList();
+        ConcurrentDictionary<Item, List<WordInfo>> countableDictionary = new ConcurrentDictionary<Item, List<WordInfo>>();
+        
+        Parallel.ForEach(countableItems, item =>
+        {
+            countableDictionary.TryAdd(item, BuildParamForCountableItem(item, allNouns, words));
+        });
+        
+        countableDictionary.OrderBy(element => element.Key.Rank).ToList().ForEach(element =>
+        {
+            if (element.Value.Count == 0) return;
+            HashSet<string> values = FilterAndGetWordInfoValue(element.Value, element.Key, queryParameters);
+            if (values.Count == 0) return;
+            queryParameters[element.Key.Name] = $"{element.Key.Name}={string.Join(",", values)}";
+        });
+        
+        return Task.FromResult(queryParameters.Count > 0 ? "?" + string.Join("&", queryParameters.Values) : string.Empty);
     }
     
     private static string AddSpaceAfterLastNumber(string rawSearchTerms)
@@ -50,15 +78,24 @@ public static partial class ManualQueryBuilderHelper
         string[] words = rawSearchTerms.Split(' ');
         if (words.Length == 0) return rawSearchTerms;
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         foreach (string word in words)
         {
-            Match lastNumber = Regex.Match(word, @"\d(?!.*\d)");
-            String element = lastNumber.Success ? word.Insert(lastNumber.Index + 1, " ") : word;
-            result.Append($"{element} ");
+            Match lastNumber = LastNumberOfNumericSequence().Match(word);
+            if (lastNumber.Success)
+            {
+                builder.Append(word.AsSpan(0, lastNumber.Index + lastNumber.Length));
+                builder.Append(' ');
+                builder.Append(word.AsSpan(lastNumber.Index + lastNumber.Length));
+                builder.Append(' ');
+                continue;
+            }
+
+            builder.Append(word);
+            builder.Append(' ');
         }
         
-        return BlankSpaces().Replace(result.ToString().Trim(), " ");
+        return BlankSpaces().Replace(builder.ToString().Trim(), " ");
     }
 
     private static string NormalizeSearchTerms(string rawSearchTerms)
@@ -78,8 +115,7 @@ public static partial class ManualQueryBuilderHelper
             {
                 stringBuilder.Append(' ');
                 continue;
-            }
-            
+            }            
             if (ReplaceByEmpty.Contains(textEnumerator.GetTextElement()))
             {
                 continue;
@@ -93,16 +129,21 @@ public static partial class ManualQueryBuilderHelper
         return BlankSpaces().Replace(result, " ");
     }
 
-    private static Task<string> BuildParameterForItem(Item item, IList<string> allNouns, IDictionary<string, string> queryParameters, IList<string> words)
+    private static List<WordInfo> BuildParamForCountableItem(Item item, IList<string> allNouns, IList<string> words)
+    {
+        IList<Entry> entries = item.Entries;
+
+        return entries.Count == 0 ? Task.FromResult(new List<WordInfo>()).Result : BuildCountableItem(item, allNouns, words);
+    }
+    
+    private static Task<string> BuildParamForNonCountableItem(Item item, IList<string> allNouns, IList<string> words)
     {
         IList<Entry> entries = item.Entries;
 
         if (entries.Count == 0) return Task.FromResult(string.Empty);
 
-        HashSet<string> values = item.IsCountable
-            ? BuildCountableItem(item, allNouns, queryParameters, words)
-            : BuildNonCountableItem(item, RephraseNumerals(item, allNouns, words));
-
+        HashSet<string> values = BuildNonCountableItem(item, RephraseNumerals(item, allNouns, words));
+        
         string result = values.Count > 0 ? $"{item.Name}={string.Join(",", values)}" : string.Empty;
 
         return Task.FromResult(result);
@@ -112,29 +153,21 @@ public static partial class ManualQueryBuilderHelper
     {
         IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        foreach (WordInfo wordInfo in wordInfos)
-        {
-            stringBuilder.Append($"{wordInfo.Value.Split(' ')[0]} ");
-        }
-
-        IList<string> recycleWords = stringBuilder.ToString().Trim().Split(Separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+        IList<string> recycleWords = wordInfos.Select(wordInfo => wordInfo.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()).ToList();
 
         return recycleWords;
     }
 
-    private static HashSet<string> BuildCountableItem(Item item, IList<string> allNouns, IDictionary<string, string> queryParameters, IList<string> words)
+    private static List<WordInfo> BuildCountableItem(Item item, IList<string> allNouns, IList<string> words)
     {
         IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
 
         IList<string> itemKeyWords = item.Entries.SelectMany(element => element.KeyWords).ToList();
-        IList<WordInfo> infoList = GroupWordInfos(wordInfos, itemKeyWords, item.WaitForConfirmationWords);
-
-        return infoList.Count == 0 ? new HashSet<string>() : FilterAndGetWordInfoValue(infoList, item, queryParameters);
+        
+        return GroupWordInfos(wordInfos, itemKeyWords, item.WaitForConfirmationWords);
     }
 
-    private static List<WordInfo> GroupWordInfos(IList<WordInfo> wordInfos, IList<string> keyWords, bool waitForConfirmation)
+    private static List<WordInfo> GroupWordInfos(IList<WordInfo> wordInfos, ICollection<string> keyWords, bool waitForConfirmation)
     {
         List<WordInfo> wordInfoList = new List<WordInfo>();
         List<WordInfo> candidates = new List<WordInfo>();
@@ -149,7 +182,7 @@ public static partial class ManualQueryBuilderHelper
         return wordInfoList;
     }
 
-    private static void ProcessWordInfos(IList<WordInfo> wordInfos, ICollection<string> keyWords, bool waitForConfirmation, IList<WordInfo> wordInfoList, IList<WordInfo> candidates)
+    private static void ProcessWordInfos(IList<WordInfo> wordInfos, ICollection<string> keyWords, bool waitForConfirmation, IList<WordInfo> wordInfoList, ICollection<WordInfo> candidates)
     {
         int lastPosition = wordInfos.Count - 1;
 
@@ -208,7 +241,6 @@ public static partial class ManualQueryBuilderHelper
         if (wordInfo.Type != WordInfoType.ConfirmationIndicator) return false;
 
         foreach (WordInfo candidate in candidates) wordInfoList.Add(candidate);
-
         candidates.Clear();
 
         return true;
@@ -247,14 +279,14 @@ public static partial class ManualQueryBuilderHelper
         return new HashSet<string>();
     }
 
-    private static bool IsIncompatible(Entry entry, IDictionary<string, string> queryParameters1)
+    private static bool IsIncompatible(Entry entry, IDictionary<string, string> queryParameters)
     {
         bool isIncompatible = false;
 
-        foreach (KeyValuePair<string, string> parameter in queryParameters1)
+        foreach (KeyValuePair<string, string> parameter in queryParameters)
         {
             if (!entry.IncompatibleWith.TryGetValue(parameter.Key, out string incompatibleKeyValue)) continue;
-            string parameterValue = parameter.Value.Split('=')[1];
+           string parameterValue = parameter.Value.Split('=')[1];
             if (!string.Equals(parameterValue, incompatibleKeyValue, StringComparison.InvariantCultureIgnoreCase)) continue;
             isIncompatible = true;
         }
@@ -267,9 +299,9 @@ public static partial class ManualQueryBuilderHelper
         return PickupMultipleEntryKeys(item.Entries, words);
     }
 
-    private static HashSet<string> PickupMultipleEntryKeys(IList<Entry> entries, IList<string> words)
+    private static HashSet<string> PickupMultipleEntryKeys(ICollection<Entry> entries, IList<string> words)
     {
-        Dictionary<Entry, int> entrySimilarity = new Dictionary<Entry, int>();
+        IDictionary<Entry, int> entrySimilarity = new Dictionary<Entry, int>(entries.Count);
 
         foreach (Entry entry in entries)
         {
@@ -284,14 +316,14 @@ public static partial class ManualQueryBuilderHelper
             entrySimilarity.Add(entry, (int) (maxSimilarity * 100));
         }
 
-        Dictionary<Entry, int> topEntrySimilarity = entrySimilarity.Where(keyValuePair => keyValuePair.Value >= 85)
+        IDictionary<Entry, int> topEntrySimilarity = entrySimilarity.Where(keyValuePair => keyValuePair.Value >= 80)
             .OrderByDescending(keyValuePair => keyValuePair.Value)
             .ToDictionary(keyValuePair => keyValuePair.Key, pair => pair.Value);
 
         if (!topEntrySimilarity.Any()) return new HashSet<string>();
 
         // Get all entries with the Immiscible attribute
-        List<KeyValuePair<Entry, int>> immiscibleEntries = topEntrySimilarity.Where(keyValuePair
+        IList<KeyValuePair<Entry, int>> immiscibleEntries = topEntrySimilarity.Where(keyValuePair
             => keyValuePair.Key.Immiscible).ToList();
 
         // If all top similar entries are Immiscible, return the one with the highest similarity
@@ -316,7 +348,7 @@ public static partial class ManualQueryBuilderHelper
         // If it's exclusive, return the key
         return topEntry.Exclusive
             ? new HashSet<string>(new[] {topEntry.Key})
-            // Otherwise, return all keys with the similarity greater than 85%
+            // Otherwise, return all keys with the similarity greater than 80%
             : new HashSet<string>(topEntrySimilarity.Keys.Select(entry => entry.Key));
     }
 
