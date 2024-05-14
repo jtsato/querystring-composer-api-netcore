@@ -566,6 +566,16 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "casa para alugar no jardim primavera pato-branco pr 158m2 por 2950 reais",
         "?types=HOUSE&transaction=RENT&districts=Jardim Primavera&maxPrice=2950&minArea=158"
     )]
+    [InlineData
+    (
+        "R$500.000 a R$1.000.000",
+        "?minPrice=500000&maxPrice=1000000"
+    )]
+    [InlineData
+    (
+        "R$500.000,00 a R$1.000.000,00",
+        "?minPrice=500000&maxPrice=1000000"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange

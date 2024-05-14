@@ -22,12 +22,13 @@ public static partial class ManualQueryBuilderHelper
 
     [GeneratedRegex("\\s+")]
     private static partial Regex BlankSpaces();
-        [GeneratedRegex(@"\d+(?!\d)")]
+
+    [GeneratedRegex(@"\d+(?!\d)")]
     private static partial Regex LastNumberOfNumericSequence();
 
     public static Task<string> Build(QueryStructure queryStructure, string rawSearchTerms)
     {
-        string searchTerms = AddSpaceAfterLastNumber(NormalizeSearchTerms(rawSearchTerms));
+        string searchTerms = AddSpaceBeforeFirstNumber(AddSpaceAfterLastNumber(NormalizeSearchTerms(rawSearchTerms)));
 
         IList<string> words = searchTerms.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries).ToList();
         
@@ -71,6 +72,11 @@ public static partial class ManualQueryBuilderHelper
         });
         
         return Task.FromResult(queryParameters.Count > 0 ? "?" + string.Join("&", queryParameters.Values) : string.Empty);
+    }
+    
+    private static string AddSpaceBeforeFirstNumber(string input)
+    {
+        return BlankSpaces().Replace(input.Replace("$", "$ "), " ");
     }
     
     private static string AddSpaceAfterLastNumber(string rawSearchTerms)
