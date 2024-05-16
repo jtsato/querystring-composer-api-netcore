@@ -69,14 +69,16 @@ public static class Program
                 {
                     policy.WithOrigins
                         (
-                            "https://app.patolar.com.br", 
-                            "https://patolar-dev.flutterflow.app", 
-                            "https://app.flutterflow.io", 
+                            "https://app.patolar.com.br",
+                            "https://patolar-dev.flutterflow.app",
+                            "https://app.flutterflow.io",
                             "https://ff-debug-service-frontend-free-ygxkweukma-uc.a.run.app",
-                            "https://ff-debug-service-frontend-pro-ygxkweukma-uc.a.run.app"
+                            "https://ff-debug-service-frontend-pro-ygxkweukma-uc.a.run.app",
+                            "http://localhost:8000"
                         )
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
         });
 
