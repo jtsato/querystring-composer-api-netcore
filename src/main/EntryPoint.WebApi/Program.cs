@@ -69,6 +69,7 @@ public static class Program
                 {
                     policy.WithOrigins
                         (
+                            "https://patolar.com.br",
                             "https://www.patolar.com.br",
                             "https://app.patolar.com.br",
                             "https://patolar-dev.flutterflow.app",
