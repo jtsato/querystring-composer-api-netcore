@@ -524,17 +524,20 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Casa de outros andares no Fraron com dois quartos até 10 mil reais",
-        "?types=TWO_STOREY_HOUSE&districts=Fraron&minBedrooms=2&maxPrice=10000"
+        "?types=TWO_STOREY_HOUSE,HOUSE,OTHER&districts=Fraron&minBedrooms=2&maxPrice=10000"
+    //  "?types=TWO_STOREY_HOUSE&districts=Fraron&minBedrooms=2&maxPrice=10000"
     )]
     [InlineData
     (
         "Casa para alugar de dois andares no Fraron com três quartos até 10 mil reais",
-        "?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Fraron&minBedrooms=3&maxPrice=10000"
+        "?types=TWO_STOREY_HOUSE,HOUSE&transaction=RENT&districts=Fraron&minBedrooms=3&maxPrice=10000"
+    //  "?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Fraron&minBedrooms=3&maxPrice=10000"
     )]
     [InlineData
     (
         "Casa para vender de dois andares no Fraron com três quartos até 300 mil reais",
-        "?types=TWO_STOREY_HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000"
+        "?types=TWO_STOREY_HOUSE,HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000"
+     // "?types=TWO_STOREY_HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000"
     )]
     [InlineData
     (
@@ -576,6 +579,21 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "R$500.000,00 a R$1.000.000,00",
         "?minPrice=500000&maxPrice=1000000"
     )]
+    [InlineData
+    (
+        "Casa para comprar com 3 quartos maior que 200m² por menos de 2 milhões de reais",
+        "?types=HOUSE&transaction=SALE&minBedrooms=3&minPrice=1&maxPrice=2000000&minArea=200"
+    )]
+    [InlineData
+    (
+        "Casa para alugar no Jardim com 3 quartos e 2 banheiros",
+        "?types=HOUSE&transaction=RENT&districts=Jardim Floresta,Jardim Primavera,Jardim das Américas&minBedrooms=3&minToilets=2"
+    )]
+    [InlineData
+    (
+        "Casa ou sobrado no fraron",
+        "?types=TWO_STOREY_HOUSE,HOUSE&districts=Fraron"
+    )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
@@ -613,7 +631,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
 
                         new Entry
                         {
-                            Rank = 2, Key = "TWO_STOREY_HOUSE", Exclusive = true,
+                            Rank = 2, Key = "TWO_STOREY_HOUSE",
                             KeyWords = new List<string> {"🏘️", "sobrado", "andares"},
                         },
                         new Entry
@@ -631,8 +649,8 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                             Rank = 4, Key = "HOUSE",
                             KeyWords = new List<string>
                             {
-                                "🏠", "🏚️", "casa", "casinha", "chalé", "edícula", "kaza", "kza", "mansão", "vivenda"
-                            }
+                                "🏠", "🏚️", "casa", "casinha", "chalé", "edícula", "kaza", "kza", "mansão", "vivenda",
+                            },
                         },
                         new Entry
                         {
@@ -697,7 +715,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                     Rank = 2, Name = "transaction", Description = "Transaction Type",
                     Entries = new List<Entry>
                     {
-                        new Entry {Rank = 1, Key = "SALE", KeyWords = new List<string> {"💲", "venda", "vender"}},
+                        new Entry {Rank = 1, Key = "SALE", KeyWords = new List<string> {"💲", "venda", "vender", "compra", "comprar"}},
                         new Entry {Rank = 2, Key = "RENT", KeyWords = new List<string> {"📝", "aluguel", "alugar"}},
                     }
                 },
@@ -724,9 +742,9 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         new Entry { Rank = 16, Key = "Fraron", KeyWords = new List<string> { "fraron" } },
                         new Entry { Rank = 17, Key = "Gralha Azul", KeyWords = new List<string> { "gralha azul", "gralha_azul", "gralhaazul" } },
                         new Entry { Rank = 18, Key = "Industrial", KeyWords = new List<string> { "industrial", "industriais" } },
-                        new Entry { Rank = 19, Key = "Jardim Floresta", KeyWords = new List<string> { "jardim floresta", "jardim_floresta", "jardimfloresta" } },
-                        new Entry { Rank = 20, Key = "Jardim Primavera", KeyWords = new List<string> { "jardim primavera", "jardim_primavera", "jardimprimavera" } },
-                        new Entry { Rank = 21, Key = "Jardim das Américas", KeyWords = new List<string> { "jardim das américas", "jardim_das_américas", "jardim das americas", "jardim_das_americas", "jardimdasaméricas", "jardimdasamericas" } },
+                        new Entry { Rank = 19, Key = "Jardim Floresta", KeyWords = new List<string> { "jardim", "jardim floresta", "jardim_floresta", "jardimfloresta" } },
+                        new Entry { Rank = 20, Key = "Jardim Primavera", KeyWords = new List<string> { "jardim", "jardim primavera", "jardim_primavera", "jardimprimavera" } },
+                        new Entry { Rank = 21, Key = "Jardim das Américas", KeyWords = new List<string> { "jardim", "jardim das américas", "jardim_das_américas", "jardim das americas", "jardim_das_americas", "jardimdasaméricas", "jardimdasamericas" } },
                         new Entry { Rank = 22, Key = "La Salle", KeyWords = new List<string> { "la salle", "lasalle" } },
                         new Entry { Rank = 23, Key = "Menino Deus", KeyWords = new List<string> { "menino deus", "menino_deus", "meninodeus" } },
                         new Entry { Rank = 24, Key = "Morumbi", KeyWords = new List<string> { "morumbi" } },
@@ -849,7 +867,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                         },
                     },
                     ConfirmationWords = new List<string> {"entre", "acima", "desde", "maior", "mais", "min", "mínimo", "partir", "superior"},
-                    RevocationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por"},
+                    RevocationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por", "por_menos", "pr_menos_de"},
                 },
                 new Item
                 {
@@ -861,7 +879,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
                             Rank = 1, Key = "maxPrice", KeyWords = new List<string> {"Anonymous", "💲", "reais", "real", "R$"},
                         },
                     },
-                    ConfirmationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por"},
+                    ConfirmationWords = new List<string> {"abaixo", "antes", "a", "à", "á", "até", "inferior", "max", "máx", "máximo", "por", "por_menos", "pr_menos_de"},
                     RevocationWords = new List<string> {"entre", "acima", "desde", "maior", "mais", "min", "mínimo", "partir", "superior"},
                 },
                 new Item
