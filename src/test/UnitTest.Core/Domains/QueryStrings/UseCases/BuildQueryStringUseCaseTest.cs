@@ -594,6 +594,18 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Casa ou sobrado no fraron",
         "?types=TWO_STOREY_HOUSE,HOUSE&districts=Fraron"
     )]
+    /*
+    [InlineData
+    (
+        "Apartamento para alugar no centro até 5000 reais no mínimo 100m2 ou mais",
+        "?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100"
+    )]
+    [InlineData
+    (
+        "Apartamento para alugar no centro até 5000 reais de 100m2 ou mais",
+        "?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100"
+    )]
+    */
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {
         // Arrange
