@@ -38,7 +38,7 @@ public class BuildQueryStringUseCase : IBuildQueryStringUseCase
             if (optional.HasValue()) return BuildOutput(command, optional.GetValue(), true);
         }
 
-        string queryString = await ManualQueryBuilderHelper.Build(queryStructure, command.SearchTerms);
+        string queryString = ManualQueryBuilderHelper.Build(queryStructure, command.SearchTerms);
 
         return BuildOutput(command, queryString, false);
     }

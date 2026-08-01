@@ -1,0 +1,295 @@
+# Manual query builder characterization snapshot.
+# Recorded output, not asserted expectations. Do not edit by hand.
+# Re-record with: UPDATE_SNAPSHOT=1 dotnet test src/test/UnitTest.Core/UnitTest.Core.csproj
+
+IN : De R$ 100.000,00 a R$ 200.000,00
+OUT: ?minPrice=100000&maxPrice=200000
+
+IN : De 100 a 200 mil reais
+OUT: ?minPrice=100&maxPrice=200000
+
+IN : De cem mil a duzentos mil
+OUT: ?minPrice=100000&maxPrice=200000
+
+IN : De cento e cinquenta mil a duzentos e cinquenta mil
+OUT: ?minPrice=150000&maxPrice=250000
+
+IN : De 100 metros a 200 metros quadrados
+OUT: ?minArea=100&maxArea=200
+
+IN : De 100 a 200 m2
+OUT: ?minArea=100&maxArea=200
+
+IN : Encontre todas as vendas de imóveis com 2 quartos e pelo menos 2 garagens no bairro pranalto, com preço de venda máximo de R$ 3.000,00
+OUT: ?types=ALL&transaction=SALE&districts=Planalto&minBedrooms=2&minGarages=2&maxPrice=3000
+
+IN : Imóveis entre 100 e 200 metros quadrados para alugar no centro
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200
+
+IN : Imóveis entre 100 e 200 m para alugar no centro
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200
+
+IN : Imóveis entre 100 a 200 metros quadrados para alugar no centro
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200
+
+IN : Imóveis entre 100 a 200 m para alugar no centro
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minArea=100&maxArea=200
+
+IN : de R$ 3.000,00 a R$ 5.000,00
+OUT: ?minPrice=3000&maxPrice=5000
+
+IN : 3.000,00 a 5.000,00
+OUT: ?minPrice=3000&maxPrice=5000
+
+IN : Mil a 2 mil reais
+OUT: ?minPrice=1000&maxPrice=2000
+
+IN : Imóveis entre 1000 a 2000 m para alugar no centro entre 1 bilhão e 500 milhões e 2 bilhões e 300 milhões e 400 mil reais
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000
+
+IN : Imóveis entre 1000 a 2000 m para alugar no centro entre 1 bilhão e 500 milhões a 2 bilhões e 300 milhões e 400 mil reais
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minPrice=1500000000&maxPrice=2300400000&minArea=1000&maxArea=2000
+
+IN : Imóveis entre 1 a 2 m para alugar no centro entre 1000 reais e 100 mil reais
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minPrice=1000&maxPrice=100000&minArea=1&maxArea=2
+
+IN : Imóveis entre 3 a 4 m para alugar no centro entre 1 reals e 2 reais
+OUT: ?types=ALL&transaction=RENT&districts=Centro&minPrice=1&maxPrice=2&minArea=3&maxArea=4
+
+IN : Apartamentoo para alugar no centro com 3 quartos e 2 banheiros
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=3&minToilets=2
+
+IN : Apartamentoo para venda no fraron ou no alvorada com garage de até dez vagas e até 100000 reais
+OUT: ?types=APARTMENT&transaction=SALE&districts=Alvorada,Fraron&minGarages=1&maxGarages=10&maxPrice=100000
+
+IN : Loteamento à venda em Alvorada
+OUT: ?types=LAND_DIVISION&transaction=SALE&districts=Alvorada
+
+IN : Sobrado para alugar no centro com 3 quartos e 2 banheiros
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Centro&minBedrooms=3&minToilets=2
+
+IN : Apartamentuu ou Casa no centro ou no fraron para venda com no mínimo 3 quartos e dois banheiro, de até 500000 reais
+OUT: ?types=APARTMENT,HOUSE&transaction=SALE&districts=Centro,Fraron&minBedrooms=3&minToilets=2&maxPrice=500000
+
+IN : Casa no Centro, no Fraron ou no Alvorada para alugar
+OUT: ?types=HOUSE&transaction=RENT&districts=Centro,Alvorada,Fraron
+
+IN : Alugar uma casa no Centro, no Fraron ou no Alvorada, você deve.
+OUT: ?types=HOUSE&transaction=RENT&districts=Centro,Alvorada,Fraron
+
+IN : Garagem para alugar no Centro
+OUT: ?types=GARAGE&transaction=RENT&districts=Centro
+
+IN : 🏠 para vender ou comprar com 3 quartos
+OUT: ?types=HOUSE&transaction=SALE&minBedrooms=3
+
+IN : 🏘️ 📝 🏙️ 🛏️ 🚽
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Centro&minBedrooms=1&minToilets=1
+
+IN : 🏘️ 📝 🏙️ 3 🛏️ 2 🚽
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Centro&minBedrooms=3&minToilets=2
+
+IN : 🏘️ 📝 🏙️ 🛏️ 🛏️ 🛏️ 🚽 🚽 🚗
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Centro&minBedrooms=3&minToilets=2&minGarages=1
+
+IN : 🏘️ 📝 🏙️ 🛏️🛏️🛏️ 🚽🚽 🚗
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Centro&minBedrooms=3&minToilets=2&minGarages=1
+
+IN : Casa à venda em Fraron com 4 quartos
+OUT: ?types=HOUSE&transaction=SALE&districts=Fraron&minBedrooms=4
+
+IN : Terreno para alugar em Alvorada
+OUT: ?types=LAND&transaction=RENT&districts=Alvorada
+
+IN : Sala comercial para venda no centro
+OUT: ?types=OFFICE&transaction=SALE&districts=Centro
+
+IN : Fazenda à venda
+OUT: ?types=FARM&transaction=SALE
+
+IN : 🏠 no centro para aluguel com 2 banheiros
+OUT: ?types=HOUSE&transaction=RENT&districts=Centro&minToilets=2
+
+IN : Apartamento para alugar no fraron com garagem para 2 carros
+OUT: ?types=APARTMENT&transaction=RENT&districts=Fraron&minGarages=2
+
+IN : Lote no Alvorada para venda
+OUT: ?types=LAND,LAND_DIVISION&transaction=SALE&districts=Alvorada
+
+IN : Chácara à venda com 5 quartos e 3 banheiros
+OUT: ?types=COUNTRY_HOUSE&transaction=SALE&minBedrooms=5&minToilets=3
+
+IN : Barracão no Fraron para aluguel
+OUT: ?types=WAREHOUSE&transaction=RENT&districts=Fraron
+
+IN : 🏬 para aluguel em Alvorada com 3 quartos
+OUT: ?types=APARTMENT&transaction=RENT&districts=Alvorada&minBedrooms=3
+
+IN : 🏡 para vender em Fraron
+OUT: ?types=COUNTRY_HOUSE&transaction=SALE&districts=Fraron
+
+IN : Ponto comercial no Centro para alugar
+OUT: ?types=BUSINESS_PREMISES&transaction=RENT&districts=Centro
+
+IN : Sobrado em Alvorada para aluguel com 4 quartos
+OUT: ?types=TWO_STOREY_HOUSE&transaction=RENT&districts=Alvorada&minBedrooms=4
+
+IN : Sítio para venda com 6 quartos
+OUT: ?types=COUNTRY_HOUSE,FARM&transaction=SALE&minBedrooms=6
+
+IN : Estacionamento no Centro para alugar
+OUT: ?types=GARAGE&transaction=RENT&districts=Centro
+
+IN : Loteamento à venda em Fraron
+OUT: ?types=LAND_DIVISION&transaction=SALE&districts=Fraron
+
+IN : Escritório para alugar no centro
+OUT: ?types=OFFICE&transaction=RENT&districts=Centro
+
+IN : 🚜 para venda
+OUT: ?types=FARM&transaction=SALE
+
+IN : 📦 para alugar em Fraron
+OUT: ?types=WAREHOUSE&transaction=RENT&districts=Fraron
+
+IN : Armazém no Alvorada para venda
+OUT: ?types=WAREHOUSE&transaction=SALE&districts=Alvorada
+
+IN : AP no centro para alugar com vaga de garagem
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&minGarages=1
+
+IN : Casa para alugar no La Salle com 3 quartos
+OUT: ?types=HOUSE&transaction=RENT&districts=La Salle&minBedrooms=3
+
+IN : Apartamento no Sâo Cristovao para venda até 200 mil reais
+OUT: ?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000
+
+IN : Apartamento no Sao Cristovão para venda até 200 mil reais
+OUT: ?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000
+
+IN : Apartamento no Sao Cristovao para venda até 200 mil reais
+OUT: ?types=APARTMENT&transaction=SALE&districts=São Cristóvão&maxPrice=200000
+
+IN : Nada
+OUT: 
+
+IN : Apartamento no centro com dois quartos até 10000 reais
+OUT: ?types=APARTMENT&districts=Centro&minBedrooms=2&maxPrice=10000
+
+IN : Casa de outros andares no Fraron com dois quartos até 10 mil reais
+OUT: ?types=TWO_STOREY_HOUSE,HOUSE,OTHER&districts=Fraron&minBedrooms=2&maxPrice=10000
+
+IN : Casa para alugar de dois andares no Fraron com três quartos até 10 mil reais
+OUT: ?types=TWO_STOREY_HOUSE,HOUSE&transaction=RENT&districts=Fraron&minBedrooms=3&maxPrice=10000
+
+IN : Casa para vender de dois andares no Fraron com três quartos até 300 mil reais
+OUT: ?types=TWO_STOREY_HOUSE,HOUSE&transaction=SALE&districts=Fraron&minBedrooms=3&maxPrice=300000
+
+IN : Casa com 102m², contendo 02 quartos, 01 sala , cozinha, 01 banheiro, área de serviço e 01 vaga de garagem
+OUT: ?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=102
+
+IN : Casa com 103m², contendo 02 quartos, 01 sala , cozinha, 01 banheiro, área de serviço e 01 vaga de garagem
+OUT: ?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=103
+
+IN : Casa com 102m²,contendo 02 quartos,01 sala,cozinha,01 banheiro,área de serviço e 01 vaga de garagem
+OUT: ?types=HOUSE&minBedrooms=2&minToilets=1&minGarages=1&minArea=102
+
+IN : alugar/apartamento/centro/pato-branco/pr/2-quartos/1-vaga/1-banheiro/100-m2
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=2&minToilets=1&minGarages=1&minArea=100
+
+IN : alugar-apartamento-centro-pato-branco-pr-2-quartos-1-vaga-1-banheiro-100-m²
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&minBedrooms=2&minToilets=1&minGarages=1&minArea=100
+
+IN : casa para alugar no jardim primavera pato-branco pr 158m2 por 2950 reais
+OUT: ?types=HOUSE&transaction=RENT&districts=Jardim Primavera&maxPrice=2950&minArea=158
+
+IN : R$500.000 a R$1.000.000
+OUT: ?minPrice=500000&maxPrice=1000000
+
+IN : R$500.000,00 a R$1.000.000,00
+OUT: ?minPrice=500000&maxPrice=1000000
+
+IN : Casa para comprar com 3 quartos maior que 200m² por menos de 2 milhões de reais
+OUT: ?types=HOUSE&transaction=SALE&minBedrooms=3&minPrice=1&maxPrice=2000000&minArea=200
+
+IN : Casa para alugar no Jardim com 3 quartos e 2 banheiros
+OUT: ?types=HOUSE&transaction=RENT&districts=Jardim Floresta,Jardim Primavera,Jardim das Américas&minBedrooms=3&minToilets=2
+
+IN : Casa ou sobrado no fraron
+OUT: ?types=TWO_STOREY_HOUSE,HOUSE&districts=Fraron
+
+IN : Apartamento para alugar no centro até 5000 reais no mínimo 100m2 ou mais
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100
+
+IN : Apartamento para alugar no centro até 5000 reais de 100m2 ou mais
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&maxArea=100
+
+IN : Casa no alto da glória ou na bela vista
+OUT: ?types=HOUSE&districts=Alto da Glória,Bela Vista
+
+IN : Sala comercial na vila esperança para alugar
+OUT: ?types=OFFICE&transaction=RENT&districts=Vila Esperança
+
+IN : Casa no jardim das américas ou no parque do som
+OUT: ?types=HOUSE&districts=Jardim Floresta,Jardim Primavera,Jardim das Américas,Parque do Som
+
+IN : jardim com casa no jardim das américas
+OUT: ?districts=Jardim Floresta,Jardim Primavera,Jardim das Américas
+
+IN : centro de casa no centro
+OUT: ?types=HOUSE&districts=Centro
+
+IN : Sala comercial e sala comercial no centro
+OUT: ?types=OFFICE&districts=Centro
+
+IN : Casa no alto da glória e na bela vista com 2 quartos
+OUT: ?types=HOUSE&districts=Alto da Glória,Bela Vista&minBedrooms=2
+
+IN : Casa no alto da glória, na bela vista e no parque do som com 1 quarto e 1 banheiro
+OUT: ?types=HOUSE&districts=Alto da Glória,Bela Vista,Parque do Som&minBedrooms=1&minToilets=1
+
+IN : Apartamento no sao cristovao
+OUT: ?types=APARTMENT&districts=São Cristóvão
+
+IN : Apartamento no são cristóvão
+OUT: ?types=APARTMENT&districts=São Cristóvão
+
+IN : Apartamento no sáo cristovão
+OUT: ?types=APARTMENT&districts=São Cristóvão
+
+IN : 
+OUT: <<threw InvalidOperationException>>
+
+IN :    
+OUT: <<threw InvalidOperationException>>
+
+IN : ...
+OUT: <<threw InvalidOperationException>>
+
+IN : ?
+OUT: <<threw InvalidOperationException>>
+
+IN : 0
+OUT: 
+
+IN : R$
+OUT: 
+
+IN : de mil a dois mil reais
+OUT: ?minPrice=1000&maxPrice=2000
+
+IN : 1 bilhão e 500 milhões
+OUT: ?minPrice=1500000000
+
+IN : duzentos e cinquenta mil reais
+OUT: ?minPrice=250000
+
+IN : casa de 3 quartos e 3 quartos
+OUT: ?types=HOUSE&minBedrooms=3&maxBedrooms=3
+
+IN : casa com garagem para 2 carros e mais uma garagem
+OUT: ?types=HOUSE&minGarages=2
+
+IN : 🛏️ 🛏️ 🛏️ 🛏️
+OUT: ?minBedrooms=4
+
