@@ -83,14 +83,13 @@ jobs:
           /n:"querystring-composer-api-netcore" \
           /d:sonar.projectDescription="Query String Composer API .NET Core" \
           /d:sonar.links.scm="https://github.com/jtsato/querystring-composer-api-netcore" \
-          /d:sonar.login="${{ env.SONAR_TOKEN }}" \
-          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.token="${{ env.SONAR_TOKEN }}" \
           /d:sonar.qualitygate.wait=false \
           /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
           /d:sonar.dotnet.excludeTestProjects=true
           dotnet build querystring-composer-api-netcore.sln --configuration Debug --no-restore
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --configuration Debug --no-build --nologo -v n
-          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
+          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
 
       - name: Environment Teardown
         if: always()
