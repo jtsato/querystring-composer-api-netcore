@@ -29,11 +29,9 @@ public sealed class DatabaseKeeper
         _clientSequenceCollectionName = configuration["CLIENT_SEQUENCE_COLLECTION_NAME"];
         _queryStructureCollectionName = configuration["QUERY_STRUCTURE_COLLECTION_NAME"];
         _queryStructureSequenceCollectionName = configuration["QUERY_STRUCTURE_SEQUENCE_COLLECTION_NAME"];
-
-        ClearCollectionsData();
     }
 
-    public void ClearCollectionsData()
+    public Task ClearCollectionsData()
     {
         List<Task> tasks =
         [
@@ -42,7 +40,7 @@ public sealed class DatabaseKeeper
             ClearCollectionsData(_queryStructureCollectionName, _queryStructureSequenceCollectionName)
         ];
 
-        Task.WhenAll(tasks);
+        return Task.WhenAll(tasks);
     }
 
     private async Task ClearCollectionsData(string collectionName, string sequenceCollectionName)

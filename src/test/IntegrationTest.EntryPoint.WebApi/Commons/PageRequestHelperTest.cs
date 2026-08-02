@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Core.Commons.Paging;
+﻿using Core.Commons.Paging;
 using EntryPoint.WebApi.Commons;
 using Xunit;
 

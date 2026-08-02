@@ -25,6 +25,15 @@ public static class SentenceParserHelper
         return Parse(CreateContext(words, nouns), confirmationWords, revocationWords);
     }
 
+    public static IList<WordInfo> Parse(SentenceParsingContext context, IList<string> confirmationWords, IList<string> revocationWords)
+    {
+        List<WordInfo> wordInfos = ClassifyIndicators(context.BaseWordInfos, confirmationWords, revocationWords);
+
+        IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, context.NounsWithWhiteSpaces);
+
+        return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
+    }
+
     // Number and noun detection depend only on the words and the query structure's full vocabulary,
     // never on a specific item's confirmation/revocation words. A search resolves every item of the
     // query structure against the same words, so this half of parsing is computed once here and reused
@@ -35,15 +44,6 @@ public static class SentenceParserHelper
         IList<string> nounsWithWhiteSpaces = [.. nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant())];
 
         return new SentenceParsingContext(baseWordInfos, nounsWithWhiteSpaces);
-    }
-
-    public static IList<WordInfo> Parse(SentenceParsingContext context, IList<string> confirmationWords, IList<string> revocationWords)
-    {
-        List<WordInfo> wordInfos = ClassifyIndicators(context.BaseWordInfos, confirmationWords, revocationWords);
-
-        IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, context.NounsWithWhiteSpaces);
-
-        return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
     }
 
     private static List<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IList<string> nounsWithWhiteSpaces)
