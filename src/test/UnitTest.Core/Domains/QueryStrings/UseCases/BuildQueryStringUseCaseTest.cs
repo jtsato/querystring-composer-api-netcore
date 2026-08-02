@@ -604,8 +604,7 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
     [InlineData
     (
         "Apartamento para alugar no centro até 5000 reais de 100m2 ou mais",
-        "?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100",
-        Skip = "Known gap: produces maxArea=100 instead of minArea=100. Tracked for stage 4."
+        "?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100"
     )]
     public async Task SuccessToBuildQueryStringManually(string searchTerms, string expectedQueryString)
     {

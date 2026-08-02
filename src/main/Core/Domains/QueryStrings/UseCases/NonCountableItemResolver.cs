@@ -64,7 +64,7 @@ public static class NonCountableItemResolver
             .OrderByDescending(keyValuePair => keyValuePair.Value)
             .ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
 
-        if (!topEntrySimilarity.Any()) return [];
+        if (topEntrySimilarity.Count == 0) return [];
 
         List<KeyValuePair<Entry, int>> immiscibleEntries =
         [
@@ -79,7 +79,7 @@ public static class NonCountableItemResolver
         }
 
         // Otherwise an immiscible entry drops out as soon as it has company.
-        if (immiscibleEntries.Any() && topEntrySimilarity.Count > 1)
+        if (immiscibleEntries.Count > 0 && topEntrySimilarity.Count > 1)
         {
             foreach (KeyValuePair<Entry, int> immiscibleEntry in immiscibleEntries)
             {

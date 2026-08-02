@@ -29,7 +29,7 @@ public static class SentenceParserHelper
         return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
     }
 
-    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(IList<WordInfo> wordInfos, IEnumerable<string> nouns)
+    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IEnumerable<string> nouns)
     {
         List<WordInfo> finalWordInfos = [];
 
@@ -342,7 +342,7 @@ public static class SentenceParserHelper
         });
     }
 
-    private static Optional<WordInfo> GetLastQuantifiedNoun(IList<WordInfo> wordInfos)
+    private static Optional<WordInfo> GetLastQuantifiedNoun(List<WordInfo> wordInfos)
     {
         if (wordInfos.Count == 0) return Optional<WordInfo>.Empty();
 
