@@ -29,7 +29,7 @@ public static class SentenceParserHelper
         return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
     }
 
-    private static IList<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IEnumerable<string> nouns)
+    private static List<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IEnumerable<string> nouns)
     {
         List<WordInfo> finalWordInfos = [];
 
