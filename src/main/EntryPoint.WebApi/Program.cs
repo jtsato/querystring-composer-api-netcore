@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Core.Commons;
 using EntryPoint.WebApi.Commons;
 using EntryPoint.WebApi.Commons.Filters;
+using Infra.MongoDB.Commons.Repository;
+using Infra.MongoDB.Domains.QueryStructures.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -89,6 +91,11 @@ public static class Program
 
         WebApplication app = builder.Build();
 
+        await EnsureIndexesAsync(app.Services.GetService(typeof(IRepository<ClientEntity>)));
+        await EnsureIndexesAsync(app.Services.GetService(typeof(ISequenceRepository<ClientSequence>)));
+        await EnsureIndexesAsync(app.Services.GetService(typeof(IRepository<QueryStructureEntity>)));
+        await EnsureIndexesAsync(app.Services.GetService(typeof(ISequenceRepository<QueryStructureSequence>)));
+
         app.UseCors("CorsPolicy");
 
         if (app.Services.GetService(typeof(IServiceResolver)) is ServiceResolver serviceResolver)
@@ -131,6 +138,14 @@ public static class Program
         );
 
         await app.RunAsync();
+    }
+
+    private static async Task EnsureIndexesAsync(object repository)
+    {
+        if (repository is IIndexInitializer indexInitializer)
+        {
+            await indexInitializer.EnsureIndexesAsync();
+        }
     }
 
     private static void ConfigureSwaggerGen(SwaggerGenOptions options)

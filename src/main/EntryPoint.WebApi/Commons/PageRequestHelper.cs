@@ -18,7 +18,7 @@ public static partial class PageRequestHelper
     public static PageRequest Of(string rawPageNumber, string rawPageSize, string rawOrderBy)
     {
         int pageNumber = int.TryParse(rawPageNumber, out int intPageNumber) ? intPageNumber : 0;
-        int pageSize = int.TryParse(rawPageSize, out int intPageSize) ? intPageSize : PageRequest.DefaultPageSize;
+        int pageSize = int.TryParse(rawPageSize, out int intPageSize) && intPageSize > 0 ? intPageSize : PageRequest.DefaultPageSize;
         return PageRequest.Of(pageNumber, pageSize, GetSort(rawOrderBy));
     }
 
@@ -33,9 +33,10 @@ public static partial class PageRequestHelper
         [
             .. strings
                 .Select(it => it.SubstringBefore(DirectionSeparator))
+                .Where(it => !string.IsNullOrWhiteSpace(it))
         ];
 
-        return Sort.By([.. properties.Select(property => GetOrder(property, orderBy))]);
+        return properties.Count == 0 ? Sort.Unsorted : Sort.By([.. properties.Select(property => GetOrder(property, orderBy))]);
     }
 
     private static Order GetOrder(string property, string orderBy)

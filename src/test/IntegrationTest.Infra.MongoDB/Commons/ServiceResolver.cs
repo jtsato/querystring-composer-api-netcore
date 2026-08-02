@@ -95,14 +95,20 @@ public sealed class ServiceResolver : IServiceResolver
 
     private IRepository<QueryStructureEntity> GetQueryStructureRepository()
     {
-        return _queryStructureRepository ??=
-            new QueryStructureRepository(_connectionFactory, _databaseName, _queryStructureCollectionName);
+        if (_queryStructureRepository != null) return _queryStructureRepository;
+
+        QueryStructureRepository queryStructureRepository = new QueryStructureRepository(_connectionFactory, _databaseName, _queryStructureCollectionName);
+        queryStructureRepository.EnsureIndexesAsync().GetAwaiter().GetResult();
+        return _queryStructureRepository = queryStructureRepository;
     }
 
     private ISequenceRepository<QueryStructureSequence> GetQueryStructureSequenceRepository()
     {
-        return _queryStructureSequenceRepository ??=
-            new QueryStructureSequenceRepository(_connectionFactory, _databaseName, _queryStructureSequenceCollectionName);
+        if (_queryStructureSequenceRepository != null) return _queryStructureSequenceRepository;
+
+        QueryStructureSequenceRepository queryStructureSequenceRepository = new QueryStructureSequenceRepository(_connectionFactory, _databaseName, _queryStructureSequenceCollectionName);
+        queryStructureSequenceRepository.EnsureIndexesAsync().GetAwaiter().GetResult();
+        return _queryStructureSequenceRepository = queryStructureSequenceRepository;
     }
 
     private IGetQueryStructureByNameGateway GetQueryStructureByUidGateway()
@@ -112,13 +118,20 @@ public sealed class ServiceResolver : IServiceResolver
 
     private IRepository<ClientEntity> GetClientRepository()
     {
-        return _clientRepository ??= new ClientRepository(_connectionFactory, _databaseName, _clientCollectionName);
+        if (_clientRepository != null) return _clientRepository;
+
+        ClientRepository clientRepository = new ClientRepository(_connectionFactory, _databaseName, _clientCollectionName);
+        clientRepository.EnsureIndexesAsync().GetAwaiter().GetResult();
+        return _clientRepository = clientRepository;
     }
 
     private ISequenceRepository<ClientSequence> GetClientSequenceRepository()
     {
-        return _clientSequenceRepository ??=
-            new ClientSequenceRepository(_connectionFactory, _databaseName, _clientSequenceCollectionName);
+        if (_clientSequenceRepository != null) return _clientSequenceRepository;
+
+        ClientSequenceRepository clientSequenceRepository = new ClientSequenceRepository(_connectionFactory, _databaseName, _clientSequenceCollectionName);
+        clientSequenceRepository.EnsureIndexesAsync().GetAwaiter().GetResult();
+        return _clientSequenceRepository = clientSequenceRepository;
     }
 
     private IRegisterClientGateway GetRegisterClientGateway()

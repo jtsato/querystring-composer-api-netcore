@@ -19,9 +19,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="F23.StringSimilarity" Version="7.0.1" />
-        <PackageReference Include="FluentValidation" Version="12.1.1" />
-        <PackageReference Include="Newtonsoft.Json.Schema" Version="4.0.1" />
+        <PackageReference Include="F23.StringSimilarity" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Newtonsoft.Json.Schema" />
     </ItemGroup>
 
 </Project>

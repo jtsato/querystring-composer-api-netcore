@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,10 +11,12 @@ namespace EntryPoint.WebApi.Commons.Models;
 public sealed class QPageRequest
 {
     [SwaggerParameter(Required = false, Description = "Results page you want to retrieve (0..N)")]
+    [DefaultValue("0")]
     [FromQuery(Name = "page")]
     public string PageNumber { get; init; }
 
     [SwaggerParameter(Required = false, Description = "Number of records per page")]
+    [DefaultValue("10")]
     [FromQuery(Name = "pageSize")]
     public string PageSize { get; init; }
 

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Infra.MongoDB.Commons.Connection;
 using Infra.MongoDB.Commons.Repository;
 using Infra.MongoDB.Domains.QueryStructures.Models;
@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Repository;
 
-public class QueryStructureSequenceRepository : ISequenceRepository<QueryStructureSequence>
+public class QueryStructureSequenceRepository : ISequenceRepository<QueryStructureSequence>, IIndexInitializer
 {
     private readonly IMongoCollection<QueryStructureSequence> _collection;
 
@@ -14,14 +14,17 @@ public class QueryStructureSequenceRepository : ISequenceRepository<QueryStructu
     {
         IMongoDatabase database = connectionFactory.GetDatabase(databaseName);
         _collection = database.GetCollection<QueryStructureSequence>(collectionName);
+    }
 
+    public async Task EnsureIndexesAsync()
+    {
         IndexKeysDefinition<QueryStructureSequence> indexKeySequenceName = Builders<QueryStructureSequence>
             .IndexKeys.Ascending(sequence => sequence.SequenceName);
 
         CreateIndexOptions uniqueIndexOptions = new CreateIndexOptions
             {Unique = true, Sparse = true, Background = false};
 
-        _collection.Indexes.CreateManyAsync([
+        await _collection.Indexes.CreateManyAsync([
             new CreateIndexModel<QueryStructureSequence>(indexKeySequenceName, uniqueIndexOptions)
         ]);
     }

@@ -1,14 +1,19 @@
-﻿using Infra.MongoDB.Commons.Connection;
+using System.Threading.Tasks;
+using Infra.MongoDB.Commons.Connection;
 using Infra.MongoDB.Commons.Repository;
 using Infra.MongoDB.Domains.QueryStructures.Models;
 using MongoDB.Driver;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Repository;
 
-public sealed class QueryStructureRepository : Repository<QueryStructureEntity>
+public sealed class QueryStructureRepository : Repository<QueryStructureEntity>, IIndexInitializer
 {
     public QueryStructureRepository(IConnectionFactory connectionFactory, string databaseName, string collectionName)
         : base(connectionFactory, databaseName, collectionName)
+    {
+    }
+
+    public async Task EnsureIndexesAsync()
     {
         IndexKeysDefinition<QueryStructureEntity> indexKeyId = Builders<QueryStructureEntity>
             .IndexKeys.Ascending(document => document.Id);
@@ -28,7 +33,7 @@ public sealed class QueryStructureRepository : Repository<QueryStructureEntity>
         CreateIndexOptions nonUniqueIndexOptions = new CreateIndexOptions
             {Unique = false, Sparse = true, Background = false};
 
-        GetCollection().Indexes
+        await GetCollection().Indexes
             .CreateManyAsync([
                 new CreateIndexModel<QueryStructureEntity>(indexKeyId, uniqueIndexOptions),
                 new CreateIndexModel<QueryStructureEntity>(indexKeyClientUid, nonUniqueIndexOptions),
