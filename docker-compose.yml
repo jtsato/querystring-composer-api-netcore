@@ -1,4 +1,3 @@
-﻿version: "3.7"
 services:
   local.webapi.mongodb:
     image: mongo:latest

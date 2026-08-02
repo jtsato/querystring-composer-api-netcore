@@ -30,41 +30,35 @@ jobs:
   run-stryker:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup .NET [v7.0.x]
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET [v10.0.x]
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            7.0.x
+            10.0.x
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: main
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Install docker-compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-      - name: Show docker-compose version
-        run: |
-          docker-compose version
+      - name: Show Docker Compose version
+        run: docker compose version
 
       - name: Start MongoDB Container
         working-directory: ./src/test/IntegrationTest.Infra.MongoDB
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Resolve dependencies
         run: dotnet restore --force --no-cache
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/pt-br 
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net7.0/en-us
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/pt-br 
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net7.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/en-us
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/en-us
 
       - name: Build in Debug Mode
         run: dotnet build --configuration Debug --no-restore
@@ -146,5 +140,5 @@ jobs:
       - name: Environment Teardown
         if: always()
         run: |
-          docker-compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml down
+          docker compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml down
           echo "Environment Teardown"

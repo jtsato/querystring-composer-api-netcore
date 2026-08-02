@@ -43,7 +43,7 @@ public sealed class ExceptionHandlerFilterAttribute : ExceptionFilterAttribute
     public override async Task OnExceptionAsync(ExceptionContext context)
     {
         string correlationId = GetCorrelationId(context);
-        context.HttpContext.Response.Headers.Add(CorrelationIdHeader, correlationId);
+        context.HttpContext.Response.Headers[CorrelationIdHeader] = correlationId;
         LogException(correlationId, context.Exception);
         context.Result = await _exceptionHandler.HandleAsync(context.Exception);
         context.ExceptionHandled = true;
@@ -52,7 +52,7 @@ public sealed class ExceptionHandlerFilterAttribute : ExceptionFilterAttribute
     public override void OnException(ExceptionContext context)
     {
         string correlationId = GetCorrelationId(context);
-        context.HttpContext.Response.Headers.Add(CorrelationIdHeader, correlationId);
+        context.HttpContext.Response.Headers[CorrelationIdHeader] = correlationId;
         LogException(correlationId, context.Exception);
         context.Result = _exceptionHandler.HandleAsync(context.Exception).Result;
         context.ExceptionHandled = true;

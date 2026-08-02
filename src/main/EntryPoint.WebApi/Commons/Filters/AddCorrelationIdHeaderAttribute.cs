@@ -16,7 +16,7 @@ public sealed class AddCorrelationIdHeaderAttribute : ResultFilterAttribute
 
     public override void OnResultExecuting(ResultExecutingContext context)
     {
-        context.HttpContext.Response.Headers.Add(CorrelationIdHeader, GetCorrelationId(context));
+        context.HttpContext.Response.Headers[CorrelationIdHeader] = GetCorrelationId(context);
     }
 
     private static string GetCorrelationId(ActionContext context)

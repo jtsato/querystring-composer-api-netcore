@@ -15,38 +15,23 @@ IF /I NOT "%~1"=="test" (
     )
 )
 
-:: Set the MongoDB host and port for the integration tests 
+:: Start the MongoDB instance used by the integration tests.
+:: --wait blocks until the container's healthcheck reports healthy.
 
-SET host=127.0.0.1
 SET port=27019
-SET timeout=30
 
 ECHO.
 ECHO Starting the integration test database...
-CALL docker-compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml up -d
+CALL docker-compose -f src/test/IntegrationTest.Infra.MongoDB/docker-compose.yml up -d --wait --wait-timeout 90
+
+IF ERRORLEVEL 1 (
+    ECHO.
+    ECHO Timed out waiting for MongoDB to start.
+    EXIT /b 1
+)
 
 ECHO.
-:wait_loop
-
-ECHO Waiting for MongoDB to start...
-
-TIMEOUT /t 1 /nobreak > nul
-
-CURL --output NUL --silent --fail !host!:!port!
-IF !ERRORLEVEL! equ 0 (
-    ECHO.
-    ECHO MongoDB is running on port !port!.
-    TIMEOUT /t 4 /nobreak > nul
-) ELSE (
-    SET /a timeout-=1
-    IF !timeout! gtr 0 (
-        goto wait_loop
-    ) ELSE (
-        ECHO.
-        ECHO Timed out waiting for MongoDB to start.
-        EXIT /b 1
-    )
-)
+ECHO MongoDB is running on port %port%.
 
 IF /I "%~1"=="test" GOTO test
 IF /I "%~1"=="coverage" GOTO coverage

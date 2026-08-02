@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Nodes;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EntryPoint.WebApi.Commons.Filters;
@@ -13,7 +13,7 @@ public sealed class CorrelationIdOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        operation.Parameters ??= new List<OpenApiParameter>();
+        operation.Parameters ??= new List<IOpenApiParameter>();
         operation.Parameters.Insert(1, new OpenApiParameter
         {
             Name = "X-Correlation-Id",
@@ -22,8 +22,8 @@ public sealed class CorrelationIdOperationFilter : IOperationFilter
             Required = false,
             Schema = new OpenApiSchema
             {
-                Type = "string",
-                Default = new OpenApiString(Guid.NewGuid().ToString())
+                Type = JsonSchemaType.String,
+                Default = JsonValue.Create(Guid.NewGuid().ToString())
             }
         });
     }

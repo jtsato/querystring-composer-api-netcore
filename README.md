@@ -1,5 +1,5 @@
 # querystring-composer-api-netcore
-This is a sample project to demonstrate the Clean Architecture principles using .NET Core 7.0
+This is a sample project to demonstrate the Clean Architecture principles using .NET 10
 
 ![CI](https://github.com/jtsato/querystring-composer-api-netcore/actions/workflows/continuous-integration.yml/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jtsato_querystring-composer-api-netcore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jtsato_querystring-composer-api-netcore)
@@ -33,7 +33,7 @@ This is a sample project to demonstrate the Clean Architecture principles using 
 
 ## Prerequisites
 
-* [.NET 7](https://dotnet.microsoft.com/download)
+* [.NET 10](https://dotnet.microsoft.com/download)
 * [Docker](https://docs.docker.com/get-docker)
 * [Docker compose](https://docs.docker.com/compose/install/)
 
@@ -106,7 +106,7 @@ dotnet stryker
 ```
 * starting the solution:
 ```
-cd EntryPoint.WebApi/bin/Debug/net7.0
+cd EntryPoint.WebApi/bin/Debug/net10.0
 dotnet EntryPoint.WebApi.dll
 ```
 ***
