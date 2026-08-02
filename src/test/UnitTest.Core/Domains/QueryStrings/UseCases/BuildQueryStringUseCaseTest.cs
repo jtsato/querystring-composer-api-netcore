@@ -599,8 +599,9 @@ public sealed class BuildQueryStringUseCaseTest : IDisposable
         "Apartamento para alugar no centro até 5000 reais no mínimo 100m2 ou mais",
         "?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100"
     )]
-    // "de" is not a minimum indicator for minArea, so the maximum opened by "até 5000 reais" stays in
-    // force and the area lands on maxArea instead of minArea.
+    // "de" is not a minimum indicator for minArea, so it is "ou mais" alone that must confirm the area
+    // as a minimum. The unrelated "até 5000 reais" clause in between must not leak its own max-ness
+    // into the area resolution.
     [InlineData
     (
         "Apartamento para alugar no centro até 5000 reais de 100m2 ou mais",

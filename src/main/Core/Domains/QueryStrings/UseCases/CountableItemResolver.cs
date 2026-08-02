@@ -64,7 +64,12 @@ public static class CountableItemResolver
         {
             WordInfo wordInfo = wordInfos[index];
 
-            if (HandleQuantifiedNoun(wordInfo, keyWords, candidates)) continue;
+            if (wordInfo.Type == WordInfoType.QuantifiedNoun)
+            {
+                if (!HandleQuantifiedNoun(wordInfo, keyWords, candidates)) CloseClauseBoundary(waitForConfirmation, wordInfoList, candidates);
+                continue;
+            }
+
             if (wordInfo.Type == WordInfoType.Noun && index > 0 && wordInfos[index - 1].Type == WordInfoType.QuantifiedNoun) continue;
             if (HandleNoun(wordInfo, keyWords, wordInfoList, waitForConfirmation)) continue;
             if (HandleConfirmationIndicator(wordInfo, candidates, wordInfoList)) continue;
@@ -75,14 +80,25 @@ public static class CountableItemResolver
 
     private static bool HandleQuantifiedNoun(WordInfo wordInfo, ICollection<string> allKeyWords, ICollection<WordInfo> candidates)
     {
-        if (wordInfo.Type != WordInfoType.QuantifiedNoun) return false;
-
         string noun = QuantifiedNoun.Parse(wordInfo.Value).Noun;
         if ((allKeyWords.Count != 0 || noun != Anonymous) && !allKeyWords.Contains(noun)) return false;
 
         candidates.Add(wordInfo);
 
         return true;
+    }
+
+    // A quantified noun that belongs to a different item ("5000 reais" while resolving area) marks the
+    // edge of this item's clause: whatever was gathered so far can no longer be confirmed or revoked by
+    // indicator words on the other side of it, so it is settled here instead.
+    private static void CloseClauseBoundary(bool waitForConfirmation, IList<WordInfo> wordInfoList, ICollection<WordInfo> candidates)
+    {
+        if (!waitForConfirmation)
+        {
+            foreach (WordInfo candidate in candidates) wordInfoList.Add(candidate);
+        }
+
+        candidates.Clear();
     }
 
     private static bool HandleNoun(WordInfo wordInfo, ICollection<string> allKeyWords, IList<WordInfo> wordInfoList, bool waitForConfirmation)

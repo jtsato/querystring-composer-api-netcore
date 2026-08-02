@@ -222,7 +222,7 @@ IN : Apartamento para alugar no centro até 5000 reais no mínimo 100m2 ou mais
 OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100
 
 IN : Apartamento para alugar no centro até 5000 reais de 100m2 ou mais
-OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&maxArea=100
+OUT: ?types=APARTMENT&transaction=RENT&districts=Centro&maxPrice=5000&minArea=100
 
 IN : Casa no alto da glória ou na bela vista
 OUT: ?types=HOUSE&districts=Alto da Glória,Bela Vista
