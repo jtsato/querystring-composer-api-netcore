@@ -20,7 +20,7 @@ public sealed class Context : IDisposable
         IConfiguration configuration = InitConfiguration();
 
         DatabaseKeeper databaseKeeper = new DatabaseKeeper(configuration);
-        databaseKeeper.ClearCollectionsData();
+        databaseKeeper.ClearCollectionsData().Wait();
 
         ServiceResolver = new ServiceResolver(configuration);
     }
