@@ -6,23 +6,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace EntryPoint.WebApi.Commons.Models;
 
-public sealed class ResponseStatus
+public sealed class ResponseStatus(int code, string message)
 {
     [SwaggerSchema(Nullable = false, Description = "HTTP response status code")]
-    public int Code { get; }
+    public int Code { get; } = code;
 
     [SwaggerSchema(Nullable = false, Description = "Response error message")]
-    public string Message { get; }
+    public string Message { get; } = message;
 
     [SwaggerSchema(Nullable = false, Description = "Detailed errors by field")]
-    public List<Field> Fields { get; }
-
-    public ResponseStatus(int code, string message)
-    {
-        Code = code;
-        Message = message;
-        Fields = new List<Field>(0);
-    }
+    public List<Field> Fields { get; } = [];
 
     [ExcludeFromCodeCoverage]
     private bool Equals(ResponseStatus other)

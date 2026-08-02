@@ -55,8 +55,7 @@ public sealed class ArgumentValidatorTest
     public void SuccessfulToValidateAnObjectListParameterIfItIsNotNull()
     {
         // Arrange
-        List<DummyClass> dummyObjects = new List<DummyClass>
-            {new DummyClass("X", "Y")};
+        List<DummyClass> dummyObjects = [new DummyClass("X", "Y")];
 
         // Act
         IReadOnlyCollection<DummyClass> result = ArgumentValidator.CheckNullOrEmpty(dummyObjects, nameof(dummyObjects));

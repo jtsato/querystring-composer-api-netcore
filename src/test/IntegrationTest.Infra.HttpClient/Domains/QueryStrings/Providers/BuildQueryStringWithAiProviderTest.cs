@@ -14,18 +14,10 @@ using Xunit.Abstractions;
 namespace Integration.Infra.HttpClient.Domains.QueryStrings.Providers;
 
 [Collection("HttpClient collection")]
-public sealed class BuildQueryStringWithAiProviderTest : IDisposable
+public sealed class BuildQueryStringWithAiProviderTest(ITestOutputHelper outputHelper) : IDisposable
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly Mock<IOpenAiApiClient> _openAiApiClientMock;
-    private readonly Mock<IGetRetryPolicy> _getRetryPolicyMock;
-
-    public BuildQueryStringWithAiProviderTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-        _openAiApiClientMock = new Mock<IOpenAiApiClient>(MockBehavior.Strict);
-        _getRetryPolicyMock = new Mock<IGetRetryPolicy>(MockBehavior.Strict);
-    }
+    private readonly Mock<IOpenAiApiClient> _openAiApiClientMock = new Mock<IOpenAiApiClient>(MockBehavior.Strict);
+    private readonly Mock<IGetRetryPolicy> _getRetryPolicyMock = new Mock<IGetRetryPolicy>(MockBehavior.Strict);
 
     private bool _disposed;
 
@@ -107,13 +99,13 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
             }))
             .ReturnsAsync(new CompletionResponse
             {
-                Choices = new[]
-                {
+                Choices =
+                [
                     new Choice
                     {
                         Text = @"\n\n?"
                     }
-                }
+                ]
             });
 
         _getRetryPolicyMock
@@ -161,13 +153,13 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
             }))
             .ReturnsAsync(new CompletionResponse
             {
-                Choices = new[]
-                {
+                Choices =
+                [
                     new Choice
                     {
                         Text = @"\n\n?types=APARTMENT&transaction=SALE&minBedrooms=3&minToilets=2&maxPrice=500000&districts=Centro,Fraron"
                     }
-                }
+                ]
             });
 
         _getRetryPolicyMock
@@ -186,7 +178,7 @@ public sealed class BuildQueryStringWithAiProviderTest : IDisposable
 
         string actual = optional.GetValue();
 
-        _outputHelper.WriteLine(actual);
+        outputHelper.WriteLine(actual);
 
         Assert.Equal("?types=APARTMENT&transaction=SALE&minBedrooms=3&minToilets=2&maxPrice=500000&districts=Centro,Fraron", actual);
     }

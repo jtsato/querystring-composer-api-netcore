@@ -5,14 +5,9 @@ namespace EntryPoint.WebApi.Commons;
 
 [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
 [SuppressMessage("Usage", "CA2254:Template should be a static expression")]
-public class LoggerAdapter<T> : ILoggerAdapter
+public class LoggerAdapter<T>(ILoggerFactory loggerFactory) : ILoggerAdapter
 {
-    private readonly ILogger<T> _logger;
-
-    public LoggerAdapter(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<T>();
-    }
+    private readonly ILogger<T> _logger = loggerFactory.CreateLogger<T>();
 
     public bool IsEnabled(LogLevel logLevel)
     {

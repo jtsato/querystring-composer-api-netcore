@@ -23,10 +23,9 @@ public sealed class ClientSequenceRepository : ISequenceRepository<ClientSequenc
         CreateIndexOptions uniqueIndexOptions = new CreateIndexOptions
             {Unique = true, Sparse = true, Background = false};
 
-        _collection.Indexes.CreateManyAsync(new[]
-        {
+        _collection.Indexes.CreateManyAsync([
             new CreateIndexModel<ClientSequence>(indexKeySequenceName, uniqueIndexOptions)
-        });
+        ]);
     }
     
     public async Task<ISequence> GetSequenceAndUpdate(FilterDefinition<ClientSequence> filterDefinition)

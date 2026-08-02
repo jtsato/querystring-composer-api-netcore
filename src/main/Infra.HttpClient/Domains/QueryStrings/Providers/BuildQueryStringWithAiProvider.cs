@@ -13,16 +13,10 @@ using Polly.Retry;
 
 namespace Infra.HttpClient.Domains.QueryStrings.Providers;
 
-public sealed class BuildQueryStringWithAiProvider : IBuildQueryStringWithAiGateway
+public sealed class BuildQueryStringWithAiProvider(IOpenAiApiClient openAiApiClient, IGetRetryPolicy getRetryPolicy) : IBuildQueryStringWithAiGateway
 {
-    private readonly IOpenAiApiClient _openAiApiClient;
-    private readonly AsyncRetryPolicy _retryPolicy;
-
-    public BuildQueryStringWithAiProvider(IOpenAiApiClient openAiApiClient, IGetRetryPolicy getRetryPolicy)
-    {
-        _openAiApiClient = ArgumentValidator.CheckNull(openAiApiClient, nameof(openAiApiClient));
-        _retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(getRetryPolicy.Attempts, _ => TimeSpan.FromSeconds(getRetryPolicy.IntervalSeconds));
-    }
+    private readonly IOpenAiApiClient _openAiApiClient = ArgumentValidator.CheckNull(openAiApiClient, nameof(openAiApiClient));
+    private readonly AsyncRetryPolicy _retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(getRetryPolicy.Attempts, _ => TimeSpan.FromSeconds(getRetryPolicy.IntervalSeconds));
 
     public async Task<Optional<string>> ExecuteAsync(QueryStructure queryStructure, string searchTerm)
     {

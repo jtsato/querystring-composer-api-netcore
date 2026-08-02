@@ -8,7 +8,7 @@ namespace IntegrationTest.EntryPoint.WebApi.Commons;
 [Collection("WebApi Collection [NoContext]")]
 public sealed class OrderByHelperTest
 {
-    private readonly string[] _sortableFields = {"Field1", "Field3", "Field5", "Field7Asc", "Field9Desc"};
+    private readonly string[] _sortableFields = ["Field1", "Field3", "Field5", "Field7Asc", "Field9Desc"];
 
     [Trait("Category", "WebApi Collection [NoContext]")]
     [Fact(DisplayName = "Successful to sanitize empty orders by query parameters")]
@@ -17,15 +17,15 @@ public sealed class OrderByHelperTest
         // Arrange
         // Act
         // Assert
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(Array.Empty<string>(), (List<string>) null));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(Array.Empty<string>(), new List<string>(0)));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(Array.Empty<string>(), new List<string> {"Id,Asc"}));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(Array.Empty<string>(), (string) null));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(Array.Empty<string>(), string.Empty));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize([], (List<string>) null));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize([], []));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize([], ["Id,Asc"]));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize([], (string) null));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize([], string.Empty));
 
         Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, (List<string>) null));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, new List<string>(0)));
-        Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, new List<string> {"Id,Asc"}));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, []));
+        Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, ["Id,Asc"]));
         Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, (string) null));
         Assert.Equal(string.Empty, OrderByHelper.Sanitize(null, string.Empty));
     }
@@ -58,7 +58,7 @@ public sealed class OrderByHelperTest
         // Arrange
         // Act
         // Assert
-        Assert.Equal(expected, OrderByHelper.Sanitize(_sortableFields, new List<string>(input.Split(","))));
+        Assert.Equal(expected, OrderByHelper.Sanitize(_sortableFields, [.. input.Split(",")]));
         Assert.Equal(expected, OrderByHelper.Sanitize(_sortableFields, input));
     }
 }

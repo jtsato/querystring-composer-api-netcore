@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Core.Exceptions;
@@ -10,14 +11,8 @@ using Microsoft.Extensions.Primitives;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class GetUserActionFilter : IActionFilter
+public sealed class GetUserActionFilter(IWebRequest webRequest) : IActionFilter
 {
-    private readonly IWebRequest _webRequest;
-
-    public GetUserActionFilter(IWebRequest webRequest)
-    {
-        _webRequest = webRequest;
-    }
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
@@ -31,9 +26,9 @@ public sealed class GetUserActionFilter : IActionFilter
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
         JwtSecurityToken jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
-        _webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower() == "clientuid")?.Value;
-        _webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower()  == "username")?.Value;
-        _webRequest.Email = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.ToLower() == "email")?.Value;
+        webRequest.ClientUid = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.Equals("clientuid", StringComparison.OrdinalIgnoreCase))?.Value;
+        webRequest.Username = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.Equals("username", StringComparison.OrdinalIgnoreCase))?.Value;
+        webRequest.Email = jwtToken?.Claims.FirstOrDefault(claim => claim.Type.Equals("email", StringComparison.OrdinalIgnoreCase))?.Value;
     }
 
     public void OnActionExecuted(ActionExecutedContext context)

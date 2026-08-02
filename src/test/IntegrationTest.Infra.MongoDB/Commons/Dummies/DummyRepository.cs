@@ -19,10 +19,9 @@ public sealed class DummyRepository : Repository<DummyEntity>
             {Unique = true, Sparse = true, Background = false};
 
         GetCollection().Indexes
-            .CreateManyAsync(new[]
-            {
+            .CreateManyAsync([
                 new CreateIndexModel<DummyEntity>(indexKeyId, uniqueIndexOptions),
                 new CreateIndexModel<DummyEntity>(indexKeyName, uniqueIndexOptions)
-            });
+            ]);
     }
 }

@@ -53,4 +53,14 @@ public readonly struct QuantifiedNoun
     {
         return HashCode.Combine(Count, Noun);
     }
+
+    public static bool operator ==(QuantifiedNoun left, QuantifiedNoun right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(QuantifiedNoun left, QuantifiedNoun right)
+    {
+        return !(left == right);
+    }
 }

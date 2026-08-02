@@ -24,6 +24,8 @@ namespace EntryPoint.WebApi;
 [ExcludeFromCodeCoverage]
 public static class Program
 {
+    private static readonly string[] HealthCheckTags = ["live", "ready"];
+
     private static async Task Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -58,7 +60,7 @@ public static class Program
         }
 
         builder.Services.AddHealthChecks()
-            .AddCheck("Health check", () => HealthCheckResult.Healthy(), tags: new[] {"live", "ready"});
+            .AddCheck("Health check", () => HealthCheckResult.Healthy(), tags: HealthCheckTags);
 
         Dictionary<Type, ServiceLifetime> lifetimeByType = DependencyInjector.ConfigureServices(builder.Services);
 
@@ -156,18 +158,17 @@ public static class Program
         options.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
         {
             {
-                new OpenApiSecuritySchemeReference("Bearer"),
-                new List<string>()
+                new OpenApiSecuritySchemeReference("Bearer"), []
             }
         });
 
         options.OperationFilter<LanguageOperationFilter>();
         options.OperationFilter<CorrelationIdOperationFilter>();
         options.DocInclusionPredicate((_, api) => !string.IsNullOrWhiteSpace(api.GroupName));
-        options.TagActionsBy(api => new[] {api.GroupName});
+        options.TagActionsBy(api => [api.GroupName]);
 
-        string[] methodsOrder = {"post", "put", "patch", "delete", "get", "options", "trace"};
-        options.OrderActionsBy(apiDesc => $"{Array.IndexOf(methodsOrder, apiDesc.HttpMethod!.ToLower())}_{apiDesc.HttpMethod}");
+        string[] methodsOrder = ["post", "put", "patch", "delete", "get", "options", "trace"];
+        options.OrderActionsBy(apiDesc => $"{Array.IndexOf(methodsOrder, apiDesc.HttpMethod.ToLower())}_{apiDesc.HttpMethod}");
     }
 
     private static void ConfigureSwagger(SwaggerOptions options)

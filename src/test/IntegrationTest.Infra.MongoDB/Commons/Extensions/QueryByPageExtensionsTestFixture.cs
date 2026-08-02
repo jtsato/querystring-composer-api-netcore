@@ -18,7 +18,7 @@ internal sealed class QueryByPageExtensionsTestFixture : IDisposable
         _repository = context.ServiceResolver.Resolve<IRepository<DummyEntity>>();
         _sequenceRepository = context.ServiceResolver.Resolve<ISequenceRepository<DummySequence>>();
         
-        string[] colors = {"Black", "White", "Red", "Green", "Blue", "Yellow", "Purple", "Orange", "Brown", "Gray"};
+        string[] colors = ["Black", "White", "Red", "Green", "Blue", "Yellow", "Purple", "Orange", "Brown", "Gray"];
 
         Task[] tasks = new Task[colors.Length];
         
@@ -53,8 +53,8 @@ internal sealed class QueryByPageExtensionsTestFixture : IDisposable
 
     public void Dispose()
     {
-        List<FilterDefinition<DummyEntity>> filterDefinitions = new List<FilterDefinition<DummyEntity>>
-        {
+        List<FilterDefinition<DummyEntity>> filterDefinitions =
+        [
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "Black"),
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "White"),
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "Red"),
@@ -65,7 +65,7 @@ internal sealed class QueryByPageExtensionsTestFixture : IDisposable
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "Orange"),
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "Brown"),
             Builders<DummyEntity>.Filter.Eq(entity => entity.Name, "Gray")
-        };
+        ];
 
         _repository.DeleteManyAsync(Builders<DummyEntity>.Filter.Or(filterDefinitions));
 

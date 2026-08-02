@@ -35,45 +35,44 @@ public static class JsonSchemaValidator
     private static List<FieldError> GetMissingFieldsErrors(JObject jObject, JSchema jSchema)
     {
         return
-        (
-            from keyValuePair in jSchema.Properties
+        [
+            .. from keyValuePair in jSchema.Properties
             where !jObject.ContainsKey(keyValuePair.Key)
             select new FieldError
             {
-                PropertyName = keyValuePair.Key,
-                ErrorMessage = "CommonJsonPropertyMissing"
+                PropertyName = keyValuePair.Key, ErrorMessage = "CommonJsonPropertyMissing"
             }
-        ).ToList();
+        ];
     }
 
     private static List<FieldError> GetExtraFieldsErrors(JObject jObject, JSchema jSchema)
     {
-        return (
-            from property in jObject.Properties()
+        return
+        [
+            .. from property in jObject.Properties()
             where !jSchema.Properties.ContainsKey(property.Name)
             select new FieldError
             {
-                PropertyName = property.Name,
-                AttemptedValue = property.Value.ToString(),
+                PropertyName = property.Name, AttemptedValue = property.Value.ToString(),
                 ErrorMessage = "CommonJsonPropertyInvalid"
             }
-        ).ToList();
+        ];
     }
 
     private static List<FieldError> GetWrongTypeFieldsErrors(JToken jObject, JSchema jSchema)
     {
-        IList<ValidationError> schemaErrors = new List<ValidationError>();
+        List<ValidationError> schemaErrors = [];
 
         jObject.Validate(jSchema, (_, args) => schemaErrors.Add(args.ValidationError));
 
         IList<FieldError> fieldErrors =
-        (
-            from validationError in schemaErrors
+        [
+            .. from validationError in schemaErrors
             where validationError.ErrorType.Equals(ErrorType.Type)
             select WrongTypeFieldErrorOf(validationError)
-        ).ToList();
+        ];
 
-        return fieldErrors.ToList();
+        return [.. fieldErrors];
     }
 
     private static FieldError WrongTypeFieldErrorOf(ValidationError validationError)

@@ -9,22 +9,13 @@ using Xunit.Abstractions;
 namespace IntegrationTest.EntryPoint.WebApi.Commons;
 
 [Collection("WebApi Collection [NoContext]")]
-public sealed class MessageResourceMappingTest : IClassFixture<CoreMessageKeysFixture>
+public sealed class MessageResourceMappingTest(ITestOutputHelper outputHelper, CoreMessageKeysFixture coreMessageKeysFixture) : IClassFixture<CoreMessageKeysFixture>
 {
     private static readonly string WebApiProjectFolder = GetProjectsByCsprojFile.Projects["EntryPoint.WebApi"];
     
     private const string DefaultMessageResourcePath = "Messages.resx";
     private const string EnUsMessageResourcePath = "Messages.en-US.resx";
     private const string PtBrMessageResourcePath = "Messages.pt-BR.resx";
-
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly CoreMessageKeysFixture _coreMessageKeysFixture;
-
-    public MessageResourceMappingTest(ITestOutputHelper outputHelper, CoreMessageKeysFixture coreMessageKeysFixture)
-    {
-        _outputHelper = outputHelper;
-        _coreMessageKeysFixture = coreMessageKeysFixture;
-    }
 
     [Trait("Category", "WebApi Collection [NoContext]")]
     [Theory(DisplayName = "Successful to validate messages mapped in message resources ")]
@@ -38,7 +29,7 @@ public sealed class MessageResourceMappingTest : IClassFixture<CoreMessageKeysFi
         List<string> messageResourcesKeys = GetMessageResourcesKeysByFilePath(messageResourcePath);
 
         // Act 
-        IEnumerable<string> coreProjectMessageKeys = _coreMessageKeysFixture.GetCoreProjectMessageKeys();
+        IEnumerable<string> coreProjectMessageKeys = coreMessageKeysFixture.GetCoreProjectMessageKeys();
         IEnumerable<string> messageKeysNotMappedInResourceFile =
             GetMessagesKeysNotMappedInResourceFile(messageResource, coreProjectMessageKeys, messageResourcesKeys);
 
@@ -54,13 +45,13 @@ public sealed class MessageResourceMappingTest : IClassFixture<CoreMessageKeysFi
         ICollection<string> messageResourcesKeys
     )
     {
-        List<string> messageKeysNotMappedInResourceFile = new List<string>();
+        List<string> messageKeysNotMappedInResourceFile = [];
         IEnumerable<string> messageKeys = coreProjectMessageKeys.Where(messageKey => !messageResourcesKeys.Contains(messageKey));
 
         foreach (string messageKey in messageKeys)
         {
             messageKeysNotMappedInResourceFile.Add(messageKey);
-            _outputHelper.WriteLine(
+            outputHelper.WriteLine(
                 $"The message key \"{messageKey}\" was not found in resource file {messageResource}");
         }
 
@@ -69,8 +60,11 @@ public sealed class MessageResourceMappingTest : IClassFixture<CoreMessageKeysFi
 
     private static List<string> GetMessageResourcesKeysByFilePath(string messageResourcePath)
     {
-        return (from line in File.ReadLines(messageResourcePath)
+        return
+        [
+            .. from line in File.ReadLines(messageResourcePath)
             where line.Contains("<data name=\"")
-            select line.SubstringAfter("<data name=\"").SubstringBefore("\" xml:space")).ToList();
+            select line.SubstringAfter("<data name=\"").SubstringBefore("\" xml:space")
+        ];
     }
 }

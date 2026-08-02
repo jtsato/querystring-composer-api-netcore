@@ -17,18 +17,16 @@ public static class MongoCollectionQueryByPageExtensions
         int pageSize)
     {
         AggregateFacet<TDocument, AggregateCountResult> countFacet = AggregateFacet.Create("count",
-            PipelineDefinition<TDocument, AggregateCountResult>.Create(new[]
-            {
+            PipelineDefinition<TDocument, AggregateCountResult>.Create([
                 PipelineStageDefinitionBuilder.Count<TDocument>()
-            }));
+            ]));
 
         AggregateFacet<TDocument, TDocument> dataFacet = AggregateFacet.Create("content",
-            PipelineDefinition<TDocument, TDocument>.Create(new[]
-            {
+            PipelineDefinition<TDocument, TDocument>.Create([
                 PipelineStageDefinitionBuilder.Sort(sortDefinition),
                 PipelineStageDefinitionBuilder.Skip<TDocument>(pageNumber * pageSize),
                 PipelineStageDefinitionBuilder.Limit<TDocument>(pageSize)
-            }));
+            ]));
 
         List<AggregateFacetResults> aggregation = await collection.Aggregate()
             .Match(filterDefinition)
@@ -46,7 +44,7 @@ public static class MongoCollectionQueryByPageExtensions
         return (totalPages, totalOfElements, content);
     }
 
-    private static long GetTotalOfElements(IReadOnlyList<AggregateFacetResults> aggregation)
+    private static long GetTotalOfElements(List<AggregateFacetResults> aggregation)
     {
         AggregateFacetResult? aggregateFacetResult = aggregation[0].Facets.FirstOrDefault(element => element.Name == "count");
         return aggregateFacetResult is not null && aggregateFacetResult.Output<AggregateCountResult>().Count != 0

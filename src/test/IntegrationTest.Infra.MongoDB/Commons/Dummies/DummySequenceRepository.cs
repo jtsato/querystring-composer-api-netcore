@@ -22,10 +22,9 @@ public sealed class DummySequenceRepository : ISequenceRepository<DummySequence>
         CreateIndexOptions uniqueIndexOptions = new CreateIndexOptions
             {Unique = true, Sparse = true, Background = false};
 
-        _collection.Indexes.CreateManyAsync(new[]
-        {
+        _collection.Indexes.CreateManyAsync([
             new CreateIndexModel<DummySequence>(indexKeySequenceName, uniqueIndexOptions)
-        });
+        ]);
     }
     
     public async Task<ISequence> GetSequenceAndUpdate(FilterDefinition<DummySequence> filterDefinition)

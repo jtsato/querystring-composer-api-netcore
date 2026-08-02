@@ -23,7 +23,7 @@ public sealed class PageRequestHelperTest
         Assert.NotNull(pageRequest.Sort);
         Assert.NotEmpty(pageRequest.Sort.GetOrders());
 
-        Order[] orders = pageRequest.Sort.GetOrders().ToArray();
+        Order[] orders = [.. pageRequest.Sort.GetOrders()];
         Assert.Equal(2, orders.Length);
 
         Order order1 = orders[0];

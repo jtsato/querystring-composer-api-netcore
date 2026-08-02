@@ -14,6 +14,6 @@ internal class CharacterSubstitution : ICharacterSubstitution
 
     public double Cost(char c1, char c2)
     {
-        return _substitutions.TryGetValue($"{c1}{c2}", out double substitution) ? substitution : 1.0;
+        return _substitutions.GetValueOrDefault($"{c1}{c2}", 1.0);
     }
 }

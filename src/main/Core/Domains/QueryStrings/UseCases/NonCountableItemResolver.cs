@@ -31,18 +31,20 @@ public static class NonCountableItemResolver
     // The sentence parser merges a quantifier with the noun it qualifies into a single "3 quartos"
     // value. A non-countable item matches single words only, so each parsed value is reduced back to
     // its leading token.
-    private static IList<string> ToLeadingTokens(Item item, IList<string> allNouns, IList<string> words)
+    private static List<string> ToLeadingTokens(Item item, IList<string> allNouns, IList<string> words)
     {
         IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
 
-        return wordInfos
-            .Select(wordInfo => wordInfo.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
-            .ToList();
+        return
+        [
+            .. wordInfos
+                .Select(wordInfo => wordInfo.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
+        ];
     }
 
     private static HashSet<string> PickupMultipleEntryKeys(ICollection<Entry> entries, IList<string> words)
     {
-        IDictionary<Entry, int> entrySimilarity = new Dictionary<Entry, int>(entries.Count);
+        Dictionary<Entry, int> entrySimilarity = new Dictionary<Entry, int>(entries.Count);
 
         foreach (Entry entry in entries)
         {
@@ -62,16 +64,18 @@ public static class NonCountableItemResolver
             .OrderByDescending(keyValuePair => keyValuePair.Value)
             .ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
 
-        if (!topEntrySimilarity.Any()) return new HashSet<string>();
+        if (!topEntrySimilarity.Any()) return [];
 
-        IList<KeyValuePair<Entry, int>> immiscibleEntries = topEntrySimilarity
-            .Where(keyValuePair => keyValuePair.Key.Immiscible)
-            .ToList();
+        List<KeyValuePair<Entry, int>> immiscibleEntries =
+        [
+            .. topEntrySimilarity
+                .Where(keyValuePair => keyValuePair.Key.Immiscible)
+        ];
 
         // When every top entry is immiscible there is nothing to keep them apart from, so the best one wins.
         if (immiscibleEntries.Count == topEntrySimilarity.Count)
         {
-            return new HashSet<string> {immiscibleEntries[0].Key.Key};
+            return [immiscibleEntries[0].Key.Key];
         }
 
         // Otherwise an immiscible entry drops out as soon as it has company.
@@ -87,8 +91,8 @@ public static class NonCountableItemResolver
 
         // An exclusive entry covers the others, so it answers alone.
         return topEntry.Exclusive
-            ? new HashSet<string> {topEntry.Key}
-            : new HashSet<string>(topEntrySimilarity.Keys.Select(entry => entry.Key));
+            ? [topEntry.Key]
+            : [.. topEntrySimilarity.Keys.Select(entry => entry.Key)];
     }
 
     private static double GetMaxSimilarity(IEnumerable<string> words, string term)

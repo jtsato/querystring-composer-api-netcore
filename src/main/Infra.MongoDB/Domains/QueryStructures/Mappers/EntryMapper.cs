@@ -9,7 +9,7 @@ public static class EntryMapper
 {
     public static IList<Entry> ToModel(this IList<EntryEntity> entities)
     {
-        IList<Entry> models = new List<Entry>(entities.Count);
+        List<Entry> models = new List<Entry>(entities.Count);
         foreach (EntryEntity entity in entities)
         {
             models.Add(entity.ToModel());
@@ -33,7 +33,7 @@ public static class EntryMapper
     
     public static IList<EntryEntity> ToEntity(this IList<Entry> models)
     {
-        IList<EntryEntity> entities = new List<EntryEntity>(models.Count);
+        List<EntryEntity> entities = new List<EntryEntity>(models.Count);
         foreach (Entry model in models)
         {
             entities.Add(model.ToEntity());

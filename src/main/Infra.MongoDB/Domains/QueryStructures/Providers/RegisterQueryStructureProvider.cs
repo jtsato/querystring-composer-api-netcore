@@ -9,18 +9,12 @@ using MongoDB.Driver;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Providers;
 
-public sealed class RegisterQueryStructureProvider : IRegisterQueryStructureGateway
+public sealed class RegisterQueryStructureProvider(IRepository<QueryStructureEntity> entityRepository, ISequenceRepository<QueryStructureSequence> sequenceRepository) : IRegisterQueryStructureGateway
 {
     private const string KeyField = "id";
 
-    private readonly IRepository<QueryStructureEntity> _entityRepository;
-    private readonly ISequenceRepository<QueryStructureSequence> _sequenceRepository;
-
-    public RegisterQueryStructureProvider(IRepository<QueryStructureEntity> entityRepository, ISequenceRepository<QueryStructureSequence> sequenceRepository)
-    {
-        _entityRepository = ArgumentValidator.CheckNull(entityRepository, nameof(entityRepository));
-        _sequenceRepository = ArgumentValidator.CheckNull(sequenceRepository, nameof(sequenceRepository));
-    }
+    private readonly IRepository<QueryStructureEntity> _entityRepository = ArgumentValidator.CheckNull(entityRepository, nameof(entityRepository));
+    private readonly ISequenceRepository<QueryStructureSequence> _sequenceRepository = ArgumentValidator.CheckNull(sequenceRepository, nameof(sequenceRepository));
 
     public async Task<QueryStructure> ExecuteAsync(QueryStructure queryStructure)
     {

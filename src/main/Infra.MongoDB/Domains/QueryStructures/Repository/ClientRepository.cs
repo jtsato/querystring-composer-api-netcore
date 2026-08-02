@@ -23,11 +23,10 @@ public sealed class ClientRepository : Repository<ClientEntity>
             {Unique = true, Sparse = true, Background = false};
 
         GetCollection().Indexes
-            .CreateManyAsync(new[]
-            {
+            .CreateManyAsync([
                 new CreateIndexModel<ClientEntity>(indexKeyId, uniqueIndexOptions),
                 new CreateIndexModel<ClientEntity>(indexKeyUid, uniqueIndexOptions),
                 new CreateIndexModel<ClientEntity>(indexKeyName, uniqueIndexOptions)
-            });
+            ]);
     }
 }

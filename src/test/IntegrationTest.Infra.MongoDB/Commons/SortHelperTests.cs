@@ -14,11 +14,11 @@ public class SortHelperTests
     public void SuccessfulToGetSortDefinition()
     {
         // Arrange
-        List<Order> orders = new List<Order>
-        {
+        List<Order> orders =
+        [
             new Order(direction: Direction.Asc, property: "Name"),
             new Order(direction: Direction.Desc, property: "Surname")
-        };
+        ];
 
         // Act
         SortDefinition<DummyEntity> sortDefinition = SortHelper.GetSortDefinitions<DummyEntity>(orders);

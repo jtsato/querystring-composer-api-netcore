@@ -9,11 +9,13 @@ public static class SortHelper
 {
     public static SortDefinition<T> GetSortDefinitions<T>(IEnumerable<Order> orders)
     {
-        List<SortDefinition<T>> definitions = orders
-            .Select(order => order.Direction == Direction.Asc
-                ? Builders<T>.Sort.Ascending(order.Property)
-                : Builders<T>.Sort.Descending(order.Property))
-            .ToList();
+        List<SortDefinition<T>> definitions =
+        [
+            .. orders
+                .Select(order => order.Direction == Direction.Asc
+                    ? Builders<T>.Sort.Ascending(order.Property)
+                    : Builders<T>.Sort.Descending(order.Property))
+        ];
 
         return Builders<T>.Sort.Combine(definitions);
     }

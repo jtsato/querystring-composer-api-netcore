@@ -21,10 +21,9 @@ public class QueryStructureSequenceRepository : ISequenceRepository<QueryStructu
         CreateIndexOptions uniqueIndexOptions = new CreateIndexOptions
             {Unique = true, Sparse = true, Background = false};
 
-        _collection.Indexes.CreateManyAsync(new[]
-        {
+        _collection.Indexes.CreateManyAsync([
             new CreateIndexModel<QueryStructureSequence>(indexKeySequenceName, uniqueIndexOptions)
-        });
+        ]);
     }
 
     public async Task<ISequence> GetSequenceAndUpdate(FilterDefinition<QueryStructureSequence> filterDefinition)

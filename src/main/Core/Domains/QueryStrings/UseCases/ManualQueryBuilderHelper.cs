@@ -17,11 +17,13 @@ public static class ManualQueryBuilderHelper
     {
         IList<string> words = SearchTermsNormalizer.ToWords(rawSearchTerms);
 
-        IList<string> allNouns = queryStructure.Items
-            .SelectMany(item => item.Entries)
-            .SelectMany(entry => entry.KeyWords)
-            .ToList();
-
+        IList<string> allNouns =
+        [
+            .. queryStructure.Items
+                .SelectMany(item => item.Entries)
+                .SelectMany(entry => entry.KeyWords)
+        ];
+    
         Dictionary<string, QueryParameter> queryParameters = new Dictionary<string, QueryParameter>();
 
         foreach (Item item in ItemsByRank(queryStructure, countable: false))

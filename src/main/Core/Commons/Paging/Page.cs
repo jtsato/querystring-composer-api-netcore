@@ -4,14 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace Core.Commons.Paging;
 
 [ExcludeFromCodeCoverage]
-public class Page<T>
+public class Page<T>(IReadOnlyList<T> content, Pageable pageable)
 {
-    public IReadOnlyList<T> Content { get; }
-    public Pageable Pageable { get; }
+    public IReadOnlyList<T> Content { get; } = content;
+    public Pageable Pageable { get; } = pageable;
 
-    public Page(IReadOnlyList<T> content, Pageable pageable)
-    {
-        Content = content;
-        Pageable = pageable;
-    }
 }

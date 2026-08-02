@@ -33,7 +33,7 @@ public abstract class Repository<T> : IRepository<T>
 
     public async Task<List<T>> FindAllAsync(FilterDefinition<T> filterDefinition)
     {
-        return (await _collection.FindAsync(filterDefinition)).ToList();
+        return await (await _collection.FindAsync(filterDefinition)).ToListAsync();
     }
 
     public async Task<T> SaveAsync(T entity)
@@ -70,6 +70,6 @@ public abstract class Repository<T> : IRepository<T>
     public async Task<List<T>> UpdateManyAsync(FilterDefinition<T> filterDefinition, UpdateDefinition<T> updateDefinition)
     {
         await _collection.UpdateManyAsync(filterDefinition, updateDefinition);
-        return (await _collection.FindAsync(filterDefinition)).ToList();
+        return await (await _collection.FindAsync(filterDefinition)).ToListAsync();
     }
 }

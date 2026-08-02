@@ -298,11 +298,11 @@ public sealed class GetQueryStructureByNameProviderTestFixture : IDisposable
 
     public void Dispose()
     {
-        List<FilterDefinition<QueryStructureEntity>> filterDefinitions = new List<FilterDefinition<QueryStructureEntity>>
-            {
-                new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.Name, "properties-search-query-structure"),
-                new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b15")
-            };
+        List<FilterDefinition<QueryStructureEntity>> filterDefinitions =
+        [
+            new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.Name, "properties-search-query-structure"),
+            new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b15")
+        ];
 
         _repository.DeleteManyAsync(new FilterDefinitionBuilder<QueryStructureEntity>().And(filterDefinitions)).Wait();
 

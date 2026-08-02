@@ -7,28 +7,20 @@ using Xunit.Sdk;
 namespace IntegrationTest.EntryPoint.WebApi.Commons;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class UseCultureAttribute : BeforeAfterTestAttribute
+public class UseCultureAttribute(string culture, string uiCulture) : BeforeAfterTestAttribute
 {
-    private readonly string _cultureName;
-    private readonly string _uiCultureName;
-        
+
     private CultureInfo _originalCulture;
     private CultureInfo _originalUiCulture;
 
     public UseCultureAttribute(string culture) : this(culture, culture) { }
-
-    public UseCultureAttribute(string culture, string uiCulture)
-    {
-        _cultureName = culture;
-        _uiCultureName = uiCulture;
-    }
 
     public override void Before(MethodInfo methodUnderTest)
     {
         _originalCulture = Thread.CurrentThread.CurrentCulture;
         _originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
-        SetThreadCultures(_cultureName, _uiCultureName);
+        SetThreadCultures(culture, uiCulture);
     }
 
     public override void After(MethodInfo methodUnderTest)

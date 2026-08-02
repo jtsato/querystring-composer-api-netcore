@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace EntryPoint.WebApi.Commons.Filters;
 
+[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class AddCorrelationIdHeaderAttribute : ResultFilterAttribute
 {

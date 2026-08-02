@@ -6,15 +6,9 @@ using Xunit.Abstractions;
 
 namespace UnitTest.Core.Domains.QueryStructures.Commands;
 
-public sealed class RegisterQueryStructureCommandValidatorTest
+public sealed class RegisterQueryStructureCommandValidatorTest(ITestOutputHelper outputHelper)
 {
-    private readonly ITestOutputHelper _outputHelper;
-    
-    public RegisterQueryStructureCommandValidatorTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
-    
+
     [Trait("Category", "Core Business tests")]
     [Fact(DisplayName = "Fail to register query structure with null parameters")]
     public void FailToRegisterQueryStructureWithNullParameters()
@@ -53,7 +47,7 @@ public sealed class RegisterQueryStructureCommandValidatorTest
             )
         );
         
-        _outputHelper.WriteLine(command.ToString());
+        outputHelper.WriteLine(command.ToString());
 
         // Assert
         Assert.NotNull(command);

@@ -12,16 +12,9 @@ using Xunit.Abstractions;
 namespace IntegrationTest.Infra.MongoDB.Domains.QueryStructures.Providers;
 
 [Collection("Database collection")]
-public sealed class GetQueryStructureByNameProviderTest : IClassFixture<GetQueryStructureByNameProviderTestFixture>
+public sealed class GetQueryStructureByNameProviderTest(ITestOutputHelper outputHelper, Context context) : IClassFixture<GetQueryStructureByNameProviderTestFixture>
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly IGetQueryStructureByNameGateway _getQueryStructureByNameGateway;
-
-    public GetQueryStructureByNameProviderTest(ITestOutputHelper outputHelper, Context context)
-    {
-        _outputHelper = outputHelper;
-        _getQueryStructureByNameGateway = context.ServiceResolver.Resolve<IGetQueryStructureByNameGateway>();
-    }
+    private readonly IGetQueryStructureByNameGateway _getQueryStructureByNameGateway = context.ServiceResolver.Resolve<IGetQueryStructureByNameGateway>();
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]
     [Fact(DisplayName = "Successful to get query structure by client uid and name")]
@@ -39,7 +32,7 @@ public sealed class GetQueryStructureByNameProviderTest : IClassFixture<GetQuery
         Assert.True(optional.HasValue());
 
         QueryStructure queryStructure = optional.GetValue();
-        _outputHelper.WriteLine(queryStructure.ToString());
+        outputHelper.WriteLine(queryStructure.ToString());
 
         // Main properties
         Assert.Equal("490f1db4-ed14-4cdc-a09f-401048951b15", queryStructure.ClientUid);

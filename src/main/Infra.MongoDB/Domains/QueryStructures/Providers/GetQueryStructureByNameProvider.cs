@@ -13,15 +13,10 @@ using MongoDB.Driver;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Providers;
 
-public class GetQueryStructureByNameProvider : IGetQueryStructureByNameGateway
+public class GetQueryStructureByNameProvider(IRepository<QueryStructureEntity> clientRepository) : IGetQueryStructureByNameGateway
 {
-    private readonly IRepository<QueryStructureEntity> _clientRepository;
-    private readonly ObjectCache _cache = MemoryCache.Default;
-
-    public GetQueryStructureByNameProvider(IRepository<QueryStructureEntity> clientRepository)
-    {
-        _clientRepository = ArgumentValidator.CheckNull(clientRepository, nameof(clientRepository));
-    }
+    private readonly IRepository<QueryStructureEntity> _clientRepository = ArgumentValidator.CheckNull(clientRepository, nameof(clientRepository));
+    private readonly MemoryCache _cache = MemoryCache.Default;
 
     public async Task<Core.Commons.Optional<QueryStructure>> ExecuteAsync(string clientUid, string name)
     {
@@ -62,7 +57,7 @@ public class GetQueryStructureByNameProvider : IGetQueryStructureByNameGateway
     
     private static FilterDefinition<QueryStructureEntity> GetFilterDefinition(string clientUid, string name)
     {
-        IList<FilterDefinition<QueryStructureEntity>> filters = new List<FilterDefinition<QueryStructureEntity>>();
+        List<FilterDefinition<QueryStructureEntity>> filters = [];
 
         FilterHelper.AddEqualsFilter(filters, entity => entity.ClientUid, clientUid);
         FilterHelper.AddEqualsFilter(filters, entity => entity.Name, name);

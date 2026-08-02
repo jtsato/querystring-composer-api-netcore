@@ -9,7 +9,7 @@ public static class ItemMapper
 {
     public static IList<Item> ToModel(this IList<ItemEntity> entities)
     {
-        IList<Item> models = new List<Item>(entities.Count);
+        List<Item> models = new List<Item>(entities.Count);
         foreach (ItemEntity entity in entities)
         {
             models.Add(entity.ToModel());
@@ -35,7 +35,7 @@ public static class ItemMapper
     
     public static IList<ItemEntity> ToEntity(this IList<Item> models)
     {
-        IList<ItemEntity> entities = new List<ItemEntity>(models.Count);
+        List<ItemEntity> entities = new List<ItemEntity>(models.Count);
         foreach (Item model in models)
         {
             entities.Add(model.ToEntity());

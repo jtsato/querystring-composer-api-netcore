@@ -247,16 +247,10 @@ public sealed class OptionalTest
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class DummyClass
+    private sealed class DummyClass(string foo, string bar)
     {
-        public string Foo { get; }
-        public string Bar { get; }
-
-        public DummyClass(string foo, string bar)
-        {
-            Foo = foo;
-            Bar = bar;
-        }
+        public string Foo { get; } = foo;
+        public string Bar { get; } = bar;
 
         private bool Equals(DummyClass other)
         {
@@ -281,16 +275,10 @@ public sealed class OptionalTest
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class DummyClassTwo
+    private sealed class DummyClassTwo(string foo, string bar)
     {
-        public string Foo { get; init; }
-        public string Bar { get; init; }
-
-        public DummyClassTwo(string foo, string bar)
-        {
-            Foo = foo;
-            Bar = bar;
-        }
+        public string Foo { get; init; } = foo;
+        public string Bar { get; init; } = bar;
 
         private bool Equals(DummyClassTwo other)
         {
@@ -324,13 +312,9 @@ public sealed class OptionalTest
         }
     }
 
-    private struct DummyStruct
+    private struct DummyStruct(string value)
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = value;
 
-        public DummyStruct(string value)
-        {
-            Value = value;
-        }
     }
 }

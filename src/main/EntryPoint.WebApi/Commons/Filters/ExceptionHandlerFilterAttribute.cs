@@ -16,29 +16,24 @@ using Microsoft.Extensions.Primitives;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
+[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-public sealed class ExceptionHandlerFilterAttribute : ExceptionFilterAttribute
+public sealed class ExceptionHandlerFilterAttribute(IExceptionHandler exceptionHandler, ILoggerAdapter logger) : ExceptionFilterAttribute
 {
     private const string CorrelationIdHeader = "X-Correlation-Id";
 
-    private readonly List<Type> _businessExceptions = new List<Type>
-    {
+    private readonly List<Type> _businessExceptions =
+    [
         typeof(AccessDeniedException),
         typeof(InvalidArgumentException),
         typeof(NotFoundException),
         typeof(ParentConstraintException),
         typeof(UniqueConstraintException),
         typeof(ValidationException)
-    };
+    ];
 
-    private readonly IExceptionHandler _exceptionHandler;
-    private readonly ILoggerAdapter _logger;
-
-    public ExceptionHandlerFilterAttribute(IExceptionHandler exceptionHandler, ILoggerAdapter logger)
-    {
-        _exceptionHandler = ArgumentValidator.CheckNull(exceptionHandler, nameof(exceptionHandler));
-        _logger = ArgumentValidator.CheckNull(logger, nameof(logger));
-    }
+    private readonly IExceptionHandler _exceptionHandler = ArgumentValidator.CheckNull(exceptionHandler, nameof(exceptionHandler));
+    private readonly ILoggerAdapter _logger = ArgumentValidator.CheckNull(logger, nameof(logger));
 
     public override async Task OnExceptionAsync(ExceptionContext context)
     {

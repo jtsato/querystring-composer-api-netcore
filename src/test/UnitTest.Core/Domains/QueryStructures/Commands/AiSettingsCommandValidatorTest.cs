@@ -6,15 +6,9 @@ using Xunit.Abstractions;
 
 namespace UnitTest.Core.Domains.QueryStructures.Commands;
 
-public class AiSettingsCommandValidatorTest
+public class AiSettingsCommandValidatorTest(ITestOutputHelper outputHelper)
 {
-    private readonly ITestOutputHelper _outputHelper;
-    
-    public AiSettingsCommandValidatorTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
-    
+
     [Trait("Category", "Core Business tests")]
     [Fact(DisplayName = "Fail to validate AI settings with null UsagePercentage")]
     public void FailToValidateAiSettingsWithNullUsagePercentage()
@@ -30,7 +24,7 @@ public class AiSettingsCommandValidatorTest
             promptTemplate: "prompt_template"
         ));
         
-        _outputHelper.WriteLine(exception?.Message ?? "No exception");
+        outputHelper.WriteLine(exception?.Message ?? "No exception");
 
         // Assert
         Assert.NotNull(exception);
@@ -53,7 +47,7 @@ public class AiSettingsCommandValidatorTest
             promptTemplate: "prompt_template"
         ));
         
-        _outputHelper.WriteLine(exception?.Message ?? "No exception");
+        outputHelper.WriteLine(exception?.Message ?? "No exception");
 
         // Assert
         Assert.NotNull(exception);
@@ -76,7 +70,7 @@ public class AiSettingsCommandValidatorTest
             promptTemplate: "prompt_template"
         ));
         
-        _outputHelper.WriteLine(exception?.Message ?? "No exception");
+        outputHelper.WriteLine(exception?.Message ?? "No exception");
 
         // Assert
         Assert.NotNull(exception);
@@ -100,7 +94,7 @@ public class AiSettingsCommandValidatorTest
             promptTemplate: "prompt_template"
         ));
         
-        _outputHelper.WriteLine(exception?.Message ?? "No exception");
+        outputHelper.WriteLine(exception?.Message ?? "No exception");
 
         // Assert
         Assert.Null(exception);

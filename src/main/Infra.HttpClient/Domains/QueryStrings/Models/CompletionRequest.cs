@@ -23,7 +23,7 @@ public sealed class CompletionRequest
     private bool Equals(CompletionRequest other)
     {
         return Model == other.Model
-               && Temperature.Equals(other.Temperature)
+               && Math.Abs(Temperature - other.Temperature) < double.Epsilon
                && MaxTokens == other.MaxTokens
                && Prompt == other.Prompt;
     }

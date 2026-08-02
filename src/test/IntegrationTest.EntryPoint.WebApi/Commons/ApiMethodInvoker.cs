@@ -6,14 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IntegrationTest.EntryPoint.WebApi.Commons;
 
-public sealed class ApiMethodInvoker
+public sealed class ApiMethodInvoker(IExceptionHandler exceptionHandler)
 {
-    private readonly IExceptionHandler _exceptionHandler;
-
-    public ApiMethodInvoker(IExceptionHandler exceptionHandler)
-    {
-        _exceptionHandler = ArgumentValidator.CheckNull(exceptionHandler, nameof(exceptionHandler));
-    }
+    private readonly IExceptionHandler _exceptionHandler = ArgumentValidator.CheckNull(exceptionHandler, nameof(exceptionHandler));
 
     public async Task<ObjectResult> InvokeAsync(Func<Task<IActionResult>> method, string cultureName = null)
     {

@@ -6,17 +6,11 @@ using Xunit.Abstractions;
 namespace IntegrationTest.Infra.MongoDB.Domains.QueryStructures.Providers;
 
 [Collection("Database collection")]
-public sealed class UpdateQueryStructureProviderTest : IClassFixture<UpdateQueryStructureProviderTestFixture>
+public sealed class UpdateQueryStructureProviderTest(ITestOutputHelper outputHelper, Context context) : IClassFixture<UpdateQueryStructureProviderTestFixture>
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly IUpdateQueryStructureGateway _updateQueryStructureGateway;
-    
-    public UpdateQueryStructureProviderTest(ITestOutputHelper outputHelper, Context context)
-    {
-        _outputHelper = outputHelper;
-        _updateQueryStructureGateway = context.ServiceResolver.Resolve<IUpdateQueryStructureGateway>();
-    }
-    
+    private readonly ITestOutputHelper _outputHelper = outputHelper;
+    private readonly IUpdateQueryStructureGateway _updateQueryStructureGateway = context.ServiceResolver.Resolve<IUpdateQueryStructureGateway>();
+
     // [Trait("Category", "Infrastructure (DB) Integration tests")]
     // [Fact(DisplayName = "Fail to update query structure when query structure does not exist")]
     // public async Task FailToUpdateQueryStructureWhenQueryStructureDoesNotExist()

@@ -35,12 +35,12 @@ public sealed class DatabaseKeeper
 
     public void ClearCollectionsData()
     {
-        List<Task> tasks = new List<Task>
-        {
+        List<Task> tasks =
+        [
             ClearCollectionsData(_dummyCollectionName, _dummySequenceCollectionName),
             ClearCollectionsData(_clientCollectionName, _clientSequenceCollectionName),
-            ClearCollectionsData(_queryStructureCollectionName, _queryStructureSequenceCollectionName),
-        };
+            ClearCollectionsData(_queryStructureCollectionName, _queryStructureSequenceCollectionName)
+        ];
 
         Task.WhenAll(tasks);
     }

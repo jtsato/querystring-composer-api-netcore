@@ -46,11 +46,11 @@ internal sealed class RegisterClientProviderTestFixture : IDisposable
 
     public void Dispose()
     {
-        List<FilterDefinition<ClientEntity>> filterDefinitions = new List<FilterDefinition<ClientEntity>>
-        {
+        List<FilterDefinition<ClientEntity>> filterDefinitions =
+        [
             new FilterDefinitionBuilder<ClientEntity>().Eq(entity => entity.Uid, "490f1db4-ed14-4cdc-a09f-401048951b16"),
-            new FilterDefinitionBuilder<ClientEntity>().Eq(entity => entity.Uid, "490f1db4-ed14-4cdc-a09f-401048951b17"),
-        };
+            new FilterDefinitionBuilder<ClientEntity>().Eq(entity => entity.Uid, "490f1db4-ed14-4cdc-a09f-401048951b17")
+        ];
 
         _repository.DeleteManyAsync(Builders<ClientEntity>.Filter.Or(filterDefinitions));
 

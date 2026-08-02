@@ -11,16 +11,9 @@ using static Infra.MongoDB.Commons.Helpers.UpdateHelper;
 
 namespace Infra.MongoDB.Domains.QueryStructures.Providers;
 
-public sealed class UpdateQueryStructureProvider : IUpdateQueryStructureGateway
+public sealed class UpdateQueryStructureProvider(IRepository<QueryStructureEntity> entityRepository) : IUpdateQueryStructureGateway
 {
-    private readonly IRepository<QueryStructureEntity> _entityRepository;
-    private readonly ISequenceRepository<QueryStructureSequence> _sequenceRepository;
-
-    public UpdateQueryStructureProvider(IRepository<QueryStructureEntity> entityRepository, ISequenceRepository<QueryStructureSequence> sequenceRepository)
-    {
-        _entityRepository = ArgumentValidator.CheckNull(entityRepository, nameof(entityRepository));
-        _sequenceRepository = ArgumentValidator.CheckNull(sequenceRepository, nameof(sequenceRepository));
-    }
+    private readonly IRepository<QueryStructureEntity> _entityRepository = ArgumentValidator.CheckNull(entityRepository, nameof(entityRepository));
 
     public async Task<QueryStructure> ExecuteAsync(QueryStructure queryStructure)
     {

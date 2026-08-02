@@ -6,22 +6,15 @@ using Microsoft.Extensions.Primitives;
 
 namespace EntryPoint.WebApi.Commons;
 
-public sealed class GetCorrelationId : IGetCorrelationId
+public sealed class GetCorrelationId(IHttpContextAccessor httpContextAccessor) : IGetCorrelationId
 {
     private const string CorrelationIdHeader = "X-Correlation-Id";
 
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public GetCorrelationId(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     public string Execute()
     {
-        if (_httpContextAccessor.HttpContext == null) return Guid.NewGuid().ToString();
+        if (httpContextAccessor.HttpContext == null) return Guid.NewGuid().ToString();
 
-        Optional<string> optional = TryGetCorrelationIdFromHeader(_httpContextAccessor.HttpContext);
+        Optional<string> optional = TryGetCorrelationIdFromHeader(httpContextAccessor.HttpContext);
         return optional.OrElse(Guid.NewGuid().ToString());
     }
 

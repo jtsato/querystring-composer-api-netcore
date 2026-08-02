@@ -17,24 +17,24 @@ public static class SentenceParserHelper
 
     private static readonly CultureInfo DefaultCultureInfo = new CultureInfo("pt-BR");
 
-    private static readonly List<long> ScaleSeparators = new List<long> {1000, 1000000, 1000000000};
+    private static readonly List<long> ScaleSeparators = [1000, 1000000, 1000000000];
 
     // “Much of the best work of the world has been done against seeming impossibilities.” by Dale Carnegie
     public static IList<WordInfo> Parse(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
-        IList<WordInfo> wordInfos = Classify(words, nouns, confirmationWords, revocationWords);
+        List<WordInfo> wordInfos = Classify(words, nouns, confirmationWords, revocationWords);
         
         IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, nouns);
 
-        return Summarize(finalWordInfos, confirmationWords, revocationWords).ToArray();
+        return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
     }
 
     private static IList<WordInfo> RefineWithNousWithWhiteSpaces(IList<WordInfo> wordInfos, IEnumerable<string> nouns)
     {
-        IList<WordInfo> finalWordInfos = new List<WordInfo>();
+        List<WordInfo> finalWordInfos = [];
 
         string singleString = wordInfos.Select(wordInfo => wordInfo.Value).Aggregate((a, b) => $"{a} {b}");
-        IList<string> nounsWithWhiteSpaces = nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant()).ToList();
+        IList<string> nounsWithWhiteSpaces = [.. nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant())];
         IList<CompositeWord> compositeWords = new List<CompositeWord>();
         
         foreach (string noun in nounsWithWhiteSpaces)
@@ -93,7 +93,7 @@ public static class SentenceParserHelper
         public int OriginalIndex { get; init; }
     }
     
-    private static IEnumerable<string> GetCombinations(string phrase, int number) {
+    private static string[] GetCombinations(string phrase, int number) {
         string[] words = phrase.Split(' ');
         int numbCombinations = Math.Max(0, words.Length - number + 1);
         string[] combinations = new string[numbCombinations];
@@ -105,9 +105,9 @@ public static class SentenceParserHelper
         return combinations;
     }
 
-    private static IList<WordInfo> Classify(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
+    private static List<WordInfo> Classify(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
-        List<WordInfo> wordInfos = new List<WordInfo>();
+        List<WordInfo> wordInfos = [];
 
         foreach (string current in words)
         {
@@ -189,10 +189,10 @@ public static class SentenceParserHelper
 
     private static List<WordInfo> Summarize(IList<WordInfo> wordInfos, IList<string> confirmationWords, IList<string> revocationWords)
     {
-        HashSet<string> indicators = new HashSet<string>(confirmationWords);
+        HashSet<string> indicators = [.. confirmationWords];
         indicators.UnionWith(revocationWords);
 
-        List<WordInfo> summarize = new List<WordInfo>();
+        List<WordInfo> summarize = [];
 
         State state = new State();
 
@@ -312,7 +312,7 @@ public static class SentenceParserHelper
         return Anonymous;
     }
 
-    private static void AddQuantifiedNoun(IList<WordInfo> target, IList<string> confirmationWords, long totalValue, string noun)
+    private static void AddQuantifiedNoun(List<WordInfo> target, IList<string> confirmationWords, long totalValue, string noun)
     {
         Optional<WordInfo> optional = GetLastQuantifiedNoun(target);
 
@@ -350,14 +350,13 @@ public static class SentenceParserHelper
         {
             WordInfo wordInfo = wordInfos[i];
             if (wordInfo.Type.Is(WordInfoType.QuantifiedNoun)) return Optional<WordInfo>.Of(wordInfo);
-            if (wordInfo.Type.Is(WordInfoType.RevocationIndicator)) return Optional<WordInfo>.Empty();
-            if (wordInfo.Type.Is(WordInfoType.ConfirmationIndicator)) return Optional<WordInfo>.Empty();
+            if (wordInfo.Type.Is(WordInfoType.RevocationIndicator) || wordInfo.Type.Is(WordInfoType.ConfirmationIndicator)) return Optional<WordInfo>.Empty();
         }
 
         return Optional<WordInfo>.Empty();
     }
 
-    private static void AddIndicator(ICollection<WordInfo> target, IList<string> confirmationWords, IList<string> revocationWords)
+    private static void AddIndicator(List<WordInfo> target, IList<string> confirmationWords, IList<string> revocationWords)
     {
         WordInfoType type = GetWordInfoType(confirmationWords, revocationWords);
 

@@ -11,17 +11,10 @@ using Xunit.Abstractions;
 
 namespace UnitTest.Core.Commons;
 
-public sealed class TestCaseDisplayNameComplianceTest
+public sealed class TestCaseDisplayNameComplianceTest(ITestOutputHelper outputHelper)
 {
     private const string CurrentProjectName = "UnitTest.Core";
-    private static readonly string[] ExcludedDisplayNamePrefixes = {"POST", "GET", "PUT", "DELETE"};
-
-    private readonly ITestOutputHelper _outputHelper;
-
-    public TestCaseDisplayNameComplianceTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
+    private static readonly string[] ExcludedDisplayNamePrefixes = ["POST", "GET", "PUT", "DELETE"];
 
     [Trait("Category", "Core Business tests")]
     [Theory(DisplayName = "Successful to validate if method name and display name match")]
@@ -34,7 +27,7 @@ public sealed class TestCaseDisplayNameComplianceTest
         string[] pathToFiles = Directory.GetFiles($"{projectRootFolder}", "*Test.cs", SearchOption.AllDirectories);
 
         // Act
-        List<NonCompliance> nonCompliances = new List<NonCompliance>();
+        List<NonCompliance> nonCompliances = [];
 
         foreach (string pathToFile in pathToFiles)
         {
@@ -60,12 +53,12 @@ public sealed class TestCaseDisplayNameComplianceTest
     {
         string location = pathToFile.SubstringAfter(projectRootFolder);
 
-        List<string> lines = File.ReadLines(pathToFile).ToList();
+        List<string> lines = [.. File.ReadLines(pathToFile)];
 
         string displayName = string.Empty;
         int lineNumber = 0;
 
-        List<NonCompliance> nonCompliances = new List<NonCompliance>();
+        List<NonCompliance> nonCompliances = [];
 
         foreach (string line in CollectionsMarshal.AsSpan(lines))
         {
@@ -117,10 +110,10 @@ public sealed class TestCaseDisplayNameComplianceTest
     {
         foreach (NonCompliance nonCompliance in CollectionsMarshal.AsSpan(nonCompliances))
         {
-            _outputHelper.WriteLine("Location: {0}:line {1} {2}", nonCompliance.Location, nonCompliance.LineNumber, nonCompliance.MethodName);
-            _outputHelper.WriteLine("MethodName (Actual)  : {0}", nonCompliance.MethodName);
-            _outputHelper.WriteLine("MethodName (Expected): {0} -> {1}", nonCompliance.MethodNameAsDisplayName, nonCompliance.ActualDisplayName);
-            _outputHelper.WriteLine("");
+            outputHelper.WriteLine("Location: {0}:line {1} {2}", nonCompliance.Location, nonCompliance.LineNumber, nonCompliance.MethodName);
+            outputHelper.WriteLine("MethodName (Actual)  : {0}", nonCompliance.MethodName);
+            outputHelper.WriteLine("MethodName (Expected): {0} -> {1}", nonCompliance.MethodNameAsDisplayName, nonCompliance.ActualDisplayName);
+            outputHelper.WriteLine("");
         }
     }
 

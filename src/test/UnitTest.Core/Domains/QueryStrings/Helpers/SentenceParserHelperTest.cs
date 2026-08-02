@@ -8,35 +8,29 @@ using Xunit.Abstractions;
 
 namespace UnitTest.Core.Domains.QueryStrings.Helpers;
 
-public class SentenceParserHelperTest
+public class SentenceParserHelperTest(ITestOutputHelper outputHelper)
 {
-    private static readonly string[] Separators = {" ", ", ", ". ", "", "?", ";", "", "-", "(", ")", "[", "]", "{", "}", "\"", "\""};
-    private readonly ITestOutputHelper _outputHelper;
+    private static readonly string[] Separators = [" ", ", ", ". ", "", "?", ";", "", "-", "(", ")", "[", "]", "{", "}", "\"", "\""];
 
-    private static readonly List<string> Nouns = new List<string>
-    {
+    private static readonly List<string> Nouns =
+    [
         "apartamento", "apartamentos", "casa", "casas", "quarto", "quartos",
         "banheiro", "banheiros", "garagem", "garagens", "sacada", "sacadas",
         "dormitório", "dormitórios", "vaga", "vagas", "loteamento", "loteamentos",
-        "centro", "fraron", "alvorada", "são cristóvão", "sao cristovao", "são cristovão", "sao cristóvão",
-    };
+        "centro", "fraron", "alvorada", "são cristóvão", "sao cristovao", "são cristovão", "sao cristóvão"
+    ];
 
-    private static readonly List<string> MinimumAdjectives = new List<string>
-    {
+    private static readonly List<string> MinimumAdjectives =
+    [
         "acima", "desde", "maior", "mais", "min", "mínimo", "partir"
-    };
+    ];
 
-    private static readonly List<string> MaximumAdjectives = new List<string>
-    {
+    private static readonly List<string> MaximumAdjectives =
+    [
         "a", "abaixo", "antes", "até", "à", "á", "e", "inferior", "max", "máx", "máximo", "menor", "menos"
-    };
+    ];
 
-    private readonly List<string> _adjectives = MinimumAdjectives.Concat(MaximumAdjectives).ToList();
-
-    public SentenceParserHelperTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
+    private readonly List<string> _adjectives = [.. MinimumAdjectives, .. MaximumAdjectives];
 
     [Trait("Category", "Core Business tests")]
     [Theory(DisplayName = "SuccessfullyParsedSentence")]
@@ -59,18 +53,18 @@ public class SentenceParserHelperTest
     [InlineData("Alugar uma casa no Centro, de 1000 até 2000 reais, você deve.", "2000 Anonymous", "Quantified Noun")]
     public void SuccessfullyParsedSentence(string sentence, string expectedValue, string expectedType)
     {
-        List<string> words = new List<string>(sentence.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries));
+        List<string> words = [.. sentence.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries)];
         IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, Nouns, _adjectives, new List<string>());
 
-        _outputHelper.WriteLine($"Sentence: {sentence}");
+        outputHelper.WriteLine($"Sentence: {sentence}");
             
         foreach (WordInfo wordInfo in wordInfos)
         {
-            _outputHelper.WriteLine($"{wordInfo.Value}: {wordInfo.Type.Name}");
+            outputHelper.WriteLine($"{wordInfo.Value}: {wordInfo.Type.Name}");
         }
 
-        _outputHelper.WriteLine("--------------------------------------------------");
-        _outputHelper.WriteLine($"Expected: {expectedValue}: {expectedType}");
+        outputHelper.WriteLine("--------------------------------------------------");
+        outputHelper.WriteLine($"Expected: {expectedValue}: {expectedType}");
 
         Assert.Contains(wordInfos, wordInfo =>
             wordInfo.Value.Equals(expectedValue, StringComparison.InvariantCultureIgnoreCase) &&

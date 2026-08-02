@@ -19,7 +19,7 @@ public sealed class AiSettings
         return UsagePercentage.Equals(other.UsagePercentage)
                && ApiKey == other.ApiKey
                && Model == other.Model
-               && Temperature.Equals(other.Temperature)
+               && Math.Abs(Temperature - other.Temperature) < double.Epsilon
                && MaxTokens == other.MaxTokens
                && PromptTemplate == other.PromptTemplate;
     }

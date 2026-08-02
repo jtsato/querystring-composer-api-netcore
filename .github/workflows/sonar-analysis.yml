@@ -86,7 +86,8 @@ jobs:
           /d:sonar.token="${{ env.SONAR_TOKEN }}" \
           /d:sonar.qualitygate.wait=false \
           /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-          /d:sonar.dotnet.excludeTestProjects=true
+          /d:sonar.dotnet.excludeTestProjects=true \
+          /d:sonar.exclusions="docs/**"
           dotnet build querystring-composer-api-netcore.sln --configuration Debug --no-restore
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --configuration Debug --no-build --nologo -v n
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"

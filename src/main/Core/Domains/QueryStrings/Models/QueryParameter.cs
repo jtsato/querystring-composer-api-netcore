@@ -9,16 +9,10 @@ namespace Core.Domains.QueryStrings.Models;
 //
 // It replaces the "name=value" strings the builder used to pass around, which had to be split back
 // apart with Split('=') every time the name or the values were needed again.
-public sealed class QueryParameter
+public sealed class QueryParameter(string name, IEnumerable<string> values)
 {
-    public string Name { get; }
-    public IReadOnlyList<string> Values { get; }
-
-    public QueryParameter(string name, IEnumerable<string> values)
-    {
-        Name = name;
-        Values = values.ToList();
-    }
+    public string Name { get; } = name;
+    public IReadOnlyList<string> Values { get; } = [.. values];
 
     public string ValuesAsText => string.Join(",", Values);
 

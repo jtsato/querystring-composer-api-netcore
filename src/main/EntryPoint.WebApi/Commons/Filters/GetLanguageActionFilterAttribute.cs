@@ -10,10 +10,11 @@ using Microsoft.Extensions.Primitives;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
+[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class GetLanguageActionFilterAttribute : ActionFilterAttribute
 {
-    private static readonly string[] SupportedCultures = {"pt-BR", "en-US"};
+    private static readonly string[] SupportedCultures = ["pt-BR", "en-US"];
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {

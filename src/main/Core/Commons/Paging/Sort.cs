@@ -21,7 +21,7 @@ public sealed class Sort
     {
         ArgumentValidator.CheckNullOrEmpty(properties, nameof(properties), "You have to provide at least one property to sort by!");
 
-        _orders = properties.Select(it => new Order(direction, it)).ToList();
+        _orders = [.. properties.Select(it => new Order(direction, it))];
     }
 
     public static Sort By(params string[] properties)
@@ -42,7 +42,7 @@ public sealed class Sort
     {
         ArgumentValidator.CheckNullOrEmpty(orders, nameof(orders), "Orders must not be null!");
 
-        return By(orders.ToArray());
+        return By([.. orders]);
     }
 
     public IEnumerable<Order> GetOrders()

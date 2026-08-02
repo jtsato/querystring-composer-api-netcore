@@ -86,10 +86,10 @@ internal sealed class UpdateQueryStructureProviderTestFixture : IDisposable
 
     public void Dispose()
     {
-        List<FilterDefinition<QueryStructureEntity>> filterDefinitions = new List<FilterDefinition<QueryStructureEntity>>
-        {
-            Builders<QueryStructureEntity>.Filter.Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b18"),
-        };
+        List<FilterDefinition<QueryStructureEntity>> filterDefinitions =
+        [
+            Builders<QueryStructureEntity>.Filter.Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b18")
+        ];
 
         _repository.DeleteManyAsync(Builders<QueryStructureEntity>.Filter.Or(filterDefinitions));
 

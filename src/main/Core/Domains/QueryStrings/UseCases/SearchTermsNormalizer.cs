@@ -13,9 +13,9 @@ namespace Core.Domains.QueryStrings.UseCases;
 // as words of their own, and numbers glued to their unit ("100m2", "R$5000") are split apart.
 public static partial class SearchTermsNormalizer
 {
-    private static readonly string[] ReplaceBySpace = {". ", ",00", "?", ";", "-", "(", ")", "[", "]", "{", "}", "\"", "/", "\\"};
-    private static readonly string[] ReplaceByEmpty = {"."};
-    private static readonly string[] Separators = {" ", ","};
+    private static readonly string[] ReplaceBySpace = [". ", ",00", "?", ";", "-", "(", ")", "[", "]", "{", "}", "\"", "/", "\\"];
+    private static readonly string[] ReplaceByEmpty = ["."];
+    private static readonly string[] Separators = [" ", ","];
 
     [GeneratedRegex("\\s+")]
     private static partial Regex BlankSpaces();
@@ -27,7 +27,7 @@ public static partial class SearchTermsNormalizer
     {
         string searchTerms = AddSpaceBeforeFirstNumber(AddSpaceAfterLastNumber(Normalize(rawSearchTerms)));
 
-        return searchTerms.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+        return [.. searchTerms.ToLower().Split(Separators, StringSplitOptions.RemoveEmptyEntries)];
     }
 
     private static string AddSpaceBeforeFirstNumber(string input)

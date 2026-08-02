@@ -13,7 +13,7 @@ public sealed class EnumerationTest
     {
         // Arrange
         // Act
-        Color[] colors = Enumeration<Color>.GetAll().ToArray();
+        Color[] colors = [.. Enumeration<Color>.GetAll()];
 
         // Assert
         Assert.Equal(5, colors.Length);

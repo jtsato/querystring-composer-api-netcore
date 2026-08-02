@@ -4,16 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace UnitTest.Core.Commons.Models;
 
 [ExcludeFromCodeCoverage]
-internal sealed class DummyClass
+internal sealed class DummyClass(string foo, string bar)
 {
-    public string Foo { get; }
-    public string Bar { get; }
-
-    public DummyClass(string foo, string bar)
-    {
-        Foo = foo;
-        Bar = bar;
-    }
+    public string Foo { get; } = foo;
+    public string Bar { get; } = bar;
 
     [ExcludeFromCodeCoverage]
     private bool Equals(DummyClass other)

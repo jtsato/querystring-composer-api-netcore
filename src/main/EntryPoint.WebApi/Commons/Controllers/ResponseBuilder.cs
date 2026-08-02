@@ -11,7 +11,7 @@ public static class ResponseBuilder
     {
         ObjectResult objectResult = new ObjectResult(payload)
         {
-            Formatters = new FormatterCollection<IOutputFormatter>(),
+            Formatters = [],
             DeclaredType = payload?.GetType(),
             StatusCode = (int) httpStatusCode
         };

@@ -10,16 +10,9 @@ using Xunit.Abstractions;
 namespace IntegrationTest.Infra.MongoDB.Domains.QueryStructures.Providers;
 
 [Collection("Database collection")]
-public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQueryStructureProviderTestFixture>
+public sealed class RegisterQueryStructureProviderTest(ITestOutputHelper outputHelper, Context context) : IClassFixture<RegisterQueryStructureProviderTestFixture>
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly IRegisterQueryStructureGateway _registerQueryStructureGateway;
-
-    public RegisterQueryStructureProviderTest(ITestOutputHelper outputHelper, Context context)
-    {
-        _outputHelper = outputHelper;
-        _registerQueryStructureGateway = context.ServiceResolver.Resolve<IRegisterQueryStructureGateway>();
-    }
+    private readonly IRegisterQueryStructureGateway _registerQueryStructureGateway = context.ServiceResolver.Resolve<IRegisterQueryStructureGateway>();
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]
     [Fact(DisplayName = "Fail to register query structure when query structure already exists")]
@@ -52,7 +45,7 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
         // Assert
         Assert.NotNull(exception);
 
-        _outputHelper.WriteLine(exception.ToString());
+        outputHelper.WriteLine(exception.ToString());
 
         Assert.IsType<MongoWriteException>(exception);
         Assert.Equal(11000, ((MongoWriteException) exception).WriteError.Code);
@@ -91,7 +84,7 @@ public sealed class RegisterQueryStructureProviderTest : IClassFixture<RegisterQ
         // Assert
         Assert.NotNull(queryStructure);
 
-        _outputHelper.WriteLine(queryStructure.ToString());
+        outputHelper.WriteLine(queryStructure.ToString());
 
         Assert.Equal("490f1db4-ed14-4cdc-a09f-401048951b15", queryStructure.ClientUid);
         Assert.Equal("properties-searching-using-structure", queryStructure.Name);

@@ -10,16 +10,9 @@ using Xunit.Abstractions;
 namespace IntegrationTest.Infra.MongoDB.Domains.QueryStructures.Providers;
 
 [Collection("Database collection")]
-public sealed class RegisterClientProviderTest : IClassFixture<RegisterClientProviderTestFixture>
+public sealed class RegisterClientProviderTest(ITestOutputHelper outputHelper, Context context) : IClassFixture<RegisterClientProviderTestFixture>
 {
-    private readonly ITestOutputHelper _outputHelper;
-    private readonly IRegisterClientGateway _registerClientGateway;
-
-    public RegisterClientProviderTest(ITestOutputHelper outputHelper, Context context)
-    {
-        _outputHelper = outputHelper;
-        _registerClientGateway = context.ServiceResolver.Resolve<IRegisterClientGateway>();
-    }
+    private readonly IRegisterClientGateway _registerClientGateway = context.ServiceResolver.Resolve<IRegisterClientGateway>();
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]
     [Fact(DisplayName = "Fail to register client when client already exists")]
@@ -43,7 +36,7 @@ public sealed class RegisterClientProviderTest : IClassFixture<RegisterClientPro
         // Assert
         Assert.NotNull(exception);
 
-        _outputHelper.WriteLine(exception.ToString());
+        outputHelper.WriteLine(exception.ToString());
 
         Assert.IsType<MongoWriteException>(exception);
         Assert.Equal(11000, ((MongoWriteException) exception).WriteError.Code);
@@ -73,7 +66,7 @@ public sealed class RegisterClientProviderTest : IClassFixture<RegisterClientPro
         // Assert
         Assert.NotNull(client);
 
-        _outputHelper.WriteLine(client.ToString());
+        outputHelper.WriteLine(client.ToString());
 
         Assert.Equal("490f1db4-ed14-4cdc-a09f-401048951b16", client.Uid);
         Assert.Equal("properties-searching-using-structure", client.Name);

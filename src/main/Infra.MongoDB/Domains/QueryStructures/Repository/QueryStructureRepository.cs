@@ -29,11 +29,10 @@ public sealed class QueryStructureRepository : Repository<QueryStructureEntity>
             {Unique = false, Sparse = true, Background = false};
 
         GetCollection().Indexes
-            .CreateManyAsync(new[]
-            {
+            .CreateManyAsync([
                 new CreateIndexModel<QueryStructureEntity>(indexKeyId, uniqueIndexOptions),
                 new CreateIndexModel<QueryStructureEntity>(indexKeyClientUid, nonUniqueIndexOptions),
                 new CreateIndexModel<QueryStructureEntity>(indexKeyNameAndClientUid, uniqueIndexOptions)
-            });
+            ]);
     }
 }

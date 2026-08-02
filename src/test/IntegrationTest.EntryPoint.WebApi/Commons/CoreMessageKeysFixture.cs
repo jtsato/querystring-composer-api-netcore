@@ -41,15 +41,18 @@ public sealed class CoreMessageKeysFixture : IDisposable
     {
         string[] pathToFiles = Directory.GetFiles(CoreDomainFolder, "*.cs", SearchOption.AllDirectories);
 
-        List<string> messageKeys = (from pathToFile in pathToFiles
+        List<string> messageKeys =
+        [
+            .. from pathToFile in pathToFiles
             from line in File.ReadLines(pathToFile)
             where line.Contains("Exception(\"") || line.Contains("WithMessage(\"")
             select line.Contains("Exception(\"")
                 ? line.SubstringAfter("Exception(\"").SubstringBefore("\"")
-                : line.SubstringAfter("WithMessage(\"").SubstringBefore("\"")).ToList();
+                : line.SubstringAfter("WithMessage(\"").SubstringBefore("\"")
+        ];
 
         messageKeys.Sort();
 
-        return messageKeys.Distinct().ToList();
+        return [.. messageKeys.Distinct()];
     }
 }

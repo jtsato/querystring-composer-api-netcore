@@ -21,18 +21,11 @@ namespace UnitTest.Core.Domains.QueryStrings.UseCases;
 // To re-record after an intentional behaviour change:
 //     UPDATE_SNAPSHOT=1 dotnet test src/test/UnitTest.Core/UnitTest.Core.csproj
 [ExcludeFromCodeCoverage]
-public sealed class ManualQueryBuilderCharacterizationTest
+public sealed class ManualQueryBuilderCharacterizationTest(ITestOutputHelper outputHelper)
 {
     private const string UpdateSnapshotVariable = "UPDATE_SNAPSHOT";
 
     private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false);
-
-    private readonly ITestOutputHelper _outputHelper;
-
-    public ManualQueryBuilderCharacterizationTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
 
     [Trait("Category", "Core Business tests")]
     [Fact(DisplayName = "Manual query builder output matches the recorded snapshot")]
@@ -44,7 +37,7 @@ public sealed class ManualQueryBuilderCharacterizationTest
         if (ShouldUpdateSnapshot())
         {
             File.WriteAllText(snapshotPath, actual, Utf8);
-            _outputHelper.WriteLine($"Snapshot re-recorded at {snapshotPath}");
+            outputHelper.WriteLine($"Snapshot re-recorded at {snapshotPath}");
             return;
         }
 

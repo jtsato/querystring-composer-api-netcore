@@ -35,15 +35,15 @@ public static class CountableItemResolver
     {
         IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
 
-        IList<string> itemKeyWords = item.Entries.SelectMany(entry => entry.KeyWords).ToList();
+        IList<string> itemKeyWords = [.. item.Entries.SelectMany(entry => entry.KeyWords)];
 
         return GroupWordInfos(wordInfos, itemKeyWords, item.WaitForConfirmationWords);
     }
 
     private static List<WordInfo> GroupWordInfos(IList<WordInfo> wordInfos, ICollection<string> keyWords, bool waitForConfirmation)
     {
-        List<WordInfo> wordInfoList = new List<WordInfo>();
-        List<WordInfo> candidates = new List<WordInfo>();
+        List<WordInfo> wordInfoList = [];
+        List<WordInfo> candidates = [];
 
         ProcessWordInfos(wordInfos, keyWords, waitForConfirmation, wordInfoList, candidates);
 
@@ -132,9 +132,11 @@ public static class CountableItemResolver
     private static HashSet<string> PickupFirstCompatibleCount(IEnumerable<WordInfo> wordInfoList, Item item,
         IReadOnlyDictionary<string, QueryParameter> queryParameters)
     {
-        List<QuantifiedNoun> quantifiedNouns = wordInfoList
-            .Select(wordInfo => QuantifiedNoun.Parse(wordInfo.Value))
-            .ToList();
+        List<QuantifiedNoun> quantifiedNouns =
+        [
+            .. wordInfoList
+                .Select(wordInfo => QuantifiedNoun.Parse(wordInfo.Value))
+        ];
 
         // A garage for two cars is two garages.
         quantifiedNouns.Reverse();
@@ -148,12 +150,12 @@ public static class CountableItemResolver
                 if (IsIncompatible(entry, queryParameters)) continue;
 
                 return quantifiedNoun.Count != 0
-                    ? new HashSet<string> {quantifiedNoun.CountAsText}
-                    : new HashSet<string>();
+                    ? [quantifiedNoun.CountAsText]
+                    : [];
             }
         }
 
-        return new HashSet<string>();
+        return [];
     }
 
     // "Garagem no centro" asks for a property in the Centro district that has a garage, while

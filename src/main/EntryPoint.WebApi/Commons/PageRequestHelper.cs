@@ -29,10 +29,13 @@ public static partial class PageRequestHelper
         string orderBy = BlankSpaces().Replace(rawOrderBy, "");
 
         string[] strings = orderBy.Split(FieldSeparator);
-        List<string> properties = strings
-            .Select(it => it.SubstringBefore(DirectionSeparator)).ToList();
+        List<string> properties =
+        [
+            .. strings
+                .Select(it => it.SubstringBefore(DirectionSeparator))
+        ];
 
-        return Sort.By(properties.Select(property => GetOrder(property, orderBy)).ToList());
+        return Sort.By([.. properties.Select(property => GetOrder(property, orderBy))]);
     }
 
     private static Order GetOrder(string property, string orderBy)

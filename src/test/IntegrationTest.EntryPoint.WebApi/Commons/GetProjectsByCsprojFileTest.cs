@@ -5,14 +5,8 @@ using Xunit.Abstractions;
 namespace IntegrationTest.EntryPoint.WebApi.Commons;
 
 [Collection("WebApi Collection [NoContext]")]
-public sealed class GetProjectsByCsprojFileTest
+public sealed class GetProjectsByCsprojFileTest(ITestOutputHelper outputHelper)
 {
-    private readonly ITestOutputHelper _outputHelper;
-
-    public GetProjectsByCsprojFileTest(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
 
     [Trait("Category", "WebApi Collection [NoContext]")]
     [Fact(DisplayName = "Successful to get projects by csproj file")]
@@ -28,8 +22,8 @@ public sealed class GetProjectsByCsprojFileTest
         
         foreach (KeyValuePair<string, string> project in projects)
         {
-            _outputHelper.WriteLine($"Project name: {project.Key}");
-            _outputHelper.WriteLine($"Project folder: {project.Value}");
+            outputHelper.WriteLine($"Project name: {project.Key}");
+            outputHelper.WriteLine($"Project folder: {project.Value}");
         }
     }
 }

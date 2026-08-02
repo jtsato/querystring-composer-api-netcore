@@ -10,11 +10,11 @@ public static class ExceptionExtensions
     private static readonly Type Type = typeof(StackTrace).GetNestedType("TraceFormat", BindingFlags.NonPublic);
 
     private static readonly MethodInfo MethodInfo =
-        typeof(StackTrace).GetMethod("ToString", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {Type}, null);
+        typeof(StackTrace).GetMethod("ToString", BindingFlags.NonPublic | BindingFlags.Instance, null, [Type], null);
 
     public static Exception SetStackTrace(this Exception target, StackTrace stack)
     {
-        object stackTraceAsString = MethodInfo.Invoke(stack, new[] {Enum.GetValues(Type).GetValue(0)});
+        object stackTraceAsString = MethodInfo.Invoke(stack, [Enum.GetValues(Type).GetValue(0)]);
         FieldInfo.SetValue(target, stackTraceAsString);
         return target;
     }

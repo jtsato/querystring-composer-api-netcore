@@ -13,16 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EntryPoint.WebApi.Domains.QueryStrings.EntryPoints;
 
-public sealed class BuildQueryStringController : IBuildQueryStringController
+public sealed class BuildQueryStringController(IWebRequest webRequest, IBuildQueryStringUseCase useCase) : IBuildQueryStringController
 {
-    private readonly IWebRequest _webRequest;
-    private readonly IBuildQueryStringUseCase _useCase;
-
-    public BuildQueryStringController(IWebRequest webRequest, IBuildQueryStringUseCase useCase)
-    {
-        _webRequest = ArgumentValidator.CheckNull(webRequest, nameof(webRequest));
-        _useCase = ArgumentValidator.CheckNull(useCase, nameof(useCase));
-    }
+    private readonly IWebRequest _webRequest = ArgumentValidator.CheckNull(webRequest, nameof(webRequest));
+    private readonly IBuildQueryStringUseCase _useCase = ArgumentValidator.CheckNull(useCase, nameof(useCase));
 
     public async Task<IActionResult> ExecuteAsync(BuildQueryStringRequest request)
     {

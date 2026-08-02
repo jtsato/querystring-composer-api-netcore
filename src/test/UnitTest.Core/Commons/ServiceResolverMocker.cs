@@ -7,13 +7,8 @@ namespace UnitTest.Core.Commons;
 [ExcludeFromCodeCoverage]
 public sealed class ServiceResolverMocker
 {
-    private readonly Mock<IServiceResolver> _serviceResolver;
+    private readonly Mock<IServiceResolver> _serviceResolver = new Mock<IServiceResolver>(MockBehavior.Strict);
     public IServiceResolver Object => _serviceResolver.Object;
-
-    public ServiceResolverMocker()
-    {
-        _serviceResolver = new Mock<IServiceResolver>(MockBehavior.Strict);
-    }
 
     public ServiceResolverMocker AddService<T>(T instance)
     {

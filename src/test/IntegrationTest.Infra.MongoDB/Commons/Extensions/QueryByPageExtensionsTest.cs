@@ -10,16 +10,9 @@ using Xunit.Abstractions;
 namespace IntegrationTest.Infra.MongoDB.Commons.Extensions;
 
 [Collection("Database collection")]
-public sealed class QueryByPageExtensionsTest : IClassFixture<QueryByPageExtensionsTestFixture>
+public sealed class QueryByPageExtensionsTest(ITestOutputHelper outputHelper, Context context) : IClassFixture<QueryByPageExtensionsTestFixture>
 {
-    private readonly ITestOutputHelper _outputHelper;
-    readonly IRepository<DummyEntity> _dummyRepository;
-
-    public QueryByPageExtensionsTest(ITestOutputHelper outputHelper, Context context)
-    {
-        _outputHelper = outputHelper;
-        _dummyRepository = context.ServiceResolver.Resolve<IRepository<DummyEntity>>();
-    }
+    readonly IRepository<DummyEntity> _dummyRepository = context.ServiceResolver.Resolve<IRepository<DummyEntity>>();
 
     [Trait("Category", "Infrastructure (DB) Integration tests")]
     [Fact(DisplayName = "Successful to query by page")]
@@ -37,7 +30,7 @@ public sealed class QueryByPageExtensionsTest : IClassFixture<QueryByPageExtensi
             pageSize: 10
         );
 
-        _outputHelper.WriteLine(result.ToString());
+        outputHelper.WriteLine(result.ToString());
 
         // Assert
         Assert.True(result.totalPages >= 0);

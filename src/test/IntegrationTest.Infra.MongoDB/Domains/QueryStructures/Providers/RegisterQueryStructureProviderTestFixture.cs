@@ -56,11 +56,11 @@ internal sealed class RegisterQueryStructureProviderTestFixture : IDisposable
 
     public void Dispose()
     {
-        List<FilterDefinition<QueryStructureEntity>> filterDefinitions = new List<FilterDefinition<QueryStructureEntity>>
-        {
+        List<FilterDefinition<QueryStructureEntity>> filterDefinitions =
+        [
             new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b16"),
-            new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b17"),
-        };
+            new FilterDefinitionBuilder<QueryStructureEntity>().Eq(entity => entity.ClientUid, "490f1db4-ed14-4cdc-a09f-401048951b17")
+        ];
 
         _repository.DeleteManyAsync(Builders<QueryStructureEntity>.Filter.Or(filterDefinitions));
 

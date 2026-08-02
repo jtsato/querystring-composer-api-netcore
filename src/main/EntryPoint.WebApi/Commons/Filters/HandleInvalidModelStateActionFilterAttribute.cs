@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using EntryPoint.WebApi.Commons.Exceptions;
 using EntryPoint.WebApi.Commons.Models;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
+[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 public sealed class HandleInvalidModelStateActionFilterAttribute : ActionFilterAttribute
 {

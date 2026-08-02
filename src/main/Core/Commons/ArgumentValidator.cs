@@ -41,13 +41,13 @@ public static class ArgumentValidator
 
     private static ArgumentNullException CreateArgumentNullException(string parameterName, string message)
     {
-        return string.IsNullOrEmpty(message) ? new ArgumentNullException(parameterName) : new ArgumentNullException(message, (Exception) null!);
+        return string.IsNullOrEmpty(message) ? new ArgumentNullException(parameterName) : new ArgumentNullException(message, (Exception) null);
     }
 
     private static ArgumentException CreateArgumentException(string parameterName, string message)
     {
         return string.IsNullOrEmpty(message)
             ? new ArgumentException($"Value cannot be null or empty. (Parameter '{parameterName}')")
-            : new ArgumentException(message, (Exception) null!);
+            : new ArgumentException(message, (Exception) null);
     }
 }

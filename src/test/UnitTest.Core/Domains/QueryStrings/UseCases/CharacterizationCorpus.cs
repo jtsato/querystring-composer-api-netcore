@@ -20,11 +20,13 @@ public static class CharacterizationCorpus
         MethodInfo method = typeof(BuildQueryStringUseCaseTest)
             .GetMethod(nameof(BuildQueryStringUseCaseTest.SuccessToBuildQueryStringManually));
 
-        return method
-            .GetCustomAttributes<InlineDataAttribute>()
-            .SelectMany(attribute => attribute.GetData(method))
-            .Select(row => (string) row[0])
-            .ToList();
+        return
+        [
+            .. method
+                .GetCustomAttributes<InlineDataAttribute>()
+                .SelectMany(attribute => attribute.GetData(method))
+                .Select(row => (string) row[0])
+        ];
     }
 
     public static IReadOnlyList<string> Probes()
@@ -75,6 +77,6 @@ public static class CharacterizationCorpus
 
     public static IReadOnlyList<string> All()
     {
-        return GoldenInputs().Concat(Probes()).ToList();
+        return [.. GoldenInputs(), .. Probes()];
     }
 }

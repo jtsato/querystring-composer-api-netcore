@@ -5,12 +5,12 @@ namespace Core.Domains.QueryStrings.Helpers;
 public class NumberScale : Enumeration<NumberScale>
 {
     public static readonly NumberScale None = new NumberScale(0, "None");
-    public static readonly NumberScale Units = new NumberScale(1, "Units");
-    public static readonly NumberScale Tens = new NumberScale(2, "Tens");
-    public static readonly NumberScale Hundreds = new NumberScale(3, "Hundreds");
-    public static readonly NumberScale Thousands = new NumberScale(4, "Thousands");
-    public static readonly NumberScale Millions = new NumberScale(5, "Millions");
-    public static readonly NumberScale Billions = new NumberScale(6, "Billions");
+    private static readonly NumberScale Units = new NumberScale(1, "Units");
+    private static readonly NumberScale Tens = new NumberScale(2, "Tens");
+    private static readonly NumberScale Hundreds = new NumberScale(3, "Hundreds");
+    private static readonly NumberScale Thousands = new NumberScale(4, "Thousands");
+    private static readonly NumberScale Millions = new NumberScale(5, "Millions");
+    private static readonly NumberScale Billions = new NumberScale(6, "Billions");
 
     private NumberScale(int id, string name) : base(id, name)
     {
