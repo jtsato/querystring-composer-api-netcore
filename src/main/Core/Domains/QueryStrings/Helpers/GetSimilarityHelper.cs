@@ -49,16 +49,16 @@ public static class GetSimilarityHelper
         return 1.0 - distance / maxLength;
     }
 
-    private static void EndCache()
-    {
-        _cache = null;
-    }
-
     private sealed class CacheScope : IDisposable
     {
         public void Dispose()
         {
             EndCache();
+        }
+
+        private static void EndCache()
+        {
+            _cache = null;
         }
     }
 }
