@@ -66,7 +66,7 @@ jobs:
       - name: Mutation [Core]
         run: |
           dotnet new tool-manifest
-          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet tool install dotnet-stryker --version 4.16.0
           dotnet stryker
         working-directory: ./src/test/UnitTest.Core
 
@@ -78,7 +78,7 @@ jobs:
       - name: Mutation [EntryPoint WebApi]
         run: |
           dotnet new tool-manifest
-          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet tool install dotnet-stryker --version 4.16.0
           dotnet stryker -p "EntryPoint.WebApi.csproj"
         working-directory: ./src/test/IntegrationTest.EntryPoint.WebApi
 
@@ -90,7 +90,7 @@ jobs:
       - name: Mutation [Infra MongoDB]
         run: |
           dotnet new tool-manifest
-          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet tool install dotnet-stryker --version 4.16.0
           dotnet stryker -p "Infra.MongoDB.csproj"
         working-directory: ./src/test/IntegrationTest.Infra.MongoDB
 
@@ -102,7 +102,7 @@ jobs:
       - name: Mutation [Infra HttpClient]
         run: |
           dotnet new tool-manifest
-          dotnet tool install dotnet-stryker --version 3.10.0
+          dotnet tool install dotnet-stryker --version 4.16.0
           dotnet stryker -p "Infra.HttpClient.csproj"
         working-directory: ./src/test/IntegrationTest.Infra.HttpClient
 
