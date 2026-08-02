@@ -19,8 +19,6 @@ public sealed class UpdateQueryStructureProvider(IRepository<QueryStructureEntit
     {
         QueryStructureEntity entity = queryStructure.ToEntity();
         
-        // TODO: Get the current entity from the database
-
         await UpdateEntity(entity);
 
         return (await _entityRepository.SaveAsync(entity)).ToModel();
@@ -46,8 +44,6 @@ public sealed class UpdateQueryStructureProvider(IRepository<QueryStructureEntit
 
         UpdateDefinition<QueryStructureEntity> update = Builders<QueryStructureEntity>.Update.Combine(updateDefinitions);
             
-        // TODO: Increment rank of items and entries
-
         await _entityRepository.UpdateOneAsync(filter, update);
     }
 }
