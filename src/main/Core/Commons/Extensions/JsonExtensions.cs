@@ -37,9 +37,8 @@ public static class JsonExtensions
 
     public static JsonElement SelectToken(this JsonElement jsonElement, string path)
     {
-        while (true)
+        while (!string.IsNullOrEmpty(path))
         {
-            if (string.IsNullOrEmpty(path)) return jsonElement;
             string propertyName = path.SubstringAfter(".").SubstringBefore(".");
             string indexAsString = propertyName.SubstringAfter("[").SubstringBefore("]");
             if (string.IsNullOrEmpty(indexAsString))
@@ -54,6 +53,8 @@ public static class JsonExtensions
 
             path = path.SubstringAfter(propertyName);
         }
+
+        return jsonElement;
     }
 
     private static JsonElement GetPropertyAtIndex(JsonElement jsonElement, string propertyName, int searchedIndex)
