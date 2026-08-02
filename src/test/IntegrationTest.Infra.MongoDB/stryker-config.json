@@ -9,6 +9,7 @@
       "ToString",
       "*HashCode*",
       "*First*"
-    ]
+    ],
+    "additional-timeout": 5000
   }
 }

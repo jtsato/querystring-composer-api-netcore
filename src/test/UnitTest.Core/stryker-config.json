@@ -11,6 +11,7 @@
       "*First*",
       "CheckNull*"
     ],
-    "coverage-analysis": "off"
+    "coverage-analysis": "off",
+    "additional-timeout": 5000
   }
 }
