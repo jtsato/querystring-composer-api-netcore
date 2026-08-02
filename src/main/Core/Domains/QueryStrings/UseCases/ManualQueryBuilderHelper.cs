@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Commons;
+using Core.Domains.QueryStrings.Helpers;
 using Core.Domains.QueryStrings.Models;
 using Core.Domains.QueryStructures.Models;
 
@@ -15,6 +17,8 @@ public static class ManualQueryBuilderHelper
 {
     public static string Build(QueryStructure queryStructure, string rawSearchTerms)
     {
+        using IDisposable similarityCache = GetSimilarityHelper.BeginCache();
+
         IList<string> words = SearchTermsNormalizer.ToWords(rawSearchTerms);
 
         IList<string> allNouns =
