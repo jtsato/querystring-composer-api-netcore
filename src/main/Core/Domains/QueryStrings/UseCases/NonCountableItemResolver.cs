@@ -17,11 +17,11 @@ public static class NonCountableItemResolver
 {
     private const int SimilarityFloorInPercentage = 80;
 
-    public static Optional<QueryParameter> Resolve(Item item, IList<string> allNouns, IList<string> words)
+    public static Optional<QueryParameter> Resolve(Item item, SentenceParsingContext context)
     {
         if (item.Entries.Count == 0) return Optional<QueryParameter>.Empty();
 
-        HashSet<string> keys = PickupMultipleEntryKeys(item.Entries, ToLeadingTokens(item, allNouns, words));
+        HashSet<string> keys = PickupMultipleEntryKeys(item.Entries, ToLeadingTokens(item, context));
 
         return keys.Count > 0
             ? Optional<QueryParameter>.Of(new QueryParameter(item.Name, keys))
@@ -31,9 +31,9 @@ public static class NonCountableItemResolver
     // The sentence parser merges a quantifier with the noun it qualifies into a single "3 quartos"
     // value. A non-countable item matches single words only, so each parsed value is reduced back to
     // its leading token.
-    private static List<string> ToLeadingTokens(Item item, IList<string> allNouns, IList<string> words)
+    private static List<string> ToLeadingTokens(Item item, SentenceParsingContext context)
     {
-        IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
+        IList<WordInfo> wordInfos = SentenceParserHelper.Parse(context, item.ConfirmationWords, item.RevocationWords);
 
         return
         [

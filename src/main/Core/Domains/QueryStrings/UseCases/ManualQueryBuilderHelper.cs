@@ -27,17 +27,19 @@ public static class ManualQueryBuilderHelper
                 .SelectMany(item => item.Entries)
                 .SelectMany(entry => entry.KeyWords)
         ];
-    
+
+        SentenceParsingContext parsingContext = SentenceParserHelper.CreateContext(words, allNouns);
+
         Dictionary<string, QueryParameter> queryParameters = new Dictionary<string, QueryParameter>();
 
         foreach (Item item in ItemsByRank(queryStructure, countable: false))
         {
-            Add(queryParameters, item, NonCountableItemResolver.Resolve(item, allNouns, words));
+            Add(queryParameters, item, NonCountableItemResolver.Resolve(item, parsingContext));
         }
 
         foreach (Item item in ItemsByRank(queryStructure, countable: true))
         {
-            Add(queryParameters, item, CountableItemResolver.Resolve(item, allNouns, words, queryParameters));
+            Add(queryParameters, item, CountableItemResolver.Resolve(item, parsingContext, queryParameters));
         }
 
         return queryParameters.Count > 0

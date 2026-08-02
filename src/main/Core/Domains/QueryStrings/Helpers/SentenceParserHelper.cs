@@ -22,19 +22,35 @@ public static class SentenceParserHelper
     // “Much of the best work of the world has been done against seeming impossibilities.” by Dale Carnegie
     public static IList<WordInfo> Parse(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
     {
-        List<WordInfo> wordInfos = Classify(words, nouns, confirmationWords, revocationWords);
-        
-        IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, nouns);
+        return Parse(CreateContext(words, nouns), confirmationWords, revocationWords);
+    }
+
+    // Number and noun detection depend only on the words and the query structure's full vocabulary,
+    // never on a specific item's confirmation/revocation words. A search resolves every item of the
+    // query structure against the same words, so this half of parsing is computed once here and reused
+    // by every item instead of being redone from scratch for each one.
+    public static SentenceParsingContext CreateContext(IEnumerable<string> words, IList<string> nouns)
+    {
+        List<WordInfo> baseWordInfos = ClassifyBase(words, nouns);
+        IList<string> nounsWithWhiteSpaces = [.. nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant())];
+
+        return new SentenceParsingContext(baseWordInfos, nounsWithWhiteSpaces);
+    }
+
+    public static IList<WordInfo> Parse(SentenceParsingContext context, IList<string> confirmationWords, IList<string> revocationWords)
+    {
+        List<WordInfo> wordInfos = ClassifyIndicators(context.BaseWordInfos, confirmationWords, revocationWords);
+
+        IList<WordInfo> finalWordInfos = RefineWithNousWithWhiteSpaces(wordInfos, context.NounsWithWhiteSpaces);
 
         return [.. Summarize(finalWordInfos, confirmationWords, revocationWords)];
     }
 
-    private static List<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IEnumerable<string> nouns)
+    private static List<WordInfo> RefineWithNousWithWhiteSpaces(List<WordInfo> wordInfos, IList<string> nounsWithWhiteSpaces)
     {
         List<WordInfo> finalWordInfos = [];
 
         string singleString = wordInfos.Select(wordInfo => wordInfo.Value).Aggregate((a, b) => $"{a} {b}");
-        IList<string> nounsWithWhiteSpaces = [.. nouns.Where(element => element.Contains(' ')).Select(element => element.ToLowerInvariant())];
         IList<CompositeWord> compositeWords = new List<CompositeWord>();
         
         foreach (string noun in nounsWithWhiteSpaces)
@@ -105,7 +121,10 @@ public static class SentenceParserHelper
         return combinations;
     }
 
-    private static List<WordInfo> Classify(IEnumerable<string> words, IList<string> nouns, IList<string> confirmationWords, IList<string> revocationWords)
+    // The item-independent half of classification: numbers and nouns are matched against the full
+    // query structure vocabulary the same way no matter which item is being resolved. Words that are
+    // neither are left as WordInfoType.Other, a placeholder for ClassifyIndicators to resolve per item.
+    private static List<WordInfo> ClassifyBase(IEnumerable<string> words, IList<string> nouns)
     {
         List<WordInfo> wordInfos = [];
 
@@ -113,9 +132,10 @@ public static class SentenceParserHelper
         {
             WordInfo info = new WordInfo
             {
-                Value = current
+                Value = current,
+                Type = WordInfoType.Other
             };
-            
+
             if (int.TryParse(current, NumberStyles.Number, DefaultCultureInfo, out int result))
             {
                 info.Type = WordInfoType.QuantitativeAdjective;
@@ -138,11 +158,35 @@ public static class SentenceParserHelper
             {
                 info.Type = WordInfoType.Noun;
                 info.Value = mostSimilarWord;
-                wordInfos.Add(info);
+            }
+
+            wordInfos.Add(info);
+        }
+
+        return wordInfos;
+    }
+
+    // The item-dependent half of classification: only words left as WordInfoType.Other by ClassifyBase
+    // (neither a number nor a noun) still need to be checked against this item's own
+    // confirmation/revocation words. Always produces fresh WordInfo instances, since callers such as
+    // CountableItemResolver mutate the WordInfo objects they receive, and baseWordInfos is shared and
+    // reused by every item resolved against the same SentenceParsingContext.
+    private static List<WordInfo> ClassifyIndicators(List<WordInfo> baseWordInfos, IList<string> confirmationWords, IList<string> revocationWords)
+    {
+        List<WordInfo> wordInfos = new List<WordInfo>(baseWordInfos.Count);
+
+        foreach (WordInfo baseInfo in baseWordInfos)
+        {
+            if (baseInfo.Type != WordInfoType.Other)
+            {
+                wordInfos.Add(new WordInfo { Type = baseInfo.Type, Value = baseInfo.Value });
                 continue;
             }
 
-            (maxSimilarity, mostSimilarWord) = GetMaxSimilarity(confirmationWords, current);
+            string current = baseInfo.Value;
+            WordInfo info = new WordInfo { Value = current, Type = WordInfoType.Other };
+
+            (double maxSimilarity, string mostSimilarWord) = GetMaxSimilarity(confirmationWords, current);
             if (maxSimilarity >= SimilarityLimit)
             {
                 info.Type = WordInfoType.ConfirmationIndicator;
@@ -156,11 +200,8 @@ public static class SentenceParserHelper
             {
                 info.Type = WordInfoType.RevocationIndicator;
                 info.Value = mostSimilarWord;
-                wordInfos.Add(info);
-                continue;
             }
 
-            info.Type = WordInfoType.Other;
             wordInfos.Add(info);
         }
 

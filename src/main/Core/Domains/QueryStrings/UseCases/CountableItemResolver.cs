@@ -16,12 +16,12 @@ public static class CountableItemResolver
 {
     private const string Anonymous = "Anonymous";
 
-    public static Optional<QueryParameter> Resolve(Item item, IList<string> allNouns, IList<string> words,
+    public static Optional<QueryParameter> Resolve(Item item, SentenceParsingContext context,
         IReadOnlyDictionary<string, QueryParameter> resolvedParameters)
     {
         if (item.Entries.Count == 0) return Optional<QueryParameter>.Empty();
 
-        List<WordInfo> quantifiedNouns = CollectQuantifiedNouns(item, allNouns, words);
+        List<WordInfo> quantifiedNouns = CollectQuantifiedNouns(item, context);
         if (quantifiedNouns.Count == 0) return Optional<QueryParameter>.Empty();
 
         HashSet<string> values = PickupFirstCompatibleCount(quantifiedNouns, item, resolvedParameters);
@@ -31,9 +31,9 @@ public static class CountableItemResolver
             : Optional<QueryParameter>.Empty();
     }
 
-    private static List<WordInfo> CollectQuantifiedNouns(Item item, IList<string> allNouns, IList<string> words)
+    private static List<WordInfo> CollectQuantifiedNouns(Item item, SentenceParsingContext context)
     {
-        IList<WordInfo> wordInfos = SentenceParserHelper.Parse(words, allNouns, item.ConfirmationWords, item.RevocationWords);
+        IList<WordInfo> wordInfos = SentenceParserHelper.Parse(context, item.ConfirmationWords, item.RevocationWords);
 
         IList<string> itemKeyWords = [.. item.Entries.SelectMany(entry => entry.KeyWords)];
 
