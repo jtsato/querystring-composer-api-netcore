@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Core.Commons;
+﻿using Core.Commons;
 using UnitTest.Core.Commons.Models;
 using Xunit;
 
