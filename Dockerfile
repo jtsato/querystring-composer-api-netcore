@@ -4,8 +4,12 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
+# Central Package Management: the csproj files carry no versions, they come from
+# this file. It has to land before the restore or every PackageReference hits NU1015.
+COPY ["./Directory.Packages.props", "./"]
+
 COPY ["./src/main/Core/Core.csproj", "./Core/"]
-COPY ["./src/main/Infra.HttpClient/Infra.HttpClient.csproj", ".Infra.HttpClient/"]
+COPY ["./src/main/Infra.HttpClient/Infra.HttpClient.csproj", "./Infra.HttpClient/"]
 COPY ["./src/main/Infra.MongoDB/Infra.MongoDB.csproj", "./Infra.MongoDB/"]
 COPY ["./src/main/EntryPoint.WebApi/EntryPoint.WebApi.csproj", "./EntryPoint.WebApi/"]
 
