@@ -21,8 +21,8 @@
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
         <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="xunit" Version="2.9.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -33,17 +33,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\main\EntryPoint.WebApi\EntryPoint.WebApi.csproj"/>
+        <ProjectReference Include="..\..\main\EntryPoint.WebApi\EntryPoint.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="StrykerOutput\**"/>
+        <Compile Remove="StrykerOutput\**" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Remove="StrykerOutput\**"/>
+        <EmbeddedResource Remove="StrykerOutput\**" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="StrykerOutput\**"/>
+        <None Remove="StrykerOutput\**" />
     </ItemGroup>
 
 </Project>

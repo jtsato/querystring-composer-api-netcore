@@ -9,13 +9,13 @@
     <ItemGroup>
         <!-- Held on the 2.x line on purpose: 3.x is a code migration (LINQ2 removal, namespace
              consolidation) that has not been done yet. -->
-        <PackageReference Include="MongoDB.Bson" Version="2.30.0" />
-        <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
+        <PackageReference Include="MongoDB.Bson" Version="3.10.0" />
+        <PackageReference Include="MongoDB.Driver" Version="3.10.0" />
         <PackageReference Include="System.Runtime.Caching" Version="10.0.10" />
         <!-- Transitive deps of MongoDB.Driver 2.30.0, pinned forward to clear NU1902/NU1903.
              The driver floats them at >= 0.30.1 / >= 1.0.0, which are the vulnerable versions.
              Drop these once the driver itself requires the patched ranges. -->
-        <PackageReference Include="SharpCompress" Version="0.48.0" />
+        <PackageReference Include="SharpCompress" Version="0.50.3" />
         <PackageReference Include="Snappier" Version="1.3.1" />
     </ItemGroup>
 
