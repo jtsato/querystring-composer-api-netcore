@@ -31,13 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup .NET [v10.0.x]
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             10.0.x
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
           persist-credentials: true
@@ -132,7 +132,7 @@ jobs:
       # In the /settings/actions section set Read and write permissions for the GITHUB_TOKEN
       - name: Push the changes
         if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # v1.3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main

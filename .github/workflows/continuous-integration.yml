@@ -35,13 +35,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup .NET [v10.0.x]
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             10.0.x
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Show Docker Compose version
         run: docker compose version
@@ -97,7 +97,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Create Tag from Date and Run Number
         id: tag
@@ -115,13 +115,13 @@ jobs:
           echo "RELEASE_VERSION=${{ env.APP_VERSION }}-${{ env.TAG }}" >> "$GITHUB_OUTPUT"
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and Push to Docker Hub
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.ARTIFACT_NAME }}:${{ env.RELEASE_VERSION }}
@@ -141,7 +141,7 @@ jobs:
 
     steps:
       - name: Checkout Properties API IaC project
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: jtsato/duckhome-system-k8s
@@ -178,7 +178,7 @@ jobs:
 
       - name: Push the changes
         if: ${{ env.SHOULD_I_COMMIT == 'Yes' }}
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # v1.3.0
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: jtsato/duckhome-system-k8s
