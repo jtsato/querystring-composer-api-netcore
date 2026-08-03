@@ -103,7 +103,7 @@ START http://localhost:5132/api/properties-search/v1/swagger
 
 ECHO.
 ECHO Running the server...
-CALL dotnet run --no-build --no-restore --nologo --project ./EntryPoint.WebApi/EntryPoint.WebApi.csproj
+CALL dotnet run --no-build --no-restore --nologo --project ./src/main/EntryPoint.WebApi/EntryPoint.WebApi.csproj
 
 GOTO end
 

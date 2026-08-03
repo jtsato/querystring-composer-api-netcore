@@ -29,6 +29,7 @@ public static partial class PageRequestHelper
         string orderBy = BlankSpaces().Replace(rawOrderBy, "");
 
         string[] strings = orderBy.Split(FieldSeparator);
+        
         List<string> properties =
         [
             .. strings

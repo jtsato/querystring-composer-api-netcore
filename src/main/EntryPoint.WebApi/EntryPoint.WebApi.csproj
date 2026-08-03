@@ -6,7 +6,6 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>EntryPoint.WebApi</RootNamespace>
-		<EnableProfileGuidedOptimization>true</EnableProfileGuidedOptimization>
     </PropertyGroup>
 
     <ItemGroup>

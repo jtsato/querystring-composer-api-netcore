@@ -40,9 +40,9 @@ jobs:
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/pt-br
           mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/en-us
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/pt-br
           mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/en-us
 
       - name: Build in Debug Mode

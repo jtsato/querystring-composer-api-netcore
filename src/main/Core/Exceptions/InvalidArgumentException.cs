@@ -8,5 +8,4 @@ namespace Core.Exceptions;
 public sealed class InvalidArgumentException(string message, IList<FieldError> fieldErrors, params object[] args) : CoreException(message, args)
 {
     public IList<FieldError> FieldErrors { get; } = fieldErrors;
-
 }

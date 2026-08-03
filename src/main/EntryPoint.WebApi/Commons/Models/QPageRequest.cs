@@ -11,13 +11,13 @@ namespace EntryPoint.WebApi.Commons.Models;
 public sealed class QPageRequest
 {
     [SwaggerParameter(Required = false, Description = "Results page you want to retrieve (0..N)")]
-    [DefaultValue("0")]
     [FromQuery(Name = "page")]
+    [DefaultValue("0")]
     public string PageNumber { get; init; }
 
     [SwaggerParameter(Required = false, Description = "Number of records per page")]
-    [DefaultValue("10")]
     [FromQuery(Name = "pageSize")]
+    [DefaultValue("10")]
     public string PageSize { get; init; }
 
     [SwaggerParameter(Required = false,

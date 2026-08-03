@@ -101,12 +101,12 @@ dotnet test --nologo -v q
 ```
 * running mutation tests:
 ```
-cd UnitTest.Core
+cd src/test/UnitTest.Core
 dotnet stryker
 ```
 * starting the solution:
 ```
-cd EntryPoint.WebApi/bin/Debug/net10.0
+cd src/main/EntryPoint.WebApi/bin/Debug/net10.0
 dotnet EntryPoint.WebApi.dll
 ```
 ***

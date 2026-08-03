@@ -37,11 +37,11 @@ public static class JsonSchemaValidator
         return
         [
             .. from keyValuePair in jSchema.Properties
-            where !jObject.ContainsKey(keyValuePair.Key)
-            select new FieldError
-            {
-                PropertyName = keyValuePair.Key, ErrorMessage = "CommonJsonPropertyMissing"
-            }
+               where !jObject.ContainsKey(keyValuePair.Key)
+               select new FieldError
+               {
+                   PropertyName = keyValuePair.Key, ErrorMessage = "CommonJsonPropertyMissing"
+               }
         ];
     }
 
@@ -50,12 +50,12 @@ public static class JsonSchemaValidator
         return
         [
             .. from property in jObject.Properties()
-            where !jSchema.Properties.ContainsKey(property.Name)
-            select new FieldError
-            {
-                PropertyName = property.Name, AttemptedValue = property.Value.ToString(),
-                ErrorMessage = "CommonJsonPropertyInvalid"
-            }
+               where !jSchema.Properties.ContainsKey(property.Name)
+               select new FieldError
+               {
+                   PropertyName = property.Name, AttemptedValue = property.Value.ToString(),
+                   ErrorMessage = "CommonJsonPropertyInvalid"
+               }
         ];
     }
 
@@ -65,11 +65,11 @@ public static class JsonSchemaValidator
 
         jObject.Validate(jSchema, (_, args) => schemaErrors.Add(args.ValidationError));
 
-        IList<FieldError> fieldErrors =
+        List<FieldError> fieldErrors =
         [
             .. from validationError in schemaErrors
-            where validationError.ErrorType.Equals(ErrorType.Type)
-            select WrongTypeFieldErrorOf(validationError)
+               where validationError.ErrorType.Equals(ErrorType.Type)
+               select WrongTypeFieldErrorOf(validationError)
         ];
 
         return [.. fieldErrors];

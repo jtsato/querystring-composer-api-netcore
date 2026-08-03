@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Commons;
 using Core.Domains.QueryStructures.Interfaces;
@@ -32,15 +33,15 @@ public sealed class UpdateQueryStructureProvider(IRepository<QueryStructureEntit
             entity.Id
         );
 
-        IList<UpdateDefinition<QueryStructureEntity>> updateDefinitions = new List<UpdateDefinition<QueryStructureEntity>>
-        {
-            Builders<QueryStructureEntity>.Update.Set(queryStructureEntity => queryStructureEntity.UpdatedAt, entity.UpdatedAt),
-        };
+        List<UpdateDefinition<QueryStructureEntity>> updateDefinitions =
+        [
+            Builders<QueryStructureEntity>.Update.Set(queryStructureEntity => queryStructureEntity.UpdatedAt, entity.UpdatedAt)
+        ];
 
         AddUpDefinitionIfValueHasChanged(ref updateDefinitions, nameof(entity.Name), entity.Name, entity.Name);
         AddUpDefinitionIfValueHasChanged(ref updateDefinitions, nameof(entity.Description), entity.Description, entity.Description);
         AddUpDefinitionIfValueHasChanged(ref updateDefinitions, nameof(entity.AiSettings), entity.AiSettings, entity.AiSettings);
-        AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, nameof(entity.Items), entity.Items, entity.Items);
+        AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, nameof(entity.Items), entity.Items?.ToList(), entity.Items?.ToList());
 
         UpdateDefinition<QueryStructureEntity> update = Builders<QueryStructureEntity>.Update.Combine(updateDefinitions);
             

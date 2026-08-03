@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EntryPoint.WebApi.Commons.Filters;
 
-[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class AddCorrelationIdHeaderAttribute : ResultFilterAttribute
 {
     public override void OnResultExecuting(ResultExecutingContext context)

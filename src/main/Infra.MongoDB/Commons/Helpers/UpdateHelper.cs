@@ -8,7 +8,7 @@ public static class UpdateHelper
 {
     public static void AddUpDefinitionIfValueHasChanged<T, TU>
     (
-        ref IList<UpdateDefinition<TU>> definitions,
+        ref List<UpdateDefinition<TU>> definitions,
         string fieldName,
         T currentValue,
         T newValue
@@ -20,10 +20,10 @@ public static class UpdateHelper
 
     public static void AddUpDefinitionIfItemsHasChanged<T, TU>
     (
-        ref IList<UpdateDefinition<TU>> definitions,
+        ref List<UpdateDefinition<TU>> definitions,
         string fieldName,
-        IList<T> currentValue,
-        IList<T> newValue
+        List<T> currentValue,
+        List<T> newValue
     )
     {
         if (CompareList(currentValue, newValue)) return;
@@ -35,7 +35,7 @@ public static class UpdateHelper
         return EqualityComparer<T>.Default.Equals(first, second);
     }
 
-    private static bool CompareList<T>(IList<T> first, IList<T> second)
+    private static bool CompareList<T>(List<T> first, List<T> second)
     {
         if (first is null && second is null) return true;
         if (first is null || second is null) return false;

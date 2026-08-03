@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class HandleInvalidModelStateActionFilterAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)

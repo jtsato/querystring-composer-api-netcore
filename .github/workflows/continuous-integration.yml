@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - "**"
+      - "main"
     paths-ignore:
       - "docs/**"
       - "**/*.md"
@@ -30,6 +30,10 @@ env:
   DOCKER_REGISTRY: docker.io
   ARTIFACT_NAME: querystring-composer-api
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -55,9 +59,9 @@ jobs:
 
       - name: Hack [issue "MSB3026 Unable to copy file" for EmbeddedResources]
         run: |
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/pt-br
           mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Debug/net10.0/en-us
-          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/pt-br 
+          mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/pt-br
           mkdir -p ./src/test/IntegrationTest.EntryPoint.WebApi/bin/Release/net10.0/en-us
 
       - name: Build in Debug Mode

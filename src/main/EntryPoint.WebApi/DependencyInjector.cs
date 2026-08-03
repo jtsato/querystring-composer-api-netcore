@@ -47,12 +47,12 @@ public static class DependencyInjector
     private static readonly string ClientSequenceCollectionName =
         Environment.GetEnvironmentVariable("CLIENT_SEQUENCE_COLLECTION_NAME") ?? string.Empty;
     
-    private static readonly string OpenAiApiBaseUrl = 
+    private static readonly string OpenAiApiBaseUrl =
         Environment.GetEnvironmentVariable("OPENAI_API_BASE_URL") ?? string.Empty;
-    
+
     private static readonly int RetryAttempts =
         Convert.ToInt32(Environment.GetEnvironmentVariable("OPENAI_API_RETRY_ATTEMPTS"));
-    
+
     private static readonly int RetryIntervalInSeconds =
         Convert.ToInt32(Environment.GetEnvironmentVariable("OPENAI_API_RETRY_DELAY_IN_SECONDS"));
 
@@ -61,7 +61,7 @@ public static class DependencyInjector
         AddSharedServices(services);
         AddEntryPointServices(services);
         AddCoreServices(services);
-        AddInfraStructureServices(services, new ConnectionFactory(ConnectionString));
+        AddInfrastructureServices(services, new ConnectionFactory(ConnectionString));
 
         return BuildLifetimeByType(services);
     }
@@ -71,7 +71,7 @@ public static class DependencyInjector
         services.AddSingleton<IServiceResolver, ServiceResolver>();
         services.AddSingleton<IGetDateTime, GetDateTime>();
         services.AddTransient<ILoggerAdapter, LoggerAdapter<ExceptionHandlerFilterAttribute>>();
-        services.AddScoped<IWebRequest, WebRequest>();      
+        services.AddScoped<IWebRequest, WebRequest>();
     }
 
     private static void AddEntryPointServices(IServiceCollection services)
@@ -87,7 +87,7 @@ public static class DependencyInjector
         services.AddSingleton<IBuildQueryStringUseCase, BuildQueryStringUseCase>();
     }
 
-    private static void AddInfraStructureServices(IServiceCollection services, IConnectionFactory connectionFactory)
+    private static void AddInfrastructureServices(IServiceCollection services, IConnectionFactory connectionFactory)
     {
         services.AddSingleton<IRegisterClientGateway, RegisterClientProvider>();
         services.AddSingleton<IGetQueryStructureByNameGateway, GetQueryStructureByNameProvider>();
@@ -96,10 +96,9 @@ public static class DependencyInjector
 
         services.AddRefitClient<IOpenAiApiClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(OpenAiApiBaseUrl));
-        
+
         services.AddTransient<IGetRetryPolicy>(_ => new GetRetryPolicy(RetryAttempts, RetryIntervalInSeconds));
 
-        
         services.AddSingleton<IRepository<ClientEntity>>
         (
             _ => new ClientRepository(connectionFactory, DatabaseName, ClientCollectionName)

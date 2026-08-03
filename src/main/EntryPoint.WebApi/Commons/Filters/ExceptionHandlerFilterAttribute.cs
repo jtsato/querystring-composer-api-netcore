@@ -13,8 +13,8 @@ using Microsoft.Extensions.Logging;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class ExceptionHandlerFilterAttribute(IExceptionHandler exceptionHandler, ILoggerAdapter logger) : ExceptionFilterAttribute
 {
     private readonly List<Type> _businessExceptions =

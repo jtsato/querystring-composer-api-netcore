@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Infra.MongoDB.Commons.Helpers;
 using IntegrationTest.Infra.MongoDB.Commons.Dummies;
 using MongoDB.Driver;
@@ -13,7 +13,7 @@ public class UpdateDefinitionHelperTest
     public void SuccessfulToAddUpDefinitionIfValueHasChanged()
     {
         // Arrange
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfValueHasChanged(ref updateDefinitions, "Name", "John", "Kim");
@@ -21,13 +21,13 @@ public class UpdateDefinitionHelperTest
         // Assert
         Assert.Single(updateDefinitions);
     }
-    
+
     [Trait("Category", "Database collection [NoContext]")]
     [Fact(DisplayName = "Successful to add up definition if value was null")]
     public void SuccessfulToAddUpDefinitionIfValueWasNull()
     {
         // Arrange
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfValueHasChanged(ref updateDefinitions, "Name", null, "Kim");
@@ -35,13 +35,13 @@ public class UpdateDefinitionHelperTest
         // Assert
         Assert.Single(updateDefinitions);
     }
-        
+
     [Trait("Category", "Database collection [NoContext]")]
     [Fact(DisplayName = "Successful to add up definition if value is null")]
     public void SuccessfulToAddUpDefinitionIfValueIsNull()
     {
         // Arrange
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfValueHasChanged(ref updateDefinitions, "Name", "Kill", null);
@@ -55,7 +55,7 @@ public class UpdateDefinitionHelperTest
     public void FailToAddUpDefinitionIfValueHasNotChanged()
     {
         // Arrange
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfValueHasChanged(ref updateDefinitions, "Name", "John", "John");
@@ -69,19 +69,19 @@ public class UpdateDefinitionHelperTest
     public void SuccessfulToAddMultipleUpDefinitionsIfValueHasChanged()
     {
         // Arrange
-        IList<DummyEntity> currentDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> currentDummies =
+        [
             new DummyEntity(1, "John", "Smith", "1980-04-23 00:00:01", 29),
-            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31),
-        };
+            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31)
+        ];
 
-        IList<DummyEntity> newDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> newDummies =
+        [
             new DummyEntity(3, "Tiebout", "Moskovitz", "1981-07-07 00:00:01", 29),
-            new DummyEntity(4, "Marlane", "Moskovitz", "1984-10-10 00:00:01", 31),
-        };
+            new DummyEntity(4, "Marlane", "Moskovitz", "1984-10-10 00:00:01", 31)
+        ];
 
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, "dummies", currentDummies, newDummies);
@@ -95,19 +95,19 @@ public class UpdateDefinitionHelperTest
     public void FailToAddMultipleUpDefinitionsIfValueHasNotChanged()
     {
         // Arrange
-        IList<DummyEntity> currentDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> currentDummies =
+        [
             new DummyEntity(1, "John", "Smith", "1980-04-23 00:00:01", 29),
-            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31),
-        };
+            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31)
+        ];
 
-        IList<DummyEntity> newDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> newDummies =
+        [
             new DummyEntity(1, "John", "Smith", "1980-04-23 00:00:01", 29),
-            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31),
-        };
+            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31)
+        ];
 
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, "dummies", currentDummies, newDummies);
@@ -121,7 +121,7 @@ public class UpdateDefinitionHelperTest
     public void FailToAddMultipleUpDefinitionsIfValuesAreNull()
     {
         // Arrange
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, "dummies", (List<DummyEntity>) null, null);
@@ -135,13 +135,13 @@ public class UpdateDefinitionHelperTest
     public void SuccessfulToAddMultipleUpDefinitionsIfCurrentValueIsNull()
     {
         // Arrange
-        IList<DummyEntity> newDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> newDummies =
+        [
             new DummyEntity(1, "John", "Smith", "1980-04-23 00:00:01", 29),
-            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31),
-        };
+            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31)
+        ];
 
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, "dummies", null, newDummies);
@@ -155,13 +155,13 @@ public class UpdateDefinitionHelperTest
     public void SuccessfulToAddMultipleUpDefinitionsIfNewValueIsNull()
     {
         // Arrange
-        IList<DummyEntity> currentDummies = new List<DummyEntity>
-        {
+        List<DummyEntity> currentDummies =
+        [
             new DummyEntity(1, "John", "Smith", "1980-04-23 00:00:01", 29),
-            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31),
-        };
+            new DummyEntity(2, "Kim", "Smith", "1981-07-25 00:00:01", 31)
+        ];
 
-        IList<UpdateDefinition<DummyEntity>> updateDefinitions = new List<UpdateDefinition<DummyEntity>>();
+        List<UpdateDefinition<DummyEntity>> updateDefinitions = [];
 
         // Act
         UpdateHelper.AddUpDefinitionIfItemsHasChanged(ref updateDefinitions, "dummies", currentDummies, null);

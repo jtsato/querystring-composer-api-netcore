@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
@@ -10,8 +9,8 @@ using Microsoft.Extensions.Primitives;
 namespace EntryPoint.WebApi.Commons.Filters;
 
 [ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class)]
 [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class GetLanguageActionFilterAttribute : ActionFilterAttribute
 {
     private static readonly string[] SupportedCultures = ["pt-BR", "en-US"];
@@ -37,9 +36,7 @@ public sealed class GetLanguageActionFilterAttribute : ActionFilterAttribute
         bool isCustomizable = !string.IsNullOrWhiteSpace(cultureName) && SupportedCultures.Contains(cultureName, StringComparer.InvariantCultureIgnoreCase);
         CultureInfo cultureInfo = isCustomizable ? CultureInfo.CreateSpecificCulture(cultureName) : new CultureInfo("en-US");
 
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-        Thread.CurrentThread.CurrentCulture = cultureInfo;
-        Thread.CurrentThread.CurrentUICulture = cultureInfo;
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
     }
 }

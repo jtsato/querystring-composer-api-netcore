@@ -4,6 +4,8 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
+COPY ["global.json", "./"]
+
 # Central Package Management: the csproj files carry no versions, they come from
 # this file. It has to land before the restore or every PackageReference hits NU1015.
 COPY ["./Directory.Packages.props", "./"]

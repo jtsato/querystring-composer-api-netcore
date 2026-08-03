@@ -17,7 +17,7 @@ public sealed class ConnectionFactory(string connectionString) : IConnectionFact
         return GetClient().GetDatabase(databaseName);
     }
 
-    private static IMongoClient CreateClient(string connectionString)
+    private static MongoClient CreateClient(string connectionString)
     {
         MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
 
