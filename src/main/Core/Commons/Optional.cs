@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Core.Commons;
@@ -27,7 +28,7 @@ public readonly struct Optional<T>
 
     public bool HasValue()
     {
-        return _value is not null;
+        return !EqualityComparer<T>.Default.Equals(_value, default);
     }
 
     public void HasValue(Action<T> method)

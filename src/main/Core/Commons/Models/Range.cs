@@ -37,8 +37,8 @@ public readonly struct Range<T>
     {
         unchecked
         {
-            int fromHashCode = EqualityComparer<T>.Default.GetHashCode(From!);
-            int toHashCode = EqualityComparer<T>.Default.GetHashCode(To!);
+            int fromHashCode = EqualityComparer<T>.Default.GetHashCode(From);
+            int toHashCode = EqualityComparer<T>.Default.GetHashCode(To);
 
             return (fromHashCode * 397) ^ toHashCode;
         }
