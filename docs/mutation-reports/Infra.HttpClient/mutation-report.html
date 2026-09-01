@@ -323,7 +323,7 @@
         </div>`)}#r(){return[{type:`detected`,amount:this.detected,tooltip:`killed + timeout (${this.detected})`},{type:`survived`,amount:this.survived,tooltip:`survived (${this.survived})`},{type:`no coverage`,amount:this.noCoverage,tooltip:`no coverage (${this.noCoverage})`},{type:`pending`,amount:this.pending,tooltip:`pending`}]}#i(e){switch(e){case`detected`:return`bg-green-600`;case`survived`:return`bg-red-600`;case`no coverage`:return`bg-yellow-600`;default:return`bg-gray-200`}}#a(e){return this.total===0?0:100*e/this.total}};return W([F({type:Number})],no.prototype,`detected`,void 0),W([F({type:Number,attribute:`no-coverage`})],no.prototype,`noCoverage`,void 0),W([F({type:Number})],no.prototype,`pending`,void 0),W([F({type:Number})],no.prototype,`survived`,void 0),W([F({type:Number})],no.prototype,`total`,void 0),no=W([P(`mte-result-status-bar`)],no),Object.defineProperty(e,"MutationTestReportAppComponent",{enumerable:!0,get:function(){return q}}),e})({});</script>
     </head>
     <body>
-        <mutation-test-report-app title-postfix="Stryker.NET Report" sse="http://localhost:40963/">
+        <mutation-test-report-app title-postfix="Stryker.NET Report" sse="http://localhost:33985/">
             Your browser doesn't support <a href="https://caniuse.com/#search=custom%20elements">custom elements</a>.
             Please use a latest version of an evergreen browser (Firefox, Chrome, Safari, Opera, etc).
         </mutation-test-report-app>
